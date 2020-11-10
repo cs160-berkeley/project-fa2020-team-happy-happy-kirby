@@ -11,7 +11,7 @@
         android:theme="@style/Theme.CivilEngagement">
         <activity android:name=".presentation.HomeActivity"></activity>
         <activity android:name=".presentation.SplashScreenActivity"
-            android:theme="@style/splashScreenTheme">
+            android:theme="@style/Theme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
