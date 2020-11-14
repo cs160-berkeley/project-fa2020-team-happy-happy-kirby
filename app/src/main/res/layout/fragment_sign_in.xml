@@ -1,22 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    tools:context="com.gmail.kingarthuralagao.us.civicengagement.presentation.login.LoginActivity">
-
-    <include layout="@layout/include_login_welcome"
-        android:id="@+id/include_login_welcome"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.signin.SignInFragment">
 
     <TextView
         android:id="@+id/sign_in_via_social_networks_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
-        app:layout_constraintTop_toBottomOf="@id/include_login_welcome"
+        app:layout_constraintTop_toTopOf="parent"
         android:gravity="center"
         android:text="@string/sign_in_via_social_networks"
         android:textSize="18sp"
@@ -34,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@id/sign_in_via_social_networks_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/twitter_sign_in_btn"
-        android:src="@drawable/button_google_sign_in"/>
+        android:src="@drawable/button_google"/>
 
     <ImageView
         android:id="@+id/twitter_sign_in_btn"
@@ -46,7 +40,7 @@
         app:layout_constraintStart_toEndOf="@id/google_sign_in_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sign_in_via_social_networks_tv"
-        android:src="@drawable/button_twitter_sign_in"/>
+        android:src="@drawable/button_twitter"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sign_up_with_email_layout"
@@ -174,7 +168,7 @@
         android:layout_marginTop="@dimen/margin_large"
         android:layout_marginEnd="56dp"
         android:layout_marginStart="56dp"
-        android:text="Sign In"
+        android:text="@string/sign_in"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:paddingTop="8dp"
@@ -203,7 +197,7 @@
             android:textSize="18sp"
             android:textColor="@color/secondary_text"
             android:fontFamily="@font/merriweather"/>
-        
+
         <TextView
             android:id="@+id/sign_up_tv"
             android:layout_width="wrap_content"
@@ -212,17 +206,10 @@
             android:text="@string/sign_up"
             android:textSize="18sp"
             android:textColor="#0080FF"
-            android:fontFamily="@font/merriweather"/>
+            android:fontFamily="@font/merriweather"
+            android:clickable="true"/>
 
 
     </LinearLayout>
-
-
-
-
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
