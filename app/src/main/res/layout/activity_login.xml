@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.gmail.kingarthuralagao.us.civicengagement.presentation.login.LoginActivity">
+
+    <include layout="@layout/include_login_welcome"
+        android:id="@+id/include_login_welcome"/>
+
+    <TextView
+        android:id="@+id/sign_in_via_social_networks_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        app:layout_constraintTop_toBottomOf="@id/include_login_welcome"
+        android:gravity="center"
+        android:text="@string/sign_in_via_social_networks"
+        android:textSize="18sp"
+        android:textColor="@color/secondary_text"
+        android:fontFamily="@font/merriweather"/>
+
+
+    <ImageView
+        android:id="@+id/google_sign_in_btn"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        app:layout_constraintTop_toBottomOf="@id/sign_in_via_social_networks_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/twitter_sign_in_btn"
+        android:src="@drawable/button_google_sign_in"/>
+
+    <ImageView
+        android:id="@+id/twitter_sign_in_btn"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        app:layout_constraintStart_toEndOf="@id/google_sign_in_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sign_in_via_social_networks_tv"
+        android:src="@drawable/button_twitter_sign_in"/>
+
+    <LinearLayout
+        android:id="@+id/sign_up_with_email_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        app:layout_constraintTop_toBottomOf="@id/google_sign_in_btn"
+        android:orientation="horizontal">
+
+
+        <View
+            android:layout_width="72dp"
+            android:layout_height="2dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/background_divider"
+            android:layout_gravity="center_vertical"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_in_with_email"
+            android:textSize="18sp"
+            android:textColor="@color/secondary_text"
+            android:fontFamily="@font/merriweather"
+            android:layout_gravity="center"/>
+
+        <View
+            android:layout_width="72dp"
+            android:layout_height="2dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/background_divider"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/email_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
+        app:layout_constraintTop_toBottomOf="@id/sign_up_with_email_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="Email"
+        app:startIconDrawable="@drawable/ic_email"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email_et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/password_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
+        app:layout_constraintTop_toBottomOf="@id/email_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="Password"
+        app:startIconDrawable="@drawable/ic_password"
+        app:endIconMode="password_toggle"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPassword"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/forgot_password_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
+        app:layout_constraintTop_toBottomOf="@id/password_layout"
+        android:text="@string/forgot_password"
+        android:textColor="#0080FF"
+        android:textSize="14sp"
+        android:fontFamily="@font/merriweather"
+        android:gravity="center"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sign_in_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginEnd="56dp"
+        android:layout_marginStart="56dp"
+        android:text="Sign In"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:elevation="16dp"
+        app:cornerRadius="24dp"
+        app:layout_constraintTop_toBottomOf="@id/forgot_password_tv"
+        android:backgroundTint="@color/secondary_blue"
+        app:rippleColor="@color/secondary_blue_variant"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        app:layout_constraintStart_toStartOf="@id/sign_in_btn"
+        app:layout_constraintEnd_toEndOf="@id/sign_in_btn"
+        app:layout_constraintTop_toBottomOf="@id/sign_in_btn"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/no_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:text="@string/no_account"
+            android:textSize="18sp"
+            android:textColor="@color/secondary_text"
+            android:fontFamily="@font/merriweather"/>
+        
+        <TextView
+            android:id="@+id/sign_up_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_small"
+            android:text="@string/sign_up"
+            android:textSize="18sp"
+            android:textColor="#0080FF"
+            android:fontFamily="@font/merriweather"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
