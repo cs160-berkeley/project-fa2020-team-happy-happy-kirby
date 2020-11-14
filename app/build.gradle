@@ -7,7 +7,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.gmail.kingarthuralagao.us.civilengagement"
+        applicationId "com.gmail.kingarthuralagao.us.civicengagement"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
