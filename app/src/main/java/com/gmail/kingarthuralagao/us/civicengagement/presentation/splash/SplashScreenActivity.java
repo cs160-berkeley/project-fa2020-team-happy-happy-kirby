@@ -1,12 +1,11 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.splash;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.login.LoginActivity;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -17,7 +16,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        Intent i = new Intent(this, LoginActivity.class);
+        Intent i = new Intent(this, AuthenticationActivity.class);
         startActivity(i);
     }
 }

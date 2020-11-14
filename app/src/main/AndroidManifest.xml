@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CivilEngagement">
-        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.login.LoginActivity"></activity>
+        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity"></activity>
         <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity" />
         <activity
             android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.splash.SplashScreenActivity"
