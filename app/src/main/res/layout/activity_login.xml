@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context="com.gmail.kingarthuralagao.us.civicengagement.presentation.login.LoginActivity">
 
     <include layout="@layout/include_login_welcome"
@@ -25,7 +27,7 @@
     <ImageView
         android:id="@+id/google_sign_in_btn"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_marginTop="@dimen/margin_large"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
@@ -37,7 +39,7 @@
     <ImageView
         android:id="@+id/twitter_sign_in_btn"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_marginTop="@dimen/margin_large"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
@@ -46,26 +48,43 @@
         app:layout_constraintTop_toBottomOf="@id/sign_in_via_social_networks_tv"
         android:src="@drawable/button_twitter_sign_in"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sign_up_with_email_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintTop_toBottomOf="@id/google_sign_in_btn"
         android:orientation="horizontal">
 
 
         <View
+            android:id="@+id/div_one"
             android:layout_width="72dp"
             android:layout_height="2dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sign_in_with_email"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/background_divider"
             android:layout_gravity="center_vertical"/>
 
         <TextView
+            android:id="@+id/sign_in_with_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintStart_toEndOf="@+id/div_one"
+            app:layout_constraintEnd_toEndOf="@id/div_two"
+            app:layout_constraintTop_toTopOf="parent"
             android:text="@string/sign_in_with_email"
             android:textSize="18sp"
             android:textColor="@color/secondary_text"
@@ -73,14 +92,21 @@
             android:layout_gravity="center"/>
 
         <View
+            android:id="@+id/div_two"
             android:layout_width="72dp"
             android:layout_height="2dp"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/sign_in_with_email"
+            app:layout_constraintEnd_toEndOf="parent"
             android:background="@drawable/background_divider"
             android:layout_gravity="center_vertical"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -100,7 +126,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email_et"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:inputType="text"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -156,7 +183,7 @@
         app:cornerRadius="24dp"
         app:layout_constraintTop_toBottomOf="@id/forgot_password_tv"
         android:backgroundTint="@color/secondary_blue"
-        app:rippleColor="@color/secondary_blue_variant"/>
+        app:rippleColor="@color/primary_blue_variant"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
