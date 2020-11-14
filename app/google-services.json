@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "156929816574",
+    "firebase_url": "https://civicengagement-6258d.firebaseio.com",
+    "project_id": "civicengagement-6258d",
+    "storage_bucket": "civicengagement-6258d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156929816574:android:2519837d53c2954d5632af",
+        "android_client_info": {
+          "package_name": "com.gmail.kingarthuralagao.us.civicengagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156929816574-3phqj9jg5nik4c6icqktjq1le3vd6vcc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gmail.kingarthuralagao.us.civicengagement",
+            "certificate_hash": "290fe21075670bda97517b96431c61bd531c284f"
+          }
+        },
+        {
+          "client_id": "156929816574-8mk4c2us7cngbe8ach8beu2ghcu7npnu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbxiiUEdr8XinCzfSLSzDIiRkPOx6EIUY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "156929816574-8mk4c2us7cngbe8ach8beu2ghcu7npnu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
