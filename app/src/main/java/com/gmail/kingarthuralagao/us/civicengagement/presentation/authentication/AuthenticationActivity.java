@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.signin.SignInFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.signup.SignUpFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityAuthenticationBinding;
 
 public class AuthenticationActivity extends AppCompatActivity
@@ -15,8 +18,10 @@ public class AuthenticationActivity extends AppCompatActivity
     private ActivityAuthenticationBinding binding;
     private final String SIGNIN = "signin";
     private final String SIGNUP = "signup";
+    private final String DIALOG = "dialog";
     private SignInFragment signInFragment;
     private SignUpFragment signUpFragment;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,23 @@ public class AuthenticationActivity extends AppCompatActivity
     @Override
     public void onSwitchToSignIn() {
         switchToSignIn();
+    }
+
+    @Override
+    public void onStartLoading() {
+        loadingDialog = new LoadingDialog();
+        loadingDialog.show(getSupportFragmentManager(), DIALOG);
+    }
+
+    @Override
+    public void onStopLoading() {
+        loadingDialog.dismiss();
+    }
+
+    @Override
+    public void navigateToHome() {
+        Intent i = new Intent(this, HomeActivity.class);
+        startActivity(i);
     }
 
     private void createFragments() {
