@@ -292,6 +292,7 @@ public class SignUpFragment extends Fragment {
             // Signed in successfully, show authenticated UI.
             firebaseAuthWithGoogle(account.getIdToken());
         } catch (ApiException e) {
+            iSignUpListener.onStopLoading();
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode() + " " + e.getMessage());
         }
     }
@@ -304,11 +305,13 @@ public class SignUpFragment extends Fragment {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = firebaseAuth.getCurrentUser();
+                        iSignUpListener.onStopLoading();
                         updateUI(user);
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         Snackbar.make(binding.getRoot(), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                        iSignUpListener.onStopLoading();
                     }
                 });
     }
@@ -369,7 +372,6 @@ public class SignUpFragment extends Fragment {
 
 
     private void updateUI(FirebaseUser user) {
-        iSignUpListener.onStopLoading();
         Log.i(TAG, "Name " + user.getDisplayName());
         iSignUpListener.navigateToHome();
         //Toast.makeText(requireActivity(), "Name " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
