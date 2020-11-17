@@ -17,4 +17,12 @@
         android:layout_height="match_parent"
         android:layout_below="@id/include_login_welcome"/>
 
+    <ProgressBar
+        android:id="@+id/loading_bar"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        tools:visibility="visible"/>
+
 </RelativeLayout>

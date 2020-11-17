@@ -9,4 +9,5 @@
     <color name="primary_text">#FF212121</color>
     <color name="secondary_text">#FF757575</color>
     <color name="divider_color">#FFBDBDBD</color>
+    <color name="disabled_blue_button">#6626C5DA</color>
 </resources>
