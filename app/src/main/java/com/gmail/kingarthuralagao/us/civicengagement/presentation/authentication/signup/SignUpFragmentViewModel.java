@@ -11,7 +11,7 @@ import com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.authenticati
 import io.reactivex.annotations.NonNull;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 
-public class SignUpViewModel extends ViewModel {
+public class SignUpFragmentViewModel extends ViewModel {
 
     public StateLiveData<Boolean> isEmailTakenResponse = new StateLiveData<>();
     public CheckIfEmailIsTakenUseCase checkIfEmailIsTakenUseCase = new CheckIfEmailIsTakenUseCase(new SignUpRepositoryImpl());

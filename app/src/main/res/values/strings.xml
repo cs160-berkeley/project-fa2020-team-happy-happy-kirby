@@ -13,5 +13,6 @@
     <string name="has_account">Already have an account?</string>
     <string name="sign_in">Sign In</string>
     <string name="passsword_help">Must be at least 6 characters</string>
+    <string name="dummy_event_name">SchoolStrike4Climate</string>
 
 </resources>

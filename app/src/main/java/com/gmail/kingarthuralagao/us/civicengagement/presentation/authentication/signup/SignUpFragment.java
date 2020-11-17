@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.IAuthenticationEventsListener;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentSignUpBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -29,8 +29,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
@@ -39,16 +37,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
+
+import es.dmoral.toasty.Toasty;
 
 
 public class SignUpFragment extends Fragment {
-
-    public interface ISignUpListener {
-        void onSwitchToSignIn();
-        void onStartLoading();
-        void onStopLoading();
-        void navigateToHome();
-    }
 
     public static SignUpFragment newInstance() {
         SignUpFragment fragment = new SignUpFragment();
@@ -58,17 +52,18 @@ public class SignUpFragment extends Fragment {
     private final String TAG = getClass().getSimpleName();
     private final int GOOGLE_SIGN_IN = 200;
     private FragmentSignUpBinding binding;
-    private ISignUpListener iSignUpListener;
+    private IAuthenticationEventsListener iAuthenticationEventsListener;
     private FirebaseAuth firebaseAuth;
-    private SignUpViewModel signUpViewModel;
+    private SignUpFragmentViewModel signUpFragmentViewModel;
     private Boolean emailLayoutHasFocus = false;
+    private Boolean isValidEmail = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentSignUpBinding.inflate(getLayoutInflater());
         firebaseAuth = ((CivicEngagementApp) getActivity().getApplication()).getAuthInstance();
-        signUpViewModel = new ViewModelProvider(this).get(SignUpViewModel.class);
+        signUpFragmentViewModel = new ViewModelProvider(this).get(SignUpFragmentViewModel.class);
 
         binding.nameLayout.setEndIconVisible(false);
         binding.emailLayout.setEndIconVisible(false);
@@ -91,17 +86,17 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof ISignUpListener) {
-            iSignUpListener = (ISignUpListener) context;
+        if (context instanceof IAuthenticationEventsListener) {
+            iAuthenticationEventsListener = (IAuthenticationEventsListener) context;
         } else {
-            throw new RuntimeException("Must Implement ISignUpListener");
+            throw new RuntimeException("Must Implement iAuthenticationListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        iSignUpListener = null; // Prevent Memory Leak
+        iAuthenticationEventsListener = null; // Prevent Memory Leak
     }
 
     @Override
@@ -116,22 +111,25 @@ public class SignUpFragment extends Fragment {
     }
 
     private void subscribeToLiveData() {
-        signUpViewModel.isEmailTakenResponse.observe(this, new Observer<Resource<Boolean>>() {
+        signUpFragmentViewModel.isEmailTakenResponse.observe(this, new Observer<Resource<Boolean>>() {
             @Override
             public void onChanged(Resource<Boolean> booleanResource) {
                 switch (booleanResource.getStatus()) {
                     case LOADING:
-                        iSignUpListener.onStartLoading();
+                        iAuthenticationEventsListener.onStartLoading();
                         break;
                     case SUCCESS:
                         Log.d(TAG, "Result: " + booleanResource.getData().toString());
-                        iSignUpListener.onStopLoading();
+                        iAuthenticationEventsListener.onStopLoading();
                         if (booleanResource.getData() == true) {
                             binding.emailLayout.setErrorEnabled(true);
                             binding.emailLayout.setError("Email is already in use");
+                            isValidEmail = false;
                         } else {
                             binding.emailLayout.setEndIconVisible(true);
+                            isValidEmail = true;
                         }
+                        setSignUpButtonStatus();
                         break;
                     case ERROR:
                         Log.d(TAG, "Error" );
@@ -139,9 +137,10 @@ public class SignUpFragment extends Fragment {
                             binding.emailLayout.setErrorEnabled(true);
                             binding.emailLayout.setError("Invalid Email");
                         } else {
-                            iSignUpListener.onStopLoading();
+                            iAuthenticationEventsListener.onStopLoading();
                         }
                         binding.emailLayout.setEndIconVisible(false);
+                        isValidEmail = false;
                         break;
                     default:
                         Log.d(TAG, "Created");
@@ -152,14 +151,14 @@ public class SignUpFragment extends Fragment {
     }
 
     private void setUpEvents() {
-        binding.signInTv.setOnClickListener(view -> iSignUpListener.onSwitchToSignIn());
+        binding.signInTv.setOnClickListener(view -> iAuthenticationEventsListener.onSwitchToSignIn());
 
         binding.googleSignInBtn.setOnClickListener(view -> initializeGoogleSignIn());
 
         binding.twitterSignInBtn.setOnClickListener(view -> initializeTwitterSignIn());
 
         binding.signUpBtn.setOnClickListener(view -> {
-            iSignUpListener.onStartLoading();
+            iAuthenticationEventsListener.onStartLoading();
             createUser(binding.emailEt.getText().toString(), binding.passwordEt.getText().toString());
         });
 
@@ -216,7 +215,7 @@ public class SignUpFragment extends Fragment {
 
         binding.emailEt.setOnFocusChangeListener((view, hasFocus) -> {
             if (emailLayoutHasFocus && binding.emailEt.getText().length() != 0) {
-                signUpViewModel.checkIfEmailTaken(binding.emailEt.getText().toString());
+                signUpFragmentViewModel.checkIfEmailTaken(binding.emailEt.getText().toString());
             }
             emailLayoutHasFocus = hasFocus;
         });
@@ -239,7 +238,7 @@ public class SignUpFragment extends Fragment {
 
     private boolean inputConditionsMet() {
         return binding.passwordEt.getText().length() >= 6
-                && (binding.emailLayout.getError() == null || binding.emailEt.getError().length() == 0);
+                && isValidEmail;
     }
 
     private void enableSignUpButton() {
@@ -257,15 +256,31 @@ public class SignUpFragment extends Fragment {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "createUserWithEmail:success");
                         FirebaseUser user = firebaseAuth.getCurrentUser();
-                        iSignUpListener.onStopLoading();
-                        updateUI(user);
+                        setUserDisplayName(user);
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(requireActivity(), "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                        iSignUpListener.onStopLoading();
-                        updateUI(null);
+                        Toasty.error(requireActivity(), task.getException().getMessage(), Toast.LENGTH_LONG, true);
+                        iAuthenticationEventsListener.onStopLoading();
+                        //updateUI(null);
+                    }
+                });
+    }
+
+    private void setUserDisplayName(FirebaseUser user) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(binding.nameEt.getText().toString())
+                .build();
+
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User profile updated.");
+                        iAuthenticationEventsListener.onStopLoading();
+                        updateUI(user);
+                    } else {
+                        Toasty.error(requireActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT, true);
+                        iAuthenticationEventsListener.onStopLoading();
                     }
                 });
     }
@@ -275,7 +290,7 @@ public class SignUpFragment extends Fragment {
     /********************************** Google SignIn **********************************/
 
     private void initializeGoogleSignIn() {
-        iSignUpListener.onStartLoading();
+        iAuthenticationEventsListener.onStartLoading();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -290,9 +305,10 @@ public class SignUpFragment extends Fragment {
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
+
             firebaseAuthWithGoogle(account.getIdToken());
         } catch (ApiException e) {
-            iSignUpListener.onStopLoading();
+            iAuthenticationEventsListener.onStopLoading();
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode() + " " + e.getMessage());
         }
     }
@@ -305,13 +321,13 @@ public class SignUpFragment extends Fragment {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = firebaseAuth.getCurrentUser();
-                        iSignUpListener.onStopLoading();
+                        iAuthenticationEventsListener.onStopLoading();
                         updateUI(user);
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         Snackbar.make(binding.getRoot(), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                        iSignUpListener.onStopLoading();
+                        iAuthenticationEventsListener.onStopLoading();
                     }
                 });
     }
@@ -335,6 +351,7 @@ public class SignUpFragment extends Fragment {
                 .startActivityForSignInWithProvider(requireActivity(), provider.build())
                 .addOnSuccessListener(
                         authResult -> {
+                            Log.i(TAG, authResult.getAdditionalUserInfo().getProfile().toString());
                             // User is signed in.
                             // IdP data available in
                             // authResult.getAdditionalUserInfo().getProfile().
@@ -346,7 +363,7 @@ public class SignUpFragment extends Fragment {
                         })
                 .addOnFailureListener(
                         exception -> {
-                            Toast.makeText(requireActivity(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toasty.error(requireActivity(), exception.getMessage(), Toast.LENGTH_SHORT, true).show();
                         });
     }
 
@@ -364,7 +381,7 @@ public class SignUpFragment extends Fragment {
                         })
                 .addOnFailureListener(
                         exception -> {
-                            // Handle failure.
+                            Toasty.error(requireActivity(), exception.getMessage(), Toast.LENGTH_SHORT, true).show();
                         });
     }
 
@@ -373,7 +390,6 @@ public class SignUpFragment extends Fragment {
 
     private void updateUI(FirebaseUser user) {
         Log.i(TAG, "Name " + user.getDisplayName());
-        iSignUpListener.navigateToHome();
-        //Toast.makeText(requireActivity(), "Name " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+        iAuthenticationEventsListener.navigateToHome();
     }
 }

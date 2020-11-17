@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.signin.SignInFragment;
@@ -13,7 +12,7 @@ import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActiv
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityAuthenticationBinding;
 
 public class AuthenticationActivity extends AppCompatActivity
-        implements SignInFragment.ISignInListener, SignUpFragment.ISignUpListener {
+        implements IAuthenticationEventsListener {
 
     private ActivityAuthenticationBinding binding;
     private final String SIGNIN = "signin";
