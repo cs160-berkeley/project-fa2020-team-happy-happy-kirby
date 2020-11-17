@@ -2,6 +2,7 @@ package com.gmail.kingarthuralagao.us.civicengagement;
 
 import android.app.Application;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class CivicEngagementApp extends Application {

@@ -49,6 +49,7 @@ public class SignInFragment extends Fragment {
 
     private static final int GOOGLE_SIGN_IN = 200;
     private final String TAG = getClass().getSimpleName();
+    private GoogleSignInClient googleSignInClient;
     private FragmentSignInBinding binding;
     private FirebaseAuth firebaseAuth;
     private IAuthenticationEventsListener iAuthenticationEventsListener;
@@ -205,7 +206,7 @@ public class SignInFragment extends Fragment {
                 .requestEmail()
                 .build();
 
-        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
@@ -231,6 +232,7 @@ public class SignInFragment extends Fragment {
                         Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         iAuthenticationEventsListener.onStopLoading();
+                        googleSignInClient.signOut();
                         updateUI(user);
                     } else {
                         // If sign in fails, display a message to the user.

@@ -51,6 +51,7 @@ public class SignUpFragment extends Fragment {
 
     private final String TAG = getClass().getSimpleName();
     private final int GOOGLE_SIGN_IN = 200;
+    private GoogleSignInClient googleSignInClient;
     private FragmentSignUpBinding binding;
     private IAuthenticationEventsListener iAuthenticationEventsListener;
     private FirebaseAuth firebaseAuth;
@@ -156,6 +157,7 @@ public class SignUpFragment extends Fragment {
                 case SUCCESS:
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     iAuthenticationEventsListener.onStopLoading();
+                    googleSignInClient.signOut();
                     updateUI(user);
                     break;
                 case ERROR:
@@ -310,13 +312,12 @@ public class SignUpFragment extends Fragment {
     /********************************** Google SignIn **********************************/
 
     private void initializeGoogleSignIn() {
-        iAuthenticationEventsListener.onStartLoading();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
-        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }

@@ -17,7 +17,6 @@
         android:textColor="@color/secondary_text"
         android:fontFamily="@font/merriweather"/>
 
-
     <ImageView
         android:id="@+id/google_sign_in_btn"
         android:layout_width="0dp"
