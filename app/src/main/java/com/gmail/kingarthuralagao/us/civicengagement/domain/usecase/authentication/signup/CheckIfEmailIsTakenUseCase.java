@@ -1,7 +1,7 @@
 package com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.authentication.signup;
 
 import com.gmail.kingarthuralagao.us.civicengagement.core.base.BaseUseCase;
-import com.gmail.kingarthuralagao.us.civicengagement.domain.repository.authentication.signup.SignUpRepository;
+import com.gmail.kingarthuralagao.us.civicengagement.data.repository.authentication.signup.SignUpRepository;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;

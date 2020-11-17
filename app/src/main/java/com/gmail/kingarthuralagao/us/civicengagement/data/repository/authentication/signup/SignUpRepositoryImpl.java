@@ -1,20 +1,30 @@
 package com.gmail.kingarthuralagao.us.civicengagement.data.repository.authentication.signup;
 
+import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.gmail.kingarthuralagao.us.civicengagement.domain.repository.authentication.signup.SignUpRepository;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.SignInMethodQueryResult;
-
-import javax.security.auth.Subject;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import io.reactivex.rxjava3.core.Observable;
 
 public class SignUpRepositoryImpl implements SignUpRepository {
+
+    public static synchronized SignUpRepositoryImpl newInstance(Context c) {
+        if (instance == null) {
+            instance = new SignUpRepositoryImpl(c);
+        }
+        return instance;
+    }
+
+    private Context context;
+    private static SignUpRepositoryImpl instance;
+
+    public SignUpRepositoryImpl(Context c) {
+        this.context = c;
+    }
 
     private final String TAG = getClass().getSimpleName();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -33,6 +43,24 @@ public class SignUpRepositoryImpl implements SignUpRepository {
                             Log.e(TAG, "Is Old User!");
                         }
                         emitter.onNext(!isNewUser);
+                        emitter.onComplete();
+                    });
+        });
+        return observable;
+    }
+
+    @Override
+    public Observable<FirebaseUser> signUpWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+
+        Observable<FirebaseUser> observable = Observable.create(emitter -> {
+            FirebaseAuth.getInstance().signInWithCredential(credential)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            emitter.onNext(task.getResult().getUser());
+                        } else {
+                            emitter.onError(task.getException());
+                        }
                         emitter.onComplete();
                     });
         });

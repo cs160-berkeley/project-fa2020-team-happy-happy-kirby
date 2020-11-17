@@ -63,7 +63,9 @@ public class SignUpFragment extends Fragment {
         super.onCreate(savedInstanceState);
         binding = FragmentSignUpBinding.inflate(getLayoutInflater());
         firebaseAuth = ((CivicEngagementApp) getActivity().getApplication()).getAuthInstance();
-        signUpFragmentViewModel = new ViewModelProvider(this).get(SignUpFragmentViewModel.class);
+
+        SignUpFragmentViewModelFactory factory = new SignUpFragmentViewModelFactory(getActivity().getApplication());
+        signUpFragmentViewModel = new ViewModelProvider(this, factory).get(SignUpFragmentViewModel.class);
 
         binding.nameLayout.setEndIconVisible(false);
         binding.emailLayout.setEndIconVisible(false);
@@ -111,41 +113,59 @@ public class SignUpFragment extends Fragment {
     }
 
     private void subscribeToLiveData() {
-        signUpFragmentViewModel.isEmailTakenResponse.observe(this, new Observer<Resource<Boolean>>() {
-            @Override
-            public void onChanged(Resource<Boolean> booleanResource) {
-                switch (booleanResource.getStatus()) {
-                    case LOADING:
-                        iAuthenticationEventsListener.onStartLoading();
-                        break;
-                    case SUCCESS:
-                        Log.d(TAG, "Result: " + booleanResource.getData().toString());
-                        iAuthenticationEventsListener.onStopLoading();
-                        if (booleanResource.getData() == true) {
-                            binding.emailLayout.setErrorEnabled(true);
-                            binding.emailLayout.setError("Email is already in use");
-                            isValidEmail = false;
-                        } else {
-                            binding.emailLayout.setEndIconVisible(true);
-                            isValidEmail = true;
-                        }
-                        setSignUpButtonStatus();
-                        break;
-                    case ERROR:
-                        Log.d(TAG, "Error" );
-                        if (booleanResource.getError().getMessage() == "Invalid Email") {
-                            binding.emailLayout.setErrorEnabled(true);
-                            binding.emailLayout.setError("Invalid Email");
-                        } else {
-                            iAuthenticationEventsListener.onStopLoading();
-                        }
-                        binding.emailLayout.setEndIconVisible(false);
+        signUpFragmentViewModel.isEmailTakenResponse.observe(this, booleanResource -> {
+            switch (booleanResource.getStatus()) {
+                case LOADING:
+                    iAuthenticationEventsListener.onStartLoading();
+                    break;
+                case SUCCESS:
+                    Log.d(TAG, "Result: " + booleanResource.getData().toString());
+                    iAuthenticationEventsListener.onStopLoading();
+                    if (booleanResource.getData() == true) {
+                        binding.emailLayout.setErrorEnabled(true);
+                        binding.emailLayout.setError("Email is already in use");
                         isValidEmail = false;
-                        break;
-                    default:
-                        Log.d(TAG, "Created");
-                        break;
-                }
+                    } else {
+                        binding.emailLayout.setEndIconVisible(true);
+                        isValidEmail = true;
+                    }
+                    setSignUpButtonStatus();
+                    break;
+                case ERROR:
+                    Log.d(TAG, "Error" );
+                    if (booleanResource.getError().getMessage() == "Invalid Email") {
+                        binding.emailLayout.setErrorEnabled(true);
+                        binding.emailLayout.setError("Invalid Email");
+                    } else {
+                        iAuthenticationEventsListener.onStopLoading();
+                    }
+                    binding.emailLayout.setEndIconVisible(false);
+                    isValidEmail = false;
+                    break;
+                default:
+                    Log.d(TAG, "Created");
+                    break;
+            }
+        });
+
+        signUpFragmentViewModel.googleSignInResponse.observe(this, firebaseUserResource -> {
+            switch (firebaseUserResource.getStatus()) {
+                case LOADING:
+                    iAuthenticationEventsListener.onStartLoading();
+                    break;
+                case SUCCESS:
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    iAuthenticationEventsListener.onStopLoading();
+                    updateUI(user);
+                    break;
+                case ERROR:
+                    Log.w(TAG, "signInWithCredential:failure", firebaseUserResource.getError());
+                    Snackbar.make(binding.getRoot(), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                    iAuthenticationEventsListener.onStopLoading();
+                    break;
+                default:
+                    Log.d(TAG, "Created");
+                    break;
             }
         });
     }
@@ -306,30 +326,11 @@ public class SignUpFragment extends Fragment {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
 
-            firebaseAuthWithGoogle(account.getIdToken());
+            signUpFragmentViewModel.initializeSignUpWithGoogle(account.getIdToken());
         } catch (ApiException e) {
             iAuthenticationEventsListener.onStopLoading();
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode() + " " + e.getMessage());
         }
-    }
-
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success");
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        iAuthenticationEventsListener.onStopLoading();
-                        updateUI(user);
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        Snackbar.make(binding.getRoot(), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                        iAuthenticationEventsListener.onStopLoading();
-                    }
-                });
     }
     /********************************** End of Google SignIn **********************************/
 
