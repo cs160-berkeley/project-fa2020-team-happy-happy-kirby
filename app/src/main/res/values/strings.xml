@@ -16,5 +16,7 @@
     <string name="dummy_event_name">SchoolStrike4Climate</string>
     <string name="accessibility_text_now">Participants in this event have said they have seen / used the following resources available at the event location:</string>
     <string name="accessibility_text_soon"></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
