@@ -37,6 +37,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/accessibility_text_now"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="10dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width=""
+                android:layout_height="">
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

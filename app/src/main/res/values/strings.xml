@@ -14,5 +14,7 @@
     <string name="sign_in">Sign In</string>
     <string name="passsword_help">Must be at least 6 characters</string>
     <string name="dummy_event_name">SchoolStrike4Climate</string>
+    <string name="accessibility_text_now">Participants in this event have said they have seen / used the following resources available at the event location:</string>
+    <string name="accessibility_text_soon"></string>
 
 </resources>
