@@ -216,7 +216,9 @@ public class SignInFragment extends Fragment {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
 
-            firebaseAuthWithGoogle(account.getIdToken());
+            if (account != null) {
+                firebaseAuthWithGoogle(account.getIdToken());
+            }
         } catch (ApiException e) {
             iAuthenticationEventsListener.onStopLoading();
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode() + " " + e.getMessage());

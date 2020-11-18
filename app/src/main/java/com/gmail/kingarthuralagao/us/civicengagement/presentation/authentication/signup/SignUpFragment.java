@@ -142,6 +142,7 @@ public class SignUpFragment extends Fragment {
                     }
                     binding.emailLayout.setEndIconVisible(false);
                     isValidEmail = false;
+                    setSignUpButtonStatus();
                     break;
                 default:
                     Log.d(TAG, "Created");
@@ -282,7 +283,7 @@ public class SignUpFragment extends Fragment {
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toasty.error(requireActivity(), task.getException().getMessage(), Toast.LENGTH_LONG, true);
+                        Toasty.error(requireActivity(), task.getException().getMessage(), Toast.LENGTH_LONG, true).show();
                         iAuthenticationEventsListener.onStopLoading();
                         //updateUI(null);
                     }
@@ -327,9 +328,10 @@ public class SignUpFragment extends Fragment {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
 
-            signUpFragmentViewModel.initializeSignUpWithGoogle(account.getIdToken());
+            if (account != null) {
+                signUpFragmentViewModel.initializeSignUpWithGoogle(account.getIdToken());
+            }
         } catch (ApiException e) {
-            iAuthenticationEventsListener.onStopLoading();
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode() + " " + e.getMessage());
         }
     }
