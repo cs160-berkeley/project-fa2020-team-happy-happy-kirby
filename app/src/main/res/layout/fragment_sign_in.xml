@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
-        android:fontFamily="@font/merriweather"
+        android:fontFamily="@font/roboto_slab"
         android:gravity="center"
         android:text="@string/sign_in_via_social_networks"
         android:textColor="@color/secondary_text"
-        android:textSize="14dp"
+        android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -81,9 +81,9 @@
             app:layout_constraintEnd_toStartOf="@id/div_two"
             app:layout_constraintTop_toTopOf="parent"
             android:text="@string/sign_in_with_email"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/secondary_text"
-            android:fontFamily="@font/merriweather"
+            android:fontFamily="@font/roboto_slab"
             android:layout_gravity="center"/>
 
         <View
@@ -160,8 +160,8 @@
         app:layout_constraintTop_toBottomOf="@id/password_layout"
         android:text="@string/forgot_password"
         android:textColor="#0080FF"
-        android:textSize="14sp"
-        android:fontFamily="@font/merriweather"
+        android:textSize="16sp"
+        android:fontFamily="@font/roboto_slab"
         android:gravity="center"/>
 
     <com.google.android.material.button.MaterialButton
@@ -198,9 +198,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:text="@string/no_account"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/secondary_text"
-            android:fontFamily="@font/merriweather"/>
+            android:fontFamily="@font/roboto_slab"/>
 
         <TextView
             android:id="@+id/sign_up_tv"
@@ -208,9 +208,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_small"
             android:text="@string/sign_up"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="#0080FF"
-            android:fontFamily="@font/merriweather"
+            android:fontFamily="@font/roboto_slab"
             android:clickable="true"/>
 
     </LinearLayout>

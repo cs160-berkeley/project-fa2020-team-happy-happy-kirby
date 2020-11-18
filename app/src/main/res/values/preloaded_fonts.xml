@@ -4,5 +4,7 @@
         <item>@font/inder</item>
         <item>@font/merriweather</item>
         <item>@font/roboto_bold</item>
+        <item>@font/roboto_slab</item>
+        <item>@font/roboto_slab_bold</item>
     </array>
 </resources>

@@ -13,10 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/margin_small"
+        android:fontFamily="@font/merriweather"
         android:text="@string/welcome"
         android:textColor="#F4F3F3"
-        android:textSize="28sp"
-        android:fontFamily="@font/merriweather"/>
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/app_name_tv"
@@ -28,7 +28,7 @@
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="48sp"
-        android:fontFamily="@font/inder"/>
+        android:fontFamily="@font/inter_extra_bold"/>
 
 
 </LinearLayout>

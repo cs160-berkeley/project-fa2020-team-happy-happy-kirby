@@ -13,9 +13,9 @@
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center"
         android:text="@string/sign_up_via_social_networks"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textColor="@color/secondary_text"
-        android:fontFamily="@font/merriweather"/>
+        android:fontFamily="@font/roboto_slab"/>
 
     <ImageView
         android:id="@+id/google_sign_in_btn"
@@ -81,9 +81,9 @@
             app:layout_constraintEnd_toStartOf="@id/div_two"
             app:layout_constraintTop_toTopOf="parent"
             android:text="@string/sign_up_with_email"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/secondary_text"
-            android:fontFamily="@font/merriweather"
+            android:fontFamily="@font/roboto_slab"
             android:layout_gravity="center"/>
 
         <View
@@ -214,9 +214,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:text="@string/has_account"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/secondary_text"
-            android:fontFamily="@font/merriweather"/>
+            android:fontFamily="@font/roboto_slab"/>
 
         <TextView
             android:id="@+id/sign_in_tv"
@@ -224,9 +224,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_small"
             android:text="@string/sign_in"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="#0080FF"
-            android:fontFamily="@font/merriweather"
+            android:fontFamily="@font/roboto_slab"
             android:clickable="true"/>
 
 

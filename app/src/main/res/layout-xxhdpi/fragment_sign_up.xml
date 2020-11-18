@@ -13,9 +13,9 @@
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center"
         android:text="@string/sign_up_via_social_networks"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textColor="@color/secondary_text"
-        android:fontFamily="@font/merriweather"/>
+        android:fontFamily="@font/roboto_slab"/>
 
     <ImageView
         android:id="@+id/google_sign_in_btn"
@@ -73,18 +73,15 @@
             android:id="@+id/sign_in_with_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            app:layout_constraintStart_toEndOf="@+id/div_one"
-            app:layout_constraintEnd_toStartOf="@id/div_two"
-            app:layout_constraintTop_toTopOf="parent"
+            android:fontFamily="@font/roboto_slab"
             android:text="@string/sign_up_with_email"
-            android:textSize="14sp"
             android:textColor="@color/secondary_text"
-            android:fontFamily="@font/merriweather"
-            android:layout_gravity="center"/>
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/div_two"
+            app:layout_constraintStart_toEndOf="@+id/div_one"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/div_two"
@@ -214,7 +211,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:text="@string/has_account"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/secondary_text"
             android:fontFamily="@font/merriweather"/>
 
@@ -224,9 +221,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_small"
             android:text="@string/sign_in"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="#0080FF"
-            android:fontFamily="@font/merriweather"
+            android:fontFamily="@font/roboto_slab"
             android:clickable="true"/>
 
 
