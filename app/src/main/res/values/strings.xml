@@ -16,7 +16,9 @@
     <string name="dummy_event_name">SchoolStrike4Climate</string>
     <string name="accessibility_text_now">Participants in this event have said they have seen / used the following resources available at the event location:</string>
     <string name="accessibility_text_soon"></string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="virtualengage_text_dummy">Organizers for this event have provided the following ways to engage virtually: EVENT HAPPENING NOW</string>
+    <string name="virtualengage_text_dummy_desc">Donation links are user-provided and we bear no responsibility in verifying the authenticity of this link. You assume all responsibility for the linked GoFundMe</string>
+    <string name="virtualengage_dummy_value">$32,000</string>
+    <string name="virtualengage_dummy_value_target">$70,000 goal</string>
 </resources>
