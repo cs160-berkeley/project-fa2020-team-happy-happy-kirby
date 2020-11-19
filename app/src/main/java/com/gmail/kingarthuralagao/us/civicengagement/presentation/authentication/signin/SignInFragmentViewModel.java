@@ -2,7 +2,66 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.authenticatio
 
 import androidx.lifecycle.ViewModel;
 
+import com.gmail.kingarthuralagao.us.civicengagement.core.utils.StateLiveData;
+import com.gmail.kingarthuralagao.us.civicengagement.data.repository.authentication.signin.SignInRepositoryImpl;
+import com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.authentication.signin.SignInWithEmailAndPasswordUseCase;
+import com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.authentication.signin.SignInWithGoogleUseCase;
+import com.google.firebase.auth.FirebaseUser;
+
+import io.reactivex.rxjava3.observers.DisposableObserver;
+
 public class SignInFragmentViewModel extends ViewModel {
 
+    public StateLiveData<FirebaseUser> googleSignInResponse = new StateLiveData<>();
+    public StateLiveData<FirebaseUser> signInWithEmailAndPasswordResponse = new StateLiveData<>();
 
+
+    private SignInWithGoogleUseCase signInWithGoogleUseCase =
+            new SignInWithGoogleUseCase(SignInRepositoryImpl.newInstance());
+
+    private SignInWithEmailAndPasswordUseCase signInWithEmailAndPasswordUseCase =
+            new SignInWithEmailAndPasswordUseCase(SignInRepositoryImpl.newInstance());
+
+    public void initializeSignInWithGoogle(String idToken) {
+        googleSignInResponse.postLoading();
+
+        DisposableObserver<FirebaseUser> disposableObserver = new DisposableObserver<FirebaseUser>() {
+            @Override
+            public void onNext(@io.reactivex.rxjava3.annotations.NonNull FirebaseUser firebaseUser) {
+                googleSignInResponse.postSuccess(firebaseUser);
+            }
+
+            @Override
+            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                googleSignInResponse.postError(e);
+            }
+
+            @Override
+            public void onComplete() {}
+        };
+
+        signInWithGoogleUseCase.execute(disposableObserver, SignInWithGoogleUseCase.Params.signInWithGoogle(idToken));
+    }
+
+    public void setSignInWithEmailAndPasswordUseCase(String email, String password) {
+        signInWithEmailAndPasswordResponse.postLoading();
+
+        DisposableObserver<FirebaseUser> disposableObserver = new DisposableObserver<FirebaseUser>() {
+            @Override
+            public void onNext(@io.reactivex.rxjava3.annotations.NonNull FirebaseUser firebaseUser) {
+                signInWithEmailAndPasswordResponse.postSuccess(firebaseUser);
+            }
+
+            @Override
+            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                signInWithEmailAndPasswordResponse.postError(e);
+            }
+
+            @Override
+            public void onComplete() {}
+        };
+
+        signInWithEmailAndPasswordUseCase.execute(disposableObserver,
+                SignInWithEmailAndPasswordUseCase.Params.signInWithEmailAndPassword(email, password));
+    }
 }

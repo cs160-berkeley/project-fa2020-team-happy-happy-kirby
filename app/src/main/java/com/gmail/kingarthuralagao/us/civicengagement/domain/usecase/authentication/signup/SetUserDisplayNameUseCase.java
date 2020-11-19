@@ -8,30 +8,32 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class SignUpWithGoogleUseCase extends BaseUseCase<FirebaseUser, SignUpWithGoogleUseCase.Params> {
+public class SetUserDisplayNameUseCase extends BaseUseCase<FirebaseUser, SetUserDisplayNameUseCase.Params> {
 
     private SignUpRepository signUpRepository;
 
-    public SignUpWithGoogleUseCase(SignUpRepository signUpRepository) {
+    public SetUserDisplayNameUseCase(SignUpRepository signUpRepository) {
         super(Schedulers.io(), AndroidSchedulers.mainThread());
         this.signUpRepository = signUpRepository;
     }
 
     @Override
     protected Observable<FirebaseUser> createObservableUseCase(Params params) {
-        return signUpRepository.signUpWithGoogle(params.idToken);
+        return signUpRepository.setUserDisplayName(params.user, params.name);
     }
 
     public static final class Params {
 
-        private final String idToken;
+        private final String name;
+        private final FirebaseUser user;
 
-        private Params(String idToken) {
-            this.idToken = idToken;
+        private Params(String name, FirebaseUser user) {
+            this.name = name;
+            this.user = user;
         }
 
-        public static Params signUpWithGoogle(String idToken) {
-            return new Params(idToken);
+        public static Params setUserDisplayName(String name, FirebaseUser user) {
+            return new Params(name, user);
         }
     }
 }

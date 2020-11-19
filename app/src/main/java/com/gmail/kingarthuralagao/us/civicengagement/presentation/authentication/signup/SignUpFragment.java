@@ -171,6 +171,45 @@ public class SignUpFragment extends Fragment {
                     break;
             }
         });
+
+        signUpFragmentViewModel.createNewUserResponse.observe(this, firebaseUserResource -> {
+            switch (firebaseUserResource.getStatus()) {
+                case LOADING:
+                    iAuthenticationEventsListener.onStartLoading();
+                    break;
+                case SUCCESS:
+                    FirebaseUser user = firebaseUserResource.getData();
+                    setUserDisplayName(user, binding.nameEt.getText().toString());
+                    break;
+                case ERROR:
+                    Log.w(TAG, "createUserWithEmail:failure", firebaseUserResource.getError());
+                    Toasty.error(requireActivity(), firebaseUserResource.getError().getMessage(), Toast.LENGTH_LONG, true).show();
+                    iAuthenticationEventsListener.onStopLoading();
+                    break;
+                default:
+                    Log.d(TAG, "Created");
+                    break;
+            }
+        });
+
+        signUpFragmentViewModel.setUserDisplayNameResponse.observe(this, firebaseUserResource -> {
+            switch (firebaseUserResource.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    FirebaseUser user = firebaseUserResource.getData();
+                    iAuthenticationEventsListener.onStopLoading();
+                    updateUI(user);
+                    break;
+                case ERROR:
+                    Toasty.error(requireActivity(), firebaseUserResource.getError().getMessage(), Toast.LENGTH_SHORT, true);
+                    iAuthenticationEventsListener.onStopLoading();
+                    break;
+                default:
+                    Log.d(TAG, "Created");
+                    break;
+            }
+        });
     }
 
     private void setUpEvents() {
@@ -180,10 +219,7 @@ public class SignUpFragment extends Fragment {
 
         binding.twitterSignInBtn.setOnClickListener(view -> initializeTwitterSignIn());
 
-        binding.signUpBtn.setOnClickListener(view -> {
-            iAuthenticationEventsListener.onStartLoading();
-            createUser(binding.emailEt.getText().toString(), binding.passwordEt.getText().toString());
-        });
+        binding.signUpBtn.setOnClickListener(view -> createUser(binding.emailEt.getText().toString(), binding.passwordEt.getText().toString()));
 
         addTextWatchers();
     }
@@ -212,7 +248,6 @@ public class SignUpFragment extends Fragment {
         binding.passwordEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
@@ -273,39 +308,11 @@ public class SignUpFragment extends Fragment {
     }
 
     private void createUser(String email, String password) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "createUserWithEmail:success");
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        setUserDisplayName(user);
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toasty.error(requireActivity(), task.getException().getMessage(), Toast.LENGTH_LONG, true).show();
-                        iAuthenticationEventsListener.onStopLoading();
-                        //updateUI(null);
-                    }
-                });
+        signUpFragmentViewModel.createUserWithEmailAndPasswordUseCase(email, password);
     }
 
-    private void setUserDisplayName(FirebaseUser user) {
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(binding.nameEt.getText().toString())
-                .build();
-
-        user.updateProfile(profileUpdates)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "User profile updated.");
-                        iAuthenticationEventsListener.onStopLoading();
-                        updateUI(user);
-                    } else {
-                        Toasty.error(requireActivity(), task.getException().getMessage(), Toast.LENGTH_SHORT, true);
-                        iAuthenticationEventsListener.onStopLoading();
-                    }
-                });
+    private void setUserDisplayName(FirebaseUser user, String name) {
+        signUpFragmentViewModel.setUserDisplayName(user, name);
     }
 
     /******************************* End of Password-based SignUp **********************************/
@@ -375,13 +382,7 @@ public class SignUpFragment extends Fragment {
         pendingResultTask
                 .addOnSuccessListener(
                         authResult -> {
-                            // User is signed in.
-                            // IdP data available in
-                            // authResult.getAdditionalUserInfo().getProfile().
-                            // The OAuth access token can also be retrieved:
-                            // authResult.getCredential().getAccessToken().
-                            // The OAuth secret can be retrieved by calling:
-                            // authResult.getCredential().getSecret().
+                            updateUI(authResult.getUser());
                         })
                 .addOnFailureListener(
                         exception -> {

@@ -12,8 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.Accessibility;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentAccessibilityBinding;
 

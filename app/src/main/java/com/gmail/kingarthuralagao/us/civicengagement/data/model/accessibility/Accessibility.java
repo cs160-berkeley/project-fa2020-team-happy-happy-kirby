@@ -1,4 +1,4 @@
-package com.gmail.kingarthuralagao.us.civicengagement.data.model;
+package com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility;
 
 public class Accessibility {
 

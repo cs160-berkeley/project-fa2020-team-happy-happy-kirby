@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
+import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.IAuthenticationEventsListener;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentSignInBinding;
@@ -53,13 +56,14 @@ public class SignInFragment extends Fragment {
     private FragmentSignInBinding binding;
     private FirebaseAuth firebaseAuth;
     private IAuthenticationEventsListener iAuthenticationEventsListener;
-    private Boolean emailLayoutHasFocus = false;
+    private SignInFragmentViewModel signInFragmentViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentSignInBinding.inflate(getLayoutInflater());
         firebaseAuth = ((CivicEngagementApp) requireActivity().getApplication()).getAuthInstance();
+        signInFragmentViewModel = new ViewModelProvider(this).get(SignInFragmentViewModel.class);
     }
 
     @Override
@@ -73,6 +77,7 @@ public class SignInFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         setUpEvents();
+        subscribeToLiveData();
     }
 
     @Override
@@ -99,6 +104,50 @@ public class SignInFragment extends Fragment {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
+    }
+
+    private void subscribeToLiveData() {
+        signInFragmentViewModel.googleSignInResponse.observe(this, firebaseUserResource -> {
+            switch (firebaseUserResource.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    FirebaseUser user = firebaseUserResource.getData();
+                    googleSignInClient.signOut();
+                    iAuthenticationEventsListener.onStopLoading();
+                    updateUI(user);
+                    break;
+                case ERROR:
+                    Log.w(TAG, "signInWithCredential:failure", firebaseUserResource.getError());
+                    Toasty.error(requireActivity(), "Authentication failed.", Toast.LENGTH_SHORT, true).show();
+                    iAuthenticationEventsListener.onStopLoading();
+                    break;
+                default:
+                    Log.d(TAG, "Created");
+                    break;
+            }
+        });
+
+        signInFragmentViewModel.signInWithEmailAndPasswordResponse.observe(this, firebaseUserResource -> {
+            switch (firebaseUserResource.getStatus()) {
+                case LOADING:
+                    iAuthenticationEventsListener.onStartLoading();
+                    break;
+                case SUCCESS:
+                    FirebaseUser user = firebaseUserResource.getData();
+                    iAuthenticationEventsListener.onStopLoading();
+                    updateUI(user);
+                    break;
+                case ERROR:
+                    Log.w(TAG, "signInWithEmail:failure", firebaseUserResource.getError());
+                    iAuthenticationEventsListener.onStopLoading();
+                    Toasty.error(requireActivity(), "Authentication failed.", Toast.LENGTH_SHORT, true).show();
+                    break;
+                default:
+                    Log.d(TAG, "Created");
+                    break;
+            }
+        });
     }
 
     private void setUpEvents() {
@@ -151,23 +200,7 @@ public class SignInFragment extends Fragment {
     /******************************* Password-based SignIn **********************************/
 
     private void signInUser(String email, String password) {
-        iAuthenticationEventsListener.onStartLoading();
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        iAuthenticationEventsListener.onStopLoading();
-                        updateUI(user);
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        iAuthenticationEventsListener.onStopLoading();
-                        Toasty.error(requireActivity(), "Authentication failed.", Toast.LENGTH_SHORT, true).show();
-                        //updateUI(null);
-                    }
-                });
+        signInFragmentViewModel.setSignInWithEmailAndPasswordUseCase(email, password);
     }
 
     private boolean hasEmptyFields() {
@@ -217,32 +250,12 @@ public class SignInFragment extends Fragment {
             // Signed in successfully, show authenticated UI.
 
             if (account != null) {
-                firebaseAuthWithGoogle(account.getIdToken());
+                signInFragmentViewModel.initializeSignInWithGoogle(account.getIdToken());
             }
         } catch (ApiException e) {
             iAuthenticationEventsListener.onStopLoading();
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode() + " " + e.getMessage());
         }
-    }
-
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithCredential:success");
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        iAuthenticationEventsListener.onStopLoading();
-                        googleSignInClient.signOut();
-                        updateUI(user);
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        Snackbar.make(binding.getRoot(), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                        iAuthenticationEventsListener.onStopLoading();
-                    }
-                });
     }
 
     /********************************** End of Google SignIn **********************************/
@@ -277,7 +290,7 @@ public class SignInFragment extends Fragment {
                         })
                 .addOnFailureListener(
                         exception -> {
-                            Toast.makeText(requireActivity(), exception.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toasty.error(requireActivity(), exception.getMessage(), Toast.LENGTH_SHORT, true).show();
                         });
     }
 
@@ -285,17 +298,11 @@ public class SignInFragment extends Fragment {
         pendingResultTask
                 .addOnSuccessListener(
                         authResult -> {
-                            // User is signed in.
-                            // IdP data available in
-                            // authResult.getAdditionalUserInfo().getProfile().
-                            // The OAuth access token can also be retrieved:
-                            // authResult.getCredential().getAccessToken().
-                            // The OAuth secret can be retrieved by calling:
-                            // authResult.getCredential().getSecret().
+                            updateUI(authResult.getUser());
                         })
                 .addOnFailureListener(
                         exception -> {
-                            // Handle failure.
+                            Toasty.error(requireActivity(), exception.getMessage(), Toast.LENGTH_SHORT, true).show();
                         });
     }
     
@@ -304,6 +311,5 @@ public class SignInFragment extends Fragment {
     private void updateUI(FirebaseUser user) {
         Log.i(TAG, "Name " + user.getDisplayName());
         iAuthenticationEventsListener.navigateToHome();
-        //Toast.makeText(requireActivity(), "Name " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
     }
 }
