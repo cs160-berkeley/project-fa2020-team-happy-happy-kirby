@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.list_event.EventsViewFragment;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityAccessibilityBinding;
 
@@ -24,9 +25,15 @@ public class AccessibilityActivity extends AppCompatActivity {
         binding = ActivityAccessibilityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        /*
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(binding.fragmentContainer.getId(), AccessibilityFragment.newInstance())
+                .commit();*/
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(binding.fragmentContainer.getId(), EventsViewFragment.newInstance("Engage me at 1234 Main Street"))
                 .commit();
     }
 }

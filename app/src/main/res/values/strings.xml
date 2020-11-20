@@ -32,5 +32,19 @@
     <string name="event_accessibilities_question">What accessibility resources are available at this event, as best as you can tell?</string>
     <string name="add_new_event">Add New Event</string>
 
+    <!--Events View-->
+    <string name="street_name_dummy">1234 The Main Street</string>
+
+
+    <!--Causes-->
+    <string name="climate">Climate</string>
+    <string name="gun_violence">Gun Violence</string>
+    <string name="health_care">Health Care</string>
+    <string name="immigration">Immigration</string>
+    <string name="lgbtq">LGBTQ+</string>
+    <string name="poverty">Poverty</string>
+    <string name="racial_justice">Racial Justice</string>
+    <string name="womxns_right">Womxn\'s Rights</string>
+
 
 </resources>

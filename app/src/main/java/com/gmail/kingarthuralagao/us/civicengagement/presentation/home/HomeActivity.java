@@ -10,7 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.add_event.AddNewEventDialogFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddNewEventDialogFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityHomeBinding;
@@ -41,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
         binding.btn.setOnClickListener(view -> {
             fragment.show(getSupportFragmentManager(), "");
         });
+
     }
 
     @Override

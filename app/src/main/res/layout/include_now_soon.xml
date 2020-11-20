@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="24dp"
+    android:padding="0dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/disabled_happening_button">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/happening_now_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:enabled="false"
+            android:text="NOW"
+            android:textColor="@color/happening_button_text_color_state_list"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/happening_button_background_color_state"
+            app:cornerRadius="24dp"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/happening_soon_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:enabled="true"
+            android:text="SOON"
+            android:textColor="@color/happening_button_text_color_state_list"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/happening_button_background_color_state"
+            app:cornerRadius="24dp"/>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

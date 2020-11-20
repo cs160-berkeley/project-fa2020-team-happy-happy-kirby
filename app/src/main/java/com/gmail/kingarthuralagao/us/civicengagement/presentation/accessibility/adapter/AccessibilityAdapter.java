@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.AccessibilityAvailability;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemAccessibilityAvailabilityBinding;
 
@@ -18,10 +18,10 @@ import java.util.ArrayList;
 
 public class AccessibilityAdapter extends RecyclerView.Adapter<AccessibilityAdapter.ViewHolder> {
 
-    private ArrayList<AccessibilityAvailability> accessibilities;
+    private ArrayList<Accessibility> accessibilities;
 
-    public AccessibilityAdapter(ArrayList<AccessibilityAvailability> accessibilityAvailabilityList) {
-        accessibilities = accessibilityAvailabilityList;
+    public AccessibilityAdapter(ArrayList<Accessibility> accessibilityList) {
+        accessibilities = accessibilityList;
     }
 
     @NonNull

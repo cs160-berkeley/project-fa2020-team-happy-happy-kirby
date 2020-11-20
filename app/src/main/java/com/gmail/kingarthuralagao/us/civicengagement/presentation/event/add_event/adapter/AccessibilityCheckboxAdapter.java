@@ -1,37 +1,33 @@
-package com.gmail.kingarthuralagao.us.civicengagement.presentation.add_event.adapter;
+package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.adapter;
 
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.AccessibilityAvailability;
-import com.gmail.kingarthuralagao.us.civilengagement.R;
-import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemAccessibilityAvailabilityBinding;
-import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemAccessibilityCheckboxBinding;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
+import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemCheckboxBinding;
 
 import java.util.ArrayList;
 
 public class AccessibilityCheckboxAdapter extends RecyclerView.Adapter<AccessibilityCheckboxAdapter.ViewHolder> {
 
-    private final ArrayList<AccessibilityAvailability> accessibilities;
+    private final ArrayList<Accessibility> accessibilities;
 
-    public AccessibilityCheckboxAdapter(ArrayList<AccessibilityAvailability> accessibilityAvailabilityList) {
-        accessibilities = accessibilityAvailabilityList;
+    public AccessibilityCheckboxAdapter(ArrayList<Accessibility> accessibilityList) {
+        accessibilities = accessibilityList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        RowItemAccessibilityCheckboxBinding binding = RowItemAccessibilityCheckboxBinding.inflate(inflater, parent, false);
+        RowItemCheckboxBinding binding = RowItemCheckboxBinding.inflate(inflater, parent, false);
 
         return new ViewHolder(binding);
     }
@@ -52,7 +48,7 @@ public class AccessibilityCheckboxAdapter extends RecyclerView.Adapter<Accessibi
         private TextView resourceTv;
         private CheckBox availabilityCheckBox;
 
-        public ViewHolder(@NonNull RowItemAccessibilityCheckboxBinding binding) {
+        public ViewHolder(@NonNull RowItemCheckboxBinding binding) {
             super(binding.getRoot());
 
             resourceTv = binding.accessibilityTv;

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
@@ -20,7 +22,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         Intent i;
-
+        //i = new Intent(this, AccessibilityActivity.class);
         if (((CivicEngagementApp) getApplication()).getAuthInstance().getCurrentUser() != null) {
             i = new Intent(this, HomeActivity.class);
         } else {

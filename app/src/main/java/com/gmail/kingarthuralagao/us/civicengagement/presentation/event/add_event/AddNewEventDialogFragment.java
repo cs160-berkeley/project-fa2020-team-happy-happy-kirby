@@ -1,17 +1,11 @@
-package com.gmail.kingarthuralagao.us.civicengagement.presentation.add_event;
+package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,15 +13,10 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.AccessibilityAvailability;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.adapter.AccessibilityAdapter;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.add_event.adapter.AccessibilityCheckboxAdapter;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.adapter.AccessibilityCheckboxAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.DialogAddNewEventBinding;
-import com.gmail.kingarthuralagao.us.civilengagement.databinding.IncludeAccessibilityCheckboxesBinding;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 
@@ -125,18 +114,18 @@ public class AddNewEventDialogFragment extends DialogFragment {
     }
 
     private void initializeRecyclerView() {
-        ArrayList<AccessibilityAvailability> accessibilityList = new ArrayList<>();
-        accessibilityList.add(new AccessibilityAvailability("Curb cuts for wheelchair", true));
-        accessibilityList.add(new AccessibilityAvailability("Medic station with supplies", true));
-        accessibilityList.add(new AccessibilityAvailability("Medic station with trained staff", false));
-        accessibilityList.add(new AccessibilityAvailability("Easy access to seating", false));
+        ArrayList<Accessibility> accessibilityList = new ArrayList<>();
+        accessibilityList.add(new Accessibility("Curb cuts for wheelchair", true));
+        accessibilityList.add(new Accessibility("Medic station with supplies", true));
+        accessibilityList.add(new Accessibility("Medic station with trained staff", false));
+        accessibilityList.add(new Accessibility("Easy access to seating", false));
 
         AccessibilityCheckboxAdapter accessibilityCheckboxAdapter = new AccessibilityCheckboxAdapter(accessibilityList);
 
         binding.includeAccessibilityCheckboxes.accessibilitiesRv.setAdapter(accessibilityCheckboxAdapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.recyclerview_divider, null));
+        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.recyclerview_divider_gray, null));
 
         binding.includeAccessibilityCheckboxes.accessibilitiesRv.addItemDecoration(dividerItemDecoration);
         binding.includeAccessibilityCheckboxes.accessibilitiesRv.setLayoutManager(new LinearLayoutManager(requireContext()));

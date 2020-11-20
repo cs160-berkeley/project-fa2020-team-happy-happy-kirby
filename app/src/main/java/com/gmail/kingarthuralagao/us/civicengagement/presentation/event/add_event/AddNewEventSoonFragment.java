@@ -1,4 +1,4 @@
-package com.gmail.kingarthuralagao.us.civicengagement.presentation.add_event;
+package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.gmail.kingarthuralagao.us.civilengagement.databinding.IncludeAddEventHappeningNowBinding;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.IncludeAddEventHappeningSoonBinding;
 
 public class AddNewEventSoonFragment extends Fragment {

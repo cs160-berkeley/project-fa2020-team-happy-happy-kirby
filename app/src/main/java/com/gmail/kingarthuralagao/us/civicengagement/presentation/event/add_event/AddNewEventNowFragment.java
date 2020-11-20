@@ -1,4 +1,4 @@
-package com.gmail.kingarthuralagao.us.civicengagement.presentation.add_event;
+package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
