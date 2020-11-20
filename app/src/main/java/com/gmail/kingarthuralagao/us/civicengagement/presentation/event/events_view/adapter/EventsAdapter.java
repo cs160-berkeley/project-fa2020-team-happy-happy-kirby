@@ -1,22 +1,18 @@
-package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.list_event.adapter;
+package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter;
 
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
-import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemCheckboxBinding;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemEventDetailsBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 

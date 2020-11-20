@@ -1,4 +1,4 @@
-package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.list_event;
+package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,13 +12,11 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.list_event.adapter.EventsAdapter;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventsViewBinding;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class EventsViewFragment extends Fragment {
 
