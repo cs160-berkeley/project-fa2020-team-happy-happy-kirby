@@ -2,7 +2,7 @@
     <string name="app_name">CivEngageMEnt</string>
 
     <!--Authentication Screen-->
-    <string name="welcome">Welcome to</string>
+    <string name="welcome">Welcome to CivEngageMEnt</string>
     <string name="sign_in_via_social_networks">Sign in via Social Networks</string>
     <string name="sign_in_with_email">Or Sign in with Email</string>
     <string name="forgot_password">Forgot Password?</string>
@@ -23,6 +23,8 @@
     <string name="virtualengage_dummy_value_target">$70,000 goal</string>
     
     <!--Add Events-->
+    <string name="enable_location">Engage with local events</string>
+    <string name="description">Learn about nearby social movement events for the causes you care about and contains basic event information, accessibility information for in-person engagement and resources for alternative virtual engagement.</string>
     <string name="event_name_question">What is the name of the event?</string>
     <string name="event_causes_question">What causes does the event support?</string>
     <string name="event_end_question">When will the event end?</string>
