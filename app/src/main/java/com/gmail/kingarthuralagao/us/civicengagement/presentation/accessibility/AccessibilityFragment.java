@@ -12,7 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.AccessibilityAvailability;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.adapter.AccessibilityAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentAccessibilityBinding;
 
@@ -46,11 +47,11 @@ public class AccessibilityFragment extends Fragment {
     }
 
     private void initializeRecyclerView() {
-        ArrayList<Accessibility> accessibilities = new ArrayList<>();
-        accessibilities.add(new Accessibility("Curb cuts for wheelchair", true));
-        accessibilities.add(new Accessibility("Medic station with supplies", true));
-        accessibilities.add(new Accessibility("Medic station with trained staff", false));
-        accessibilities.add(new Accessibility("Easy access to seating", false));
+        ArrayList<AccessibilityAvailability> accessibilities = new ArrayList<>();
+        accessibilities.add(new AccessibilityAvailability("Curb cuts for wheelchair", true));
+        accessibilities.add(new AccessibilityAvailability("Medic station with supplies", true));
+        accessibilities.add(new AccessibilityAvailability("Medic station with trained staff", false));
+        accessibilities.add(new AccessibilityAvailability("Easy access to seating", false));
 
         AccessibilityAdapter accessibilityAdapter = new AccessibilityAdapter(accessibilities);
 

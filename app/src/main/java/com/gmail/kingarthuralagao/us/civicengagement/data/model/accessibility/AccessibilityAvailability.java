@@ -1,14 +1,14 @@
 package com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility;
 
-public class Accessibility {
+public class AccessibilityAvailability {
 
     private String resource;
     private Boolean isAvailable;
 
-    public Accessibility() {
+    public AccessibilityAvailability() {
     }
 
-    public Accessibility(String r, Boolean available) {
+    public AccessibilityAvailability(String r, Boolean available) {
         resource = r;
         isAvailable = available;
     }

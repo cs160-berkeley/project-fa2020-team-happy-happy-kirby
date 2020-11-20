@@ -17,4 +17,14 @@
     <style name="Theme.SplashScreen" parent="Theme.CivilEngagement">
         <item name="android:windowBackground">@drawable/img_splash_screen</item>
     </style>
+
+    <style name="Theme.FullScreenDialog" parent="Theme.CivilEngagement">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="Theme.Slide" parent="Theme.CivilEngagement">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
 </resources>

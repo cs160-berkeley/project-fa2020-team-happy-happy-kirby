@@ -1,4 +1,4 @@
-package com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility;
+package com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.adapter;
 
 
 import android.view.LayoutInflater;
@@ -10,25 +10,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.AccessibilityAvailability;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
-import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemAccessibilityBinding;
+import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemAccessibilityAvailabilityBinding;
 
 import java.util.ArrayList;
 
 public class AccessibilityAdapter extends RecyclerView.Adapter<AccessibilityAdapter.ViewHolder> {
 
-    private ArrayList<Accessibility> accessibilities;
+    private ArrayList<AccessibilityAvailability> accessibilities;
 
-    public AccessibilityAdapter(ArrayList<Accessibility> accessibilityList) {
-        accessibilities = accessibilityList;
+    public AccessibilityAdapter(ArrayList<AccessibilityAvailability> accessibilityAvailabilityList) {
+        accessibilities = accessibilityAvailabilityList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        RowItemAccessibilityBinding binding = RowItemAccessibilityBinding.inflate(inflater, parent, false);
+        RowItemAccessibilityAvailabilityBinding binding = RowItemAccessibilityAvailabilityBinding.inflate(inflater, parent, false);
 
         return new ViewHolder(binding);
     }
@@ -61,7 +61,7 @@ public class AccessibilityAdapter extends RecyclerView.Adapter<AccessibilityAdap
         private TextView resourceTv;
         private ImageView availabilityIv;
 
-        public ViewHolder(@NonNull RowItemAccessibilityBinding binding) {
+        public ViewHolder(@NonNull RowItemAccessibilityAvailabilityBinding binding) {
             super(binding.getRoot());
 
             resourceTv = binding.resourceTv;

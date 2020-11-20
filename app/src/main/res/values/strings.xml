@@ -21,4 +21,16 @@
     <string name="virtualengage_text_dummy_desc">Donation links are user-provided and we bear no responsibility in verifying the authenticity of this link. You assume all responsibility for the linked GoFundMe</string>
     <string name="virtualengage_dummy_value">$32,000</string>
     <string name="virtualengage_dummy_value_target">$70,000 goal</string>
+    
+    <!--Add Events-->
+    <string name="event_name_question">What is the name of the event?</string>
+    <string name="event_causes_question">What causes does the event support?</string>
+    <string name="event_end_question">When will the event end?</string>
+    <string name="event_start_question">When will the event start?</string>
+    <string name="event_location_question">Where will the event take place?</string>
+    <string name="event_description_hint">Insert any notes or event description...</string>
+    <string name="event_accessibilities_question">What accessibility resources are available at this event, as best as you can tell?</string>
+    <string name="add_new_event">Add New Event</string>
+
+
 </resources>

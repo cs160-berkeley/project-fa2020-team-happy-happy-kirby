@@ -5,51 +5,65 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/primary_blue">
+
     <androidx.cardview.widget.CardView
-        android:id="@+id/event_name_virtual"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:id="@+id/event_name_cv"
         android:layout_width="0dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginEnd="@dimen/margin_normal"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:cardCornerRadius="16dp"
-        >
+        app:layout_constraintBottom_toTopOf="@id/engage_virtually_tv"
+        app:cardCornerRadius="16dp">
+
         <TextView
+            android:id="@+id/event_name_tv"
             android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_height="match_parent"
             android:text="@string/dummy_event_name"
             android:gravity="center"
-            android:textSize="30dp">
+            android:textSize="30dp"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_large">
         </TextView>
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/dummy_virtualengage_screen1"
+        android:id="@+id/engage_virtually_tv"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:layout_marginHorizontal="15dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_normal"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/event_name_cv"
+        app:layout_constraintBottom_toTopOf="@id/fund_cv"
         android:gravity="center"
         android:text="@string/virtualengage_text_dummy"
         android:textColor="#FFFFFF"
         android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/event_name_virtual">
+        android:paddingBottom="@dimen/margin_small"
+        android:paddingTop="@dimen/margin_small">
 
     </TextView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/fund_cv"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_width="0dp"
-        android:layout_height="400dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="60dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dummy_virtualengage_screen1"
+        app:layout_constraintTop_toBottomOf="@id/engage_virtually_tv"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:cardCornerRadius="16dp"
         >
 
@@ -58,19 +72,18 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/text_cost1"
+                android:id="@+id/sub_event_name_tv"
                 android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:text="@string/dummy_event_name"
-                android:gravity="center"
-                android:textSize="26dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                >
+                android:text="@string/dummy_event_name"
+                android:paddingTop="@dimen/margin_large"
+                android:paddingBottom="@dimen/margin_large"
+                android:textSize="26dp"
+                android:gravity="center">
             </TextView>
 
             <com.google.android.material.progressindicator.ProgressIndicator
-                app:layout_constraintTop_toBottomOf="@id/text_cost1"
-                style="@style/Widget.MaterialComponents.ProgressIndicator.Circular.Determinate"
                 android:id="@+id/progress_idc"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
@@ -78,11 +91,42 @@
                 android:layout_marginEnd="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sub_event_name_tv"
                 app:circularRadius="90dp"
                 app:indicatorColor="@color/primary_blue"
-                app:trackColor="#736D6D">
+                app:trackColor="#736D6D"
+                style="@style/Widget.MaterialComponents.ProgressIndicator.Circular.Determinate">
 
             </com.google.android.material.progressindicator.ProgressIndicator>
+
+            <TextView
+                android:id="@+id/fund_value_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/progress_idc"
+                app:layout_constraintEnd_toEndOf="@id/progress_idc"
+                app:layout_constraintTop_toTopOf="@id/progress_idc"
+                app:layout_constraintBottom_toBottomOf="@id/progress_idc"
+                android:layout_marginBottom="30dp"
+                android:text="@string/virtualengage_dummy_value"
+                android:textColor="@color/primary_blue"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:gravity="center">
+            </TextView>
+
+            <TextView
+                android:id="@+id/goal_value_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/fund_value_tv"
+                android:text="@string/virtualengage_dummy_value_target"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/secondary_text"
+                android:gravity="center">
+
+            </TextView>
 
             <TextView
                 app:layout_constraintTop_toBottomOf="@id/progress_idc"
@@ -90,45 +134,9 @@
                 android:layout_height="90dp"
                 android:text="@string/virtualengage_text_dummy_desc"
                 android:gravity="center"
-                android:textSize="14dp"
-                >
-            </TextView>
-
-            <TextView
-                android:id="@+id/virtualengage_value"
-                android:layout_width="170dp"
-                android:layout_height="40dp"
-                app:layout_constraintStart_toStartOf="@id/progress_idc"
-                app:layout_constraintEnd_toEndOf="@id/progress_idc"
-                app:layout_constraintTop_toTopOf="@id/progress_idc"
-                app:layout_constraintBottom_toBottomOf="@id/progress_idc"
-                android:layout_marginBottom="30dp"
-                android:text="@string/virtualengage_dummy_value"
-                android:gravity="center"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:textColor="@color/primary_blue"
-                >
-            </TextView>
-
-            <TextView
-                app:layout_constraintTop_toBottomOf="@id/virtualengage_value"
-                android:gravity="center"
-                android:text="@string/virtualengage_dummy_value_target"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                android:textColor="#736D6D"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-
-                >
-
+                android:textSize="14dp">
             </TextView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </androidx.cardview.widget.CardView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

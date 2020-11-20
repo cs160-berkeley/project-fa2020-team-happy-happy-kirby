@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.add_event.AddNewEventDialogFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityHomeBinding;
@@ -29,11 +30,17 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle("");
 
+        /*
         firebaseAuth = ((CivicEngagementApp) this.getApplication()).getAuthInstance();
 
         String userDisplayName = firebaseAuth.getCurrentUser().getDisplayName();
         binding.nameTv.setText("Hello "
-                + (userDisplayName == null ? firebaseAuth.getCurrentUser().getEmail() : userDisplayName));
+                + (userDisplayName == null ? firebaseAuth.getCurrentUser().getEmail() : userDisplayName));*/
+
+        AddNewEventDialogFragment fragment = AddNewEventDialogFragment.newInstance();
+        binding.btn.setOnClickListener(view -> {
+            fragment.show(getSupportFragmentManager(), "");
+        });
     }
 
     @Override
