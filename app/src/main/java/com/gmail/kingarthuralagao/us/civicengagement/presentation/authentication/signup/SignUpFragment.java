@@ -321,7 +321,7 @@ public class SignUpFragment extends Fragment {
 
     private void initializeGoogleSignIn() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("156929816574-8mk4c2us7cngbe8ach8beu2ghcu7npnu.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
