@@ -2,7 +2,7 @@
     <string name="app_name">CivEngageMEnt</string>
 
     <!--Authentication Screen-->
-    <string name="welcome">Welcome to CivEngageMEnt</string>
+    <string name="welcome">Welcome to</string>
     <string name="sign_in_via_social_networks">Sign in via Social Networks</string>
     <string name="sign_in_with_email">Or Sign in with Email</string>
     <string name="forgot_password">Forgot Password?</string>
