@@ -15,6 +15,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "API_KEY", "\"AIzaSyCbxiiUEdr8XinCzfSLSzDIiRkPOx6EIUY\""
     }
 
     buildTypes {
@@ -72,11 +73,14 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$google_play_version"
 
     // Custom Tab for Twitter SignIn
-    implementation "androidx.browser:browser:1.2.0"
+    implementation "androidx.browser:browser:$custom_tab_version"
 
     // SDP for supporting multiple screens
-    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation "com.intuit.sdp:sdp-android:$sdp_version"
 
     // Toast Library
-    implementation 'com.github.GrenderG:Toasty:1.5.0'
+    implementation "com.github.GrenderG:Toasty:$toasty_version"
+
+    // Google Places
+    implementation "com.google.android.libraries.places:places:$google_places_version"
 }

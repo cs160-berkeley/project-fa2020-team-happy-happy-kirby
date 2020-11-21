@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Engage me at 1234 Main Street"
-            android:textSize="48dp"
+            android:textSize="40dp"
             android:textColor="@color/primary_text"
             android:gravity="center"
             android:padding="4dp"/>

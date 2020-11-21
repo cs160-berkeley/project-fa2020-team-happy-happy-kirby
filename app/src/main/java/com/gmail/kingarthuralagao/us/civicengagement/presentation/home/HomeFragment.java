@@ -3,6 +3,7 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.home;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,8 +21,22 @@ import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddNewEventDialogFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity;
+import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentHomeBinding;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class HomeFragment extends Fragment {
 
@@ -29,7 +44,9 @@ public class HomeFragment extends Fragment {
         return new HomeFragment();
     }
 
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 200;
     private FragmentHomeBinding binding;
+    private final String TAG = getClass().getSimpleName();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,15 +98,25 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 200) {
-            Toast.makeText(requireActivity(), "Success", Toast.LENGTH_SHORT).show();
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i(TAG, "Place: " + place.getAddress() + ", " + place.getId());
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i(TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                Log.i(TAG, "Cancelled");
+            }
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setUpEvents() {
-        AddNewEventDialogFragment fragment = AddNewEventDialogFragment.newInstance();
         binding.addNewEventBtn.setOnClickListener(view -> {
+            AddNewEventDialogFragment fragment = AddNewEventDialogFragment.newInstance();
             fragment.show(getChildFragmentManager(), "");
         });
 
@@ -104,15 +131,18 @@ public class HomeFragment extends Fragment {
     }
 
     private void initializeLocationSearch() {
-
         // Set the fields to specify which types of place data to
         // return after the user has made a selection.
-        /*
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+        // Initialize the SDK
+        Places.initialize(requireContext(), BuildConfig.API_KEY);
+        Places.createClient(requireContext());
+
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS);
 
         // Start the autocomplete intent.
-        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
-                .build(this);
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);*/
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                .build(requireContext());
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
 }
