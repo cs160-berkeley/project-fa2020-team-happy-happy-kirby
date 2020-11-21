@@ -49,6 +49,13 @@ public class HomeActivity extends AppCompatActivity {
             Intent i = new Intent(this, EventsViewActivity.class);
             startActivity(i);
         });
+
+        binding.logoutBtn.setOnClickListener(view -> {
+            FirebaseAuth.getInstance().signOut();
+
+            Intent i = new Intent(this, AuthenticationActivity.class);
+            startActivity(i);
+        });
     }
 
     private void initializeLocationSearch() {

@@ -118,4 +118,14 @@
         android:textSize="25dp"
         app:cornerRadius="40dp"
         />
+
+    <Button
+        android:id="@+id/logout_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/secondary_blue"
+        android:text="Log out"
+        app:layout_constraintTop_toBottomOf="@id/add_new_event_btn"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
