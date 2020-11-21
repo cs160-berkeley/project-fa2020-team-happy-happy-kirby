@@ -3,9 +3,11 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_eve
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,9 +16,17 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.adapter.AccessibilityCheckboxAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.DialogAddNewEventBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -111,6 +121,48 @@ public class AddNewEventDialogFragment extends DialogFragment {
             binding.includeHappeningNowHappeningSoon.happeningNowBtn.setEnabled(true);
             binding.includeHappeningNowHappeningSoon.happeningSoonBtn.setEnabled(false);
         });
+
+        binding.addEventBtn.setOnClickListener(view -> {
+            postEvent();
+            //getEvent();
+        });
+    }
+
+    private void getEvent() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("events").document("events");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("AddEventDialogFragment", "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d("AddEventDialogFragment", "No such document");
+                    }
+                } else {
+                    Log.d("AddEventDialogFragment", "get failed with ", task.getException());
+                }
+            }
+        });
+
+    }
+
+    private void postEvent() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Event event1 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+        db.collection("events")
+                .document("events")
+                .set(event1)
+                .addOnCompleteListener(task -> {
+                    Toast.makeText(requireActivity(), "Success!", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(requireActivity(), "Fail!", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void initializeRecyclerView() {

@@ -69,7 +69,7 @@ public class FilterDialog extends DialogFragment {
 
         Dialog dialog = getDialog();
         if (dialog != null) {
-            int width = (getScreenWidth() * 3) / 4;
+            int width = getScreenWidth();
             int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             dialog.getWindow().setLayout(width, height);
         }

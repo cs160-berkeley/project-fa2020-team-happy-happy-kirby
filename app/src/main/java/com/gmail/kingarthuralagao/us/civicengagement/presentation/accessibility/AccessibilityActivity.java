@@ -19,15 +19,15 @@ public class AccessibilityActivity extends AppCompatActivity {
         binding = ActivityAccessibilityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        /*
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(binding.fragmentContainer.getId(), AccessibilityFragment.newInstance())
-                .commit();*/
+                .commit();
 
+        /*
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(binding.fragmentContainer.getId(), EventsViewFragment.newInstance("Engage me at 1234 Main Street"))
-                .commit();
+                .commit();*/
     }
 }

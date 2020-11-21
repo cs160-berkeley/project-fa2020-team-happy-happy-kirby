@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddNewEventDialogFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityHomeBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,15 +21,13 @@ public class HomeActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private ActivityHomeBinding binding;
+    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setTitle("");
 
         /*
         firebaseAuth = ((CivicEngagementApp) this.getApplication()).getAuthInstance();
@@ -38,10 +37,31 @@ public class HomeActivity extends AppCompatActivity {
                 + (userDisplayName == null ? firebaseAuth.getCurrentUser().getEmail() : userDisplayName));*/
 
         AddNewEventDialogFragment fragment = AddNewEventDialogFragment.newInstance();
-        binding.btn.setOnClickListener(view -> {
+        binding.addNewEventBtn.setOnClickListener(view -> {
             fragment.show(getSupportFragmentManager(), "");
         });
 
+        binding.landingEditText.setOnClickListener(view -> {
+            initializeLocationSearch();
+        });
+
+        binding.locationImage.setOnClickListener(view -> {
+            Intent i = new Intent(this, EventsViewActivity.class);
+            startActivity(i);
+        });
+    }
+
+    private void initializeLocationSearch() {
+
+        // Set the fields to specify which types of place data to
+        // return after the user has made a selection.
+        /*
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+        // Start the autocomplete intent.
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                .build(this);
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);*/
     }
 
     @Override

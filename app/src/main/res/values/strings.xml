@@ -21,7 +21,7 @@
     <string name="virtualengage_text_dummy_desc">Donation links are user-provided and we bear no responsibility in verifying the authenticity of this link. You assume all responsibility for the linked GoFundMe</string>
     <string name="virtualengage_dummy_value">$32,000</string>
     <string name="virtualengage_dummy_value_target">$70,000 goal</string>
-    
+
     <!--Add Events-->
     <string name="enable_location">Engage with local events</string>
     <string name="description">Learn about nearby social movement events for the causes you care about and contains basic event information, accessibility information for in-person engagement and resources for alternative virtual engagement.</string>

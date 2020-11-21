@@ -108,6 +108,12 @@ public class EventsViewFragment extends Fragment {
 
             eventsAdapter.setData(events);
         });
+
+
+        binding.filterIv.setOnClickListener(view -> {
+            FilterDialog dialog = new FilterDialog();
+            dialog.show(getFragmentManager(), "");
+        });
     }
 
     private void initializeRecyclerView() {
