@@ -16,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CivilEngagement">
         <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.detail.EventDetailActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity" />
         <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityActivity" />
@@ -26,12 +31,6 @@
         <activity
             android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.splash.SplashScreenActivity"
             android:theme="@style/Theme.SplashScreen">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <meta-data
             android:name="preloaded_fonts"

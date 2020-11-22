@@ -1,9 +1,10 @@
 package com.gmail.kingarthuralagao.us.civicengagement.data.model.event;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class Event {
+public class Event implements Serializable {
 
     private String name;
     private String dateStart;
