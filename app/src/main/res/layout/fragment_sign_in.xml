@@ -12,7 +12,7 @@
         android:layout_marginTop="0dp"
         android:fontFamily="@font/inter_regular"
         android:gravity="center"
-        android:text="@string/sign_in_via_social_networks"
+        android:text="asasafasfasasfas"
         android:textColor="@color/secondary_text"
         android:textSize="@dimen/_14sdp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -44,7 +44,6 @@ public class AddNewEventDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DialogAddNewEventBinding.inflate(getLayoutInflater());
 
         addNewEventNowFragment = AddNewEventNowFragment.newInstance();
         addNewEventSoonFragment = AddNewEventSoonFragment.newInstance();
@@ -55,6 +54,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = DialogAddNewEventBinding.inflate(inflater, container, false);
         getChildFragmentManager()
                 .beginTransaction()
                 .add(binding.fragmentContainer.getId(), addNewEventNowFragment)

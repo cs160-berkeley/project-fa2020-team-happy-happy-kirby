@@ -31,12 +31,12 @@ public class EventDescriptionFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         description = getArguments().getString(KEY);
-        binding = FragmentEventDescriptionBinding.inflate(getLayoutInflater());
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentEventDescriptionBinding.inflate(inflater, container, false);
         if (description.length() != 0) {
             binding.eventDescriptionTv.setText(description);
         }

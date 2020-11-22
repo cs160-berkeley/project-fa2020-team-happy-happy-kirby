@@ -63,20 +63,22 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = FragmentHomeBinding.inflate(getLayoutInflater());
 
-        setHasOptionsMenu(true);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("");
-         mLocManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);;
-         mLocListener = location -> {
-             //
-         };
+        mLocManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);;
+        mLocListener = location -> {
+            //
+        };
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+
+        setHasOptionsMenu(true);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("");
+
         return binding.getRoot();
     }
 

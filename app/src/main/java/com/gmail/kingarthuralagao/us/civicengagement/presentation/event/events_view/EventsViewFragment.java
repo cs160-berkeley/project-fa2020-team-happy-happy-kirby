@@ -46,12 +46,12 @@ public class EventsViewFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         inputLocation = getArguments().getString(INPUT_LOCATION);
-        binding = FragmentEventsViewBinding.inflate(getLayoutInflater());
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentEventsViewBinding.inflate(inflater, container, false);
         binding.locationTv.setText(inputLocation);
         initializeRecyclerView();
         return binding.getRoot();

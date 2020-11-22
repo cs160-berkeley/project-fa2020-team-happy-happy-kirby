@@ -44,7 +44,6 @@ public class EventDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         event = (Event) getArguments().getSerializable("event");
-        binding = FragmentEventDetailBinding.inflate(getLayoutInflater());
 
         tabTitles = new ArrayList<>();
         tabTitles.add("Description");
@@ -54,6 +53,7 @@ public class EventDetailFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentEventDetailBinding.inflate(inflater, container, false);
         initializeViews();
         setViewPager();
         return binding.getRoot();

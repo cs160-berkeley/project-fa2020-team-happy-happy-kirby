@@ -31,13 +31,13 @@ public class AccessibilityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = FragmentAccessibilityBinding.inflate(getLayoutInflater());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         initializeRecyclerView();
+        binding = FragmentAccessibilityBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
