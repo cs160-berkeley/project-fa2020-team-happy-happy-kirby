@@ -1,7 +1,13 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.home;
 
+import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +20,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
@@ -37,6 +45,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class HomeFragment extends Fragment {
 
@@ -47,6 +56,9 @@ public class HomeFragment extends Fragment {
     private static final int AUTOCOMPLETE_REQUEST_CODE = 200;
     private FragmentHomeBinding binding;
     private final String TAG = getClass().getSimpleName();
+    private LocationManager mLocManager;
+    private LocationListener mLocListener;
+    private final int LOCATION_REQUEST_CODE = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +68,10 @@ public class HomeFragment extends Fragment {
         setHasOptionsMenu(true);
         ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("");
+         mLocManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);;
+         mLocListener = location -> {
+             //
+         };
     }
 
     @Nullable
@@ -126,9 +142,48 @@ public class HomeFragment extends Fragment {
 
         binding.locationImage.setOnClickListener(view -> {
             Intent i = new Intent(requireActivity(), EventsViewActivity.class);
-            startActivityForResult(i, 200);
+            Log.i(TAG, "In onclicklistener for location image");
+            // Location permission granted.
+            if (ContextCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+                // Update location.
+                mLocManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, 0, 0, mLocListener);
+                Location location = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Log.i(TAG, "Location: " + location.toString());
+                startActivityForResult(i, 200);
+            } else {
+                // Location permission not granted.
+                Log.i(TAG, "Requesting location permission.");
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_REQUEST_CODE);
+            }
         });
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (requestCode == LOCATION_REQUEST_CODE) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PERMISSION_GRANTED) {
+
+                // Permission was granted.
+                Intent i = new Intent(requireActivity(), EventsViewActivity.class);
+                startActivityForResult(i, 200);
+            } else {
+                // Permission denied.
+                // Tell the user the action is cancelled.
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Location permissions must be enabled to use this feature.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", null);
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        }
+    }
+
 
     private void initializeLocationSearch() {
         // Set the fields to specify which types of place data to
