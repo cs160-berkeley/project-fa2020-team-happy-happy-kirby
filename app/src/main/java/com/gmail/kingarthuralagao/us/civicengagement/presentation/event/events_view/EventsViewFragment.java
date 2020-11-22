@@ -1,6 +1,7 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -17,10 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.detail.EventDetailActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventsViewBinding;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class EventsViewFragment extends Fragment {
@@ -127,7 +130,7 @@ public class EventsViewFragment extends Fragment {
         binding.eventsRv.addOnItemTouchListener(new RecyclerTouchListener(requireContext(), new IRecyclerViewItemClickListener() {
             @Override
             public void onRecyclerViewItemClick(View view, Integer position) {
-                Toast.makeText(requireContext(), "Postion is: " + position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Event name is: " + eventsAdapter.getEvent(position).getName(), Toast.LENGTH_SHORT).show();
             }
         }));
     }

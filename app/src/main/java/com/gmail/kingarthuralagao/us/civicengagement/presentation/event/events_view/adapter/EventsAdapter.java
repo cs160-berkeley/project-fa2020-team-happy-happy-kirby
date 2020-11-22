@@ -47,6 +47,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return events.size();
     }
 
+    public Event getEvent(int position) {
+        return events.get(position);
+    }
+
     public void setData(ArrayList<Event> eventList) {
         this.events = eventList;
         notifyDataSetChanged();
