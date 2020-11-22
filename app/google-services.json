@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "156929816574-d427bh0smlbm6vm5jt1o5mm63cr9sp20.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gmail.kingarthuralagao.us.civicengagement",
+            "certificate_hash": "c7f1a9fa5fe5721d9c29af24c3dc83991dc40502"
+          }
+        },
+        {
+          "client_id": "156929816574-7i2a1kc59ec2s3lfsmlur5rdl9mvco8a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gmail.kingarthuralagao.us.civicengagement",
+            "certificate_hash": "2044ea55827b4f33ccfed183aebd7ee238e9d39c"
+          }
+        },
+        {
           "client_id": "156929816574-rs8q8ns1g2f7hkrgpifu5i75p1oolhk0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
