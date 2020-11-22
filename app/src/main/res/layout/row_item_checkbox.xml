@@ -12,14 +12,14 @@
         android:layout_gravity="center"
         android:text="ASL interpreters"
         android:textColor="@color/secondary_text"
-        android:textSize="16sp"/>
+        android:textSize="@dimen/_12sdp"/>
 
     <CheckBox
         android:id="@+id/accesibility_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
-        android:layout_marginStart="@dimen/margin_normal"
+        android:layout_marginStart="@dimen/_12sdp"
         android:layout_gravity="center"/>
 
 </LinearLayout>
