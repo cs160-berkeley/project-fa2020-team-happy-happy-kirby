@@ -9,7 +9,7 @@
         android:id="@+id/event_name_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/_12sdp"
         android:hint="@string/event_name_question"
         app:errorEnabled="true">
 
@@ -23,7 +23,7 @@
         android:id="@+id/event_causes_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_marginTop="@dimen/_4sdp"
         android:hint="@string/event_causes_question"
         app:errorEnabled="true">
 
@@ -37,7 +37,7 @@
         android:id="@+id/event_location_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_marginTop="@dimen/_4sdp"
         android:hint="@string/event_location_question"
         app:errorEnabled="true">
 
@@ -51,7 +51,7 @@
         android:id="@+id/event_end_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_marginTop="@dimen/_4sdp"
         android:hint="@string/event_end_question"
         app:errorEnabled="true">
 
@@ -64,8 +64,8 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/event_notes_layout"
         android:layout_width="match_parent"
-        android:layout_height="156dp"
-        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_height="@dimen/_140sdp"
+        android:layout_marginTop="@dimen/_4sdp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText

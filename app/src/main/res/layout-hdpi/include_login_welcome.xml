@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/primary_blue"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/_4sdp">
+
+    <TextView
+        android:id="@+id/welcome_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:fontFamily="@font/inter_regular"
+        android:text="@string/welcome"
+        android:textColor="#F4F3F3"
+        android:textSize="@dimen/_24sdp" />
+
+    <TextView
+        android:id="@+id/app_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:text="@string/app_name"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_36sdp"
+        android:fontFamily="@font/inter_extra_bold"/>
+
+
+</LinearLayout>

@@ -9,56 +9,54 @@
         android:id="@+id/sign_in_via_social_networks_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="0dp"
+        android:fontFamily="@font/inter_regular"
         android:gravity="center"
         android:text="@string/sign_up_via_social_networks"
-        android:textSize="18sp"
         android:textColor="@color/secondary_text"
-        android:fontFamily="@font/merriweather"/>
-
+        android:textSize="@dimen/_14sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/google_sign_in_btn"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="@dimen/margin_large"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginEnd="@dimen/margin_normal"
+        android:layout_height="@dimen/_48sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_32sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
         app:layout_constraintTop_toBottomOf="@id/sign_in_via_social_networks_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/twitter_sign_in_btn"
-        android:src="@drawable/button_google"
-        android:clickable="true"/>
+        android:src="@drawable/button_google"/>
 
     <ImageView
         android:id="@+id/twitter_sign_in_btn"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="@dimen/margin_large"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginEnd="@dimen/margin_normal"
+        android:layout_height="@dimen/_48sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_32sdp"
         app:layout_constraintStart_toEndOf="@id/google_sign_in_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sign_in_via_social_networks_tv"
-        android:src="@drawable/button_twitter"
-        android:clickable="true"/>
+        android:src="@drawable/button_twitter"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sign_up_with_email_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
         app:layout_constraintTop_toBottomOf="@id/google_sign_in_btn"
         android:orientation="horizontal">
-
 
         <View
             android:id="@+id/div_one"
             android:layout_width="wrap_content"
-            android:layout_height="2dp"
+            android:layout_height="@dimen/_2sdp"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="0dp"
             android:layout_marginTop="0dp"
@@ -68,13 +66,13 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/background_divider_gray"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"/>/>
 
         <TextView
             android:id="@+id/sign_in_with_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/margin_small"
             android:layout_marginEnd="0dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="0dp"
@@ -82,16 +80,16 @@
             app:layout_constraintEnd_toStartOf="@id/div_two"
             app:layout_constraintTop_toTopOf="parent"
             android:text="@string/sign_up_with_email"
-            android:textSize="18sp"
+            android:textSize="@dimen/_14sdp"
             android:textColor="@color/secondary_text"
-            android:fontFamily="@font/merriweather"
+            android:fontFamily="@font/inter_regular"
             android:layout_gravity="center"/>
 
         <View
             android:id="@+id/div_two"
             android:layout_width="wrap_content"
             android:layout_height="2dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/margin_small"
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="0dp"
             android:layout_marginTop="0dp"
@@ -108,9 +106,9 @@
         android:id="@+id/name_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_32sdp"
+        android:layout_marginEnd="@dimen/_32sdp"
         app:layout_constraintTop_toBottomOf="@id/sign_up_with_email_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -125,7 +123,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/name_et"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/_44sdp"
             android:inputType="text"
             android:maxLength="60"/>
 
@@ -134,10 +132,10 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_layout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_height="@dimen/_62sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginStart="@dimen/_32sdp"
+        android:layout_marginEnd="@dimen/_32sdp"
         app:layout_constraintTop_toBottomOf="@id/name_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -152,7 +150,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email_et"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/_44sdp"
             android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -160,10 +158,10 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/password_layout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_height="@dimen/_62sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_32sdp"
+        android:layout_marginEnd="@dimen/_32sdp"
         app:layout_constraintTop_toBottomOf="@id/email_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -176,7 +174,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password_et"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/_44sdp"
             android:inputType="textPassword"
             />
     </com.google.android.material.textfield.TextInputLayout>
@@ -185,16 +183,16 @@
         android:id="@+id/sign_up_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
-        android:layout_marginEnd="60dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_48sdp"
+        android:layout_marginStart="@dimen/_48sdp"
         android:text="@string/sign_up"
-        android:textSize="24sp"
+        android:textSize="@dimen/_18sdp"
         android:textColor="@color/white"
         android:elevation="16dp"
         app:cornerRadius="32dp"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp"
+        android:paddingBottom="@dimen/_10sdp"
+        android:paddingTop="@dimen/_10sdp"
         android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/password_layout"
         app:backgroundTint="@color/authentication_button_color_state"
@@ -203,7 +201,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/_2sdp"
         app:layout_constraintStart_toStartOf="@id/sign_up_btn"
         app:layout_constraintEnd_toEndOf="@id/sign_up_btn"
         app:layout_constraintTop_toBottomOf="@id/sign_up_btn"
@@ -215,9 +213,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:text="@string/has_account"
-            android:textSize="18sp"
+            android:textSize="@dimen/_14sdp"
             android:textColor="@color/secondary_text"
-            android:fontFamily="@font/merriweather"/>
+            android:fontFamily="@font/inter_regular"/>
 
         <TextView
             android:id="@+id/sign_in_tv"
@@ -225,9 +223,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_small"
             android:text="@string/sign_in"
-            android:textSize="18sp"
+            android:textSize="@dimen/_14sdp"
             android:textColor="#0080FF"
-            android:fontFamily="@font/merriweather"
+            android:fontFamily="@font/inter_regular"
             android:clickable="true"/>
 
 

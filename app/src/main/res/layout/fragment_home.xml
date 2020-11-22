@@ -18,21 +18,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="@dimen/_12sdp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginEnd="@dimen/margin_normal"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginBottom="0dp"
         >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="35dp"
+            android:textSize="@dimen/_28sdp"
             android:textColor="@color/primary_text"
             android:gravity="center"
-            android:text="@string/welcome"/>
+            android:text="Welcome to CivEngageMEnt"/>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -40,18 +40,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/landing_welcome"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="@dimen/_12sdp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginEnd="@dimen/margin_normal"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="0dp"
         >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="20dp"
+            android:textSize="@dimen/_14sdp"
             android:textColor="@color/primary_text"
             android:gravity="center"
             android:text="@string/description"/>
@@ -62,12 +62,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/landing_description"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="@dimen/_16sdp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginEnd="@dimen/margin_normal"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="0dp"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -81,7 +81,7 @@
                 android:id="@+id/location_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="@dimen/_16sdp"
                 android:textColor="@color/primary_text"
                 android:gravity="center"
                 android:text="@string/enable_location">
@@ -92,10 +92,10 @@
                 app:layout_constraintEnd_toEndOf="@id/location_image"
                 app:layout_constraintTop_toBottomOf="@id/location_text"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="@dimen/_14sdp"
                 android:gravity="center" >
             </EditText>
             <ImageView
@@ -104,9 +104,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/location_text"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginEnd="50dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_marginEnd="@dimen/_50sdp"
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_36sdp"
                 android:src="@drawable/ic_baseline_location_on_24"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -117,14 +117,14 @@
         app:layout_constraintTop_toBottomOf="@id/engage_location"
         app:layout_constraintStart_toStartOf="@id/engage_location"
         app:layout_constraintEnd_toEndOf="@id/engage_location"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/_16sdp"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/_48sdp"
         android:backgroundTint="@color/secondary_blue"
         android:text="Add New Event"
         android:textColor="@color/white"
-        android:textSize="25dp"
-        app:cornerRadius="40dp"
+        android:textSize="@dimen/_18sdp"
+        app:cornerRadius="@dimen/_40sdp"
         />
 
 

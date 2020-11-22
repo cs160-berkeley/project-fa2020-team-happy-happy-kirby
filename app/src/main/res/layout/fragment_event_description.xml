@@ -13,9 +13,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="No description available for this event"
-            android:textSize="16sp"
+            android:textSize="@dimen/_12sdp"
             android:textColor="@color/secondary_text"
-            android:layout_marginTop="@dimen/margin_small"/>
+            android:layout_marginTop="@dimen/_4sdp"/>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,20 +18,20 @@
 
         <ImageView
             android:id="@+id/back_arrow_img"
-            android:layout_width="40dp"
-            android:layout_height="32dp"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_28sdp"
             android:src="@drawable/ic_back_arrow_white"/>
 
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/event_name_virtual"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/margin_normal"
-        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_4sdp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:cardCornerRadius="16dp">
@@ -44,7 +44,7 @@
                 android:id="@+id/event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginTop="@dimen/_4sdp"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="Hello"
                 android:gravity="center"
@@ -54,9 +54,9 @@
                 android:id="@+id/include_event_details"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_marginStart="@dimen/margin_normal"
-                android:layout_marginEnd="@dimen/margin_normal"
-                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_4sdp"
                 app:layout_constraintTop_toBottomOf="@id/event_name"
                 />
 
@@ -64,9 +64,9 @@
                 android:id="@+id/check_in_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:layout_marginStart="@dimen/margin_normal"
-                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_4sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/engage_virtually_btn"
                 app:layout_constraintTop_toBottomOf="@id/include_event_details"
@@ -80,9 +80,9 @@
                 android:id="@+id/engage_virtually_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_normal"
-                android:layout_marginStart="@dimen/margin_small"
-                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
                 app:layout_constraintStart_toEndOf="@id/check_in_btn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/include_event_details"
@@ -96,7 +96,7 @@
                 android:id="@+id/div_one"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginTop="@dimen/_4sdp"
                 android:background="@drawable/background_divider_gray"
                 app:layout_constraintTop_toBottomOf="@id/engage_virtually_btn"/>
 
@@ -132,9 +132,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="0dp"
-                android:layout_marginStart="@dimen/margin_normal"
-                android:layout_marginEnd="@dimen/margin_normal"
-                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
                 app:layout_constraintTop_toBottomOf="@id/div_two"
                 app:layout_constraintBottom_toBottomOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>

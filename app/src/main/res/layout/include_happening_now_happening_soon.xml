@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="24dp"
+    app:cardCornerRadius="@dimen/_24sdp"
     android:padding="0dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -27,7 +27,7 @@
             android:textColor="@color/happening_button_text_color_state_list"
             android:textAllCaps="false"
             app:backgroundTint="@color/happening_button_background_color_state"
-            app:cornerRadius="24dp"/>
+            app:cornerRadius="@dimen/_24sdp"/>
 
 
         <com.google.android.material.button.MaterialButton
@@ -42,7 +42,7 @@
             android:textColor="@color/happening_button_text_color_state_list"
             android:textAllCaps="false"
             app:backgroundTint="@color/happening_button_background_color_state"
-            app:cornerRadius="24dp"/>
+            app:cornerRadius="@dimen/_24sdp"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

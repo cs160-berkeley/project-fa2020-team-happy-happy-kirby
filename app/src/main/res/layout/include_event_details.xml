@@ -7,8 +7,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:src="@drawable/ic_event_location_gray"/>
 
         <TextView
@@ -28,8 +28,8 @@
         android:layout_marginTop="@dimen/margin_small">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:src="@drawable/ic_event_date_gray"/>
 
         <TextView
@@ -48,8 +48,8 @@
         android:layout_marginTop="@dimen/margin_small">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:src="@drawable/ic_event_time_gray"/>
 
         <TextView
@@ -68,8 +68,8 @@
         android:layout_marginTop="@dimen/margin_small">
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:src="@drawable/ic_event_check_ins_gray"/>
 
         <TextView

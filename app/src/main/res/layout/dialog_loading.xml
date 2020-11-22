@@ -8,7 +8,7 @@
 
     <ProgressBar
         android:id="@+id/progress_circular"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="@dimen/_52sdp"
+        android:layout_height="@dimen/_52sdp"
         android:layout_centerInParent="true"/>
 </RelativeLayout>
