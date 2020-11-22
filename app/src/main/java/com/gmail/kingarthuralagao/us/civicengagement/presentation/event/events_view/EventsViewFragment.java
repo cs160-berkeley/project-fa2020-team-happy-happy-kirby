@@ -1,15 +1,20 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
@@ -19,6 +24,10 @@ import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventsV
 import java.util.ArrayList;
 
 public class EventsViewFragment extends Fragment {
+
+    interface IRecyclerViewItemClickListener {
+        void onRecyclerViewItemClick(View view, Integer position);
+    }
 
     public static EventsViewFragment newInstance(String inputLocation) {
         EventsViewFragment fragment = new EventsViewFragment();
@@ -114,6 +123,13 @@ public class EventsViewFragment extends Fragment {
             FilterDialog dialog = new FilterDialog();
             dialog.show(getFragmentManager(), "");
         });
+
+        binding.eventsRv.addOnItemTouchListener(new RecyclerTouchListener(requireContext(), new IRecyclerViewItemClickListener() {
+            @Override
+            public void onRecyclerViewItemClick(View view, Integer position) {
+                Toast.makeText(requireContext(), "Postion is: " + position, Toast.LENGTH_SHORT).show();
+            }
+        }));
     }
 
     private void initializeRecyclerView() {
@@ -145,5 +161,37 @@ public class EventsViewFragment extends Fragment {
 
         binding.eventsRv.addItemDecoration(dividerItemDecoration);
         binding.eventsRv.setLayoutManager(new LinearLayoutManager(requireContext()));
+    }
+
+    private class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+        private Context context;
+        private IRecyclerViewItemClickListener iRecyclerViewItemClickListener;
+        private GestureDetector gestureDetector;
+
+        public RecyclerTouchListener(Context context, IRecyclerViewItemClickListener iRecyclerViewItemClickListener) {
+            this.context = context;
+            this.iRecyclerViewItemClickListener = iRecyclerViewItemClickListener;
+            this.gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+
+            if (child != null && iRecyclerViewItemClickListener != null && gestureDetector.onTouchEvent(e))
+                iRecyclerViewItemClickListener.onRecyclerViewItemClick(child, rv.getChildAdapterPosition(child));
+
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {}
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
     }
 }

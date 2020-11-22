@@ -9,14 +9,14 @@
         android:layout_height="wrap_content"
         android:text="@string/event_accessibilities_question"
         android:textColor="@color/primary_text"
-        android:textSize="16sp"
+        android:textSize="@dimen/_12sdp"
         android:fontFamily="@font/inter_regular"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/accessibilities_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginTop="@dimen/_4sdp"
         android:nestedScrollingEnabled="false"/>
 
 </LinearLayout>

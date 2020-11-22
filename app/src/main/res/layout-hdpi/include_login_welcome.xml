@@ -30,4 +30,5 @@
         android:textSize="@dimen/_36sdp"
         android:fontFamily="@font/inter_extra_bold"/>
 
+
 </LinearLayout>
