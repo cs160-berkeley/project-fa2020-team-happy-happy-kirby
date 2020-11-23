@@ -159,7 +159,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Event event1 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null, 123);
         db.collection("events")
                 .document("events")
                 .set(event1)

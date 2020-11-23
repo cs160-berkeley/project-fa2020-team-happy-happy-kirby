@@ -80,17 +80,17 @@ public class EventsViewFragment extends Fragment {
             accessibilities.put("Easy access to seating", false);
             ArrayList<Event> events = new ArrayList<>();
             Event event1 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
             Event event2 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
             Event event3 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
 
             Event event4 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
             events.add(event1);
             events.add(event2);
@@ -112,17 +112,17 @@ public class EventsViewFragment extends Fragment {
             accessibilities.put("Easy access to seating", false);
             ArrayList<Event> events = new ArrayList<>();
             Event event1 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
             Event event2 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
             Event event3 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
 
             Event event4 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
             events.add(event1);
             events.add(event2);
@@ -157,17 +157,17 @@ public class EventsViewFragment extends Fragment {
         accessibilities.put("Easy access to seating", false);
         ArrayList<Event> events = new ArrayList<>();
         Event event1 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
         Event event2 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
         Event event3 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
 
         Event event4 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
         events.add(event1);
         events.add(event2);
