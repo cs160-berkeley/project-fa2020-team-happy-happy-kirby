@@ -15,7 +15,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "API_KEY", "\"AIzaSyCbxiiUEdr8XinCzfSLSzDIiRkPOx6EIUY\""
+        buildConfigField "String", "API_KEY", "\"AIzaSyAih6WYZYx2_j2EnI6xIxMhzc_1YeLdv3k\""
     }
 
     buildTypes {
@@ -83,4 +83,7 @@ dependencies {
 
     // Google Places
     implementation "com.google.android.libraries.places:places:$google_places_version"
+
+    // Volley
+    implementation 'com.android.volley:volley:1.1.1'
 }

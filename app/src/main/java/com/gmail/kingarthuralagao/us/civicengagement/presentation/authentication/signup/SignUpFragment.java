@@ -62,19 +62,18 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = FragmentSignUpBinding.inflate(getLayoutInflater());
         firebaseAuth = ((CivicEngagementApp) getActivity().getApplication()).getAuthInstance();
 
         SignUpFragmentViewModelFactory factory = new SignUpFragmentViewModelFactory(getActivity().getApplication());
         signUpFragmentViewModel = new ViewModelProvider(this, factory).get(SignUpFragmentViewModel.class);
-
-        binding.nameLayout.setEndIconVisible(false);
-        binding.emailLayout.setEndIconVisible(false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentSignUpBinding.inflate(inflater, container, false);
+        binding.nameLayout.setEndIconVisible(false);
+        binding.emailLayout.setEndIconVisible(false);
         return binding.getRoot();
     }
 

@@ -34,6 +34,13 @@
     <string name="event_accessibilities_question">What accessibility resources are available at this event, as best as you can tell?</string>
     <string name="add_new_event">Add New Event</string>
 
+
+    <!-- Accessibilities-->
+    <string name="accessibility_one">Curb cuts for wheelchair</string>
+    <string name="accessibility_two">Medic station with supplies</string>
+    <string name="accessibility_three">Medic station with trained staff</string>
+    <string name="accessibility_four">Easy access to seating</string>
+
     <!--Events View-->
     <string name="street_name_dummy">1234 The Main Street</string>
 

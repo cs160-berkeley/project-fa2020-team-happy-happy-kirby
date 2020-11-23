@@ -1,9 +1,10 @@
 package com.gmail.kingarthuralagao.us.civicengagement.data.model.event;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class Event {
+public class Event implements Serializable {
 
     private String name;
     private String dateStart;
@@ -16,6 +17,7 @@ public class Event {
     private Integer checkIns;
     private List<String> causes;
     private Map<String, Boolean> accessibilities;
+    private Integer eventID;
 
     public Event() {
         // Empty Constructor for Firebase
@@ -23,7 +25,7 @@ public class Event {
 
     public Event(String name, String dateStart, String dateEnd, String timeStart, String timeEnd,
                  String description, String location, String timeZone, Integer checkIns, List<String> causes,
-                 Map<String, Boolean> accessibilities) {
+                 Map<String, Boolean> accessibilities, Integer eventID) {
         this.name = name;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
@@ -35,6 +37,15 @@ public class Event {
         this.checkIns = checkIns;
         this.causes = causes;
         this.accessibilities = accessibilities;
+        this.eventID = eventID;
+    }
+
+    public Integer getID() {
+        return eventID;
+    }
+
+    public void setID(Integer id) {
+        this.eventID = id;
     }
 
     public String getName() {
@@ -125,3 +136,4 @@ public class Event {
         this.accessibilities = accessibilities;
     }
 }
+

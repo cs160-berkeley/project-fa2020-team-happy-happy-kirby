@@ -61,7 +61,6 @@ public class SignInFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = FragmentSignInBinding.inflate(getLayoutInflater());
         firebaseAuth = ((CivicEngagementApp) requireActivity().getApplication()).getAuthInstance();
         signInFragmentViewModel = new ViewModelProvider(this).get(SignInFragmentViewModel.class);
     }
@@ -69,6 +68,7 @@ public class SignInFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentSignInBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
