@@ -63,7 +63,6 @@ public class EventsViewFragment extends Fragment {
         binding = FragmentEventsViewBinding.inflate(inflater, container, false);
         binding.locationTv.setText(inputLocation);
         initializeRecyclerView();
-        getTimeStampFromDate();
         return binding.getRoot();
     }
 
@@ -85,9 +84,14 @@ public class EventsViewFragment extends Fragment {
             accessibilities.put("Medic station with trained staff", false);
             accessibilities.put("Easy access to seating", false);
             ArrayList<Event> events = new ArrayList<>();
-            Event event1 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
+            String date1 = "11/22/2020 21:14:00";
+            String date2 = "11/23/2020 21:14:00";
+            Long dateStart = getTimeStampFromDate(date1);
+            Long dateEnd = getTimeStampFromDate(date2);
+            Event event1 = new Event("#SchoolStrike4Climate", dateStart, dateEnd, "8:00AM", "4:00PM",
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
+            /*
             Event event2 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
                     "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
 
@@ -96,12 +100,9 @@ public class EventsViewFragment extends Fragment {
 
 
             Event event4 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);*/
 
             events.add(event1);
-            events.add(event2);
-            events.add(event3);
-            events.add(event4);
 
             eventsAdapter.setData(events);
         });
@@ -117,23 +118,13 @@ public class EventsViewFragment extends Fragment {
             accessibilities.put("Medic station with trained staff", false);
             accessibilities.put("Easy access to seating", false);
             ArrayList<Event> events = new ArrayList<>();
-            Event event1 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
+
+            String date1 = "11/22/2020 21:14:00";
+            String date2 = "11/23/2020 21:14:00";
+            Long dateStart = getTimeStampFromDate(date1);
+            Long dateEnd = getTimeStampFromDate(date2);
+            Event event1 = new Event("#SchoolStrike4Climate", dateStart, dateEnd, "8:00AM", "4:00PM",
                     "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-            Event event2 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-            Event event3 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-
-            Event event4 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-            events.add(event1);
-            events.add(event2);
-            events.add(event3);
-            events.add(event4);
 
             eventsAdapter.setData(events);
         });
@@ -162,23 +153,12 @@ public class EventsViewFragment extends Fragment {
         accessibilities.put("Medic station with trained staff", false);
         accessibilities.put("Easy access to seating", false);
         ArrayList<Event> events = new ArrayList<>();
-        Event event1 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
+        String date1 = "11/22/2020 21:14:00";
+        String date2 = "11/23/2020 21:14:00";
+        Long dateStart = getTimeStampFromDate(date1);
+        Long dateEnd = getTimeStampFromDate(date2);
+        Event event1 = new Event("#SchoolStrike4Climate", dateStart, dateEnd, "8:00AM", "4:00PM",
                 "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-        Event event2 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-        Event event3 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-
-        Event event4 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-        events.add(event1);
-        events.add(event2);
-        events.add(event3);
-        events.add(event4);
 
         eventsAdapter = new EventsAdapter(events);
 
@@ -223,7 +203,7 @@ public class EventsViewFragment extends Fragment {
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
     }
 
-    public static Long getTimeStampFromDate() {
+    public static Long getTimeStampFromDate(String date) {
         long epoch = 0L;
         try {
             epoch = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse("11/22/2020 21:14:00").getTime() / 1000;
