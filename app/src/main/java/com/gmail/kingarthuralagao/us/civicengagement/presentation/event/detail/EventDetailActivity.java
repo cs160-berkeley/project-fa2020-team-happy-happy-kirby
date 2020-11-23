@@ -21,12 +21,11 @@ public class EventDetailActivity extends AppCompatActivity {
         binding = ActivityEventDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Event event4 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+        Event event = (Event) getIntent().getSerializableExtra("event");
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(binding.fragmentContainer.getId(), EventDetailFragment.newInstance(event4))
+                .add(binding.fragmentContainer.getId(), EventDetailFragment.newInstance(event))
                 .commit();
     }
 }

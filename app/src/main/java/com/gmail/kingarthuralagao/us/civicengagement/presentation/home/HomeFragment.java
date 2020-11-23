@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
         return new HomeFragment();
     }
 
-    private static final int AUTOCOMPLETE_REQUEST_CODE = 200;
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 100;
     private FragmentHomeBinding binding;
     private final String TAG = getClass().getSimpleName();
     private LocationManager mLocManager;
@@ -120,6 +120,7 @@ public class HomeFragment extends Fragment {
             Log.i(TAG, "Cancelled");
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
+                binding.landingEt.setText(place.getName());
                 Log.i(TAG, "Place: " + place.getAddress() + ", " + place.getId());
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
@@ -139,7 +140,7 @@ public class HomeFragment extends Fragment {
             fragment.show(getChildFragmentManager(), "");
         });
 
-        binding.landingEditText.setOnClickListener(view -> {
+        binding.landingEt.setOnClickListener(view -> {
             initializeLocationSearch();
         });
 
@@ -196,7 +197,7 @@ public class HomeFragment extends Fragment {
         Places.initialize(requireContext(), BuildConfig.API_KEY);
         Places.createClient(requireContext());
 
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS);
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS, Place.Field.NAME);
 
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)

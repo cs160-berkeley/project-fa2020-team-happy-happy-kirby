@@ -1,6 +1,7 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -17,11 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.detail.EventDetailActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventsViewBinding;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EventsViewFragment extends Fragment {
 
@@ -69,19 +73,24 @@ public class EventsViewFragment extends Fragment {
             binding.includeNowSoon.happeningNowBtn.setEnabled(false);
             binding.includeNowSoon.happeningSoonBtn.setEnabled(true);
 
+            HashMap<String, Boolean> accessibilities = new HashMap<>();
+            accessibilities.put("Curb cuts for wheelchair", true);
+            accessibilities.put("Medic station with supplies", true);
+            accessibilities.put("Medic station with trained staff", false);
+            accessibilities.put("Easy access to seating", false);
             ArrayList<Event> events = new ArrayList<>();
             Event event1 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
             Event event2 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
             Event event3 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
 
             Event event4 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
             events.add(event1);
             events.add(event2);
@@ -96,19 +105,24 @@ public class EventsViewFragment extends Fragment {
             binding.includeNowSoon.happeningNowBtn.setEnabled(true);
             binding.includeNowSoon.happeningSoonBtn.setEnabled(false);
 
+            HashMap<String, Boolean> accessibilities = new HashMap<>();
+            accessibilities.put("Curb cuts for wheelchair", true);
+            accessibilities.put("Medic station with supplies", true);
+            accessibilities.put("Medic station with trained staff", false);
+            accessibilities.put("Easy access to seating", false);
             ArrayList<Event> events = new ArrayList<>();
             Event event1 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
             Event event2 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
             Event event3 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
 
             Event event4 = new Event("#SchoolStrike4Climate", "11/03/20", "11/05/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
             events.add(event1);
             events.add(event2);
@@ -127,25 +141,33 @@ public class EventsViewFragment extends Fragment {
         binding.eventsRv.addOnItemTouchListener(new RecyclerTouchListener(requireContext(), new IRecyclerViewItemClickListener() {
             @Override
             public void onRecyclerViewItemClick(View view, Integer position) {
+                Intent i = new Intent(requireActivity(), EventDetailActivity.class);
+                i.putExtra("event", eventsAdapter.getEvent(position));
+                startActivity(i);
                 Toast.makeText(requireContext(), "Postion is: " + position, Toast.LENGTH_SHORT).show();
             }
         }));
     }
 
     private void initializeRecyclerView() {
+        HashMap<String, Boolean> accessibilities = new HashMap<>();
+        accessibilities.put("Curb cuts for wheelchair", true);
+        accessibilities.put("Medic station with supplies", true);
+        accessibilities.put("Medic station with trained staff", false);
+        accessibilities.put("Easy access to seating", false);
         ArrayList<Event> events = new ArrayList<>();
         Event event1 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
         Event event2 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
         Event event3 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
 
         Event event4 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities);
 
         events.add(event1);
         events.add(event2);

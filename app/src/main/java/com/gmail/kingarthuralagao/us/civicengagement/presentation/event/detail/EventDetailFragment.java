@@ -90,7 +90,7 @@ public class EventDetailFragment extends Fragment {
             if (position == 0) {
                 fragment = EventDescriptionFragment.newInstance(event.getDescription());
             } else {
-                fragment = AccessibilityFragment.newInstance();
+                fragment = AccessibilityFragment.newInstance(event.getAccessibilities());
             }
             addFragment(fragment);
             return fragment;
