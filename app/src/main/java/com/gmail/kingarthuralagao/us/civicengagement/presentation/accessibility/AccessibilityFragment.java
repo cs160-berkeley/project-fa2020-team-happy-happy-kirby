@@ -17,26 +17,36 @@ import com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentAccessibilityBinding;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AccessibilityFragment extends Fragment {
 
-    public static AccessibilityFragment newInstance() {
+    public static AccessibilityFragment newInstance(Map<String, Boolean> accessibilities) {
         AccessibilityFragment fragment = new AccessibilityFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ACCESSIBILITIES, (Serializable) accessibilities);
+        fragment.setArguments(args);
         return fragment;
     }
 
     private FragmentAccessibilityBinding binding;
+    private static final String ACCESSIBILITIES = "accessibilities";
+    private HashMap<String, Boolean> accessibilities;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = FragmentAccessibilityBinding.inflate(getLayoutInflater());
+
+        accessibilities = (HashMap) getArguments().getSerializable(ACCESSIBILITIES);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentAccessibilityBinding.inflate(inflater, container, false);
         initializeRecyclerView();
         return binding.getRoot();
     }
@@ -47,20 +57,17 @@ public class AccessibilityFragment extends Fragment {
     }
 
     private void initializeRecyclerView() {
-        ArrayList<Accessibility> accessibilities = new ArrayList<>();
-        accessibilities.add(new Accessibility("Curb cuts for wheelchair", true));
-        accessibilities.add(new Accessibility("Medic station with supplies", true));
-        accessibilities.add(new Accessibility("Medic station with trained staff", false));
-        accessibilities.add(new Accessibility("Easy access to seating", false));
+        ArrayList<Map.Entry<String, Boolean>> accessibilitiesList = new ArrayList<>();
+        accessibilitiesList.addAll(accessibilities.entrySet());
 
-        AccessibilityAdapter accessibilityAdapter = new AccessibilityAdapter(accessibilities);
+        AccessibilityAdapter accessibilityAdapter = new AccessibilityAdapter(accessibilitiesList);
 
-        binding.recylerView.setAdapter(accessibilityAdapter);
+        binding.recyclerView.setAdapter(accessibilityAdapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.recyclerview_divider_gray, null));
 
-        binding.recylerView.addItemDecoration(dividerItemDecoration);
-        binding.recylerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.recyclerView.addItemDecoration(dividerItemDecoration);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     }
 }

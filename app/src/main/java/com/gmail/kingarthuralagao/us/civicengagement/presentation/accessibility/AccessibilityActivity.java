@@ -19,10 +19,10 @@ public class AccessibilityActivity extends AppCompatActivity {
         binding = ActivityAccessibilityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        getSupportFragmentManager()
+        /*getSupportFragmentManager()
                 .beginTransaction()
                 .add(binding.fragmentContainer.getId(), AccessibilityFragment.newInstance())
-                .commit();
+                .commit();*/
 
         /*
         getSupportFragmentManager()

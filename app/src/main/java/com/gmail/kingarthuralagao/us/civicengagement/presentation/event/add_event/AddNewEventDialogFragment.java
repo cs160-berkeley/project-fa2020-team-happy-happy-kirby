@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.adapter.AccessibilityCheckboxAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.DialogAddNewEventBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,10 +43,8 @@ public class AddNewEventDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DialogAddNewEventBinding.inflate(getLayoutInflater());
 
         addNewEventNowFragment = AddNewEventNowFragment.newInstance();
-        addNewEventSoonFragment = AddNewEventSoonFragment.newInstance();
 
         setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_FullScreenDialog);
     }
@@ -55,14 +52,12 @@ public class AddNewEventDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = DialogAddNewEventBinding.inflate(inflater, container, false);
         getChildFragmentManager()
                 .beginTransaction()
                 .add(binding.fragmentContainer.getId(), addNewEventNowFragment)
-                .add(binding.fragmentContainer.getId(), addNewEventSoonFragment)
-                .hide(addNewEventSoonFragment)
                 .commit();
 
-        initializeRecyclerView();
         setUpEvents();
         return binding.getRoot();
     }
@@ -113,11 +108,21 @@ public class AddNewEventDialogFragment extends DialogFragment {
         });
 
         binding.includeHappeningNowHappeningSoon.happeningSoonBtn.setOnClickListener(view -> {
-            getChildFragmentManager()
-                    .beginTransaction()
-                    .hide(addNewEventNowFragment)
-                    .show(addNewEventSoonFragment)
-                    .commit();
+            if (addNewEventSoonFragment == null) {
+                addNewEventSoonFragment = AddNewEventSoonFragment.newInstance();
+
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .hide(addNewEventNowFragment)
+                        .add(binding.fragmentContainer.getId(), addNewEventSoonFragment)
+                        .commit();
+            } else {
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .hide(addNewEventNowFragment)
+                        .show(addNewEventSoonFragment)
+                        .commit();
+            }
             binding.includeHappeningNowHappeningSoon.happeningNowBtn.setEnabled(true);
             binding.includeHappeningNowHappeningSoon.happeningSoonBtn.setEnabled(false);
         });
@@ -154,7 +159,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Event event1 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null, 123);
         db.collection("events")
                 .document("events")
                 .set(event1)
@@ -165,23 +170,6 @@ public class AddNewEventDialogFragment extends DialogFragment {
                 });
     }
 
-    private void initializeRecyclerView() {
-        ArrayList<Accessibility> accessibilityList = new ArrayList<>();
-        accessibilityList.add(new Accessibility("Curb cuts for wheelchair", true));
-        accessibilityList.add(new Accessibility("Medic station with supplies", true));
-        accessibilityList.add(new Accessibility("Medic station with trained staff", false));
-        accessibilityList.add(new Accessibility("Easy access to seating", false));
-
-        AccessibilityCheckboxAdapter accessibilityCheckboxAdapter = new AccessibilityCheckboxAdapter(accessibilityList);
-
-        binding.includeAccessibilityCheckboxes.accessibilitiesRv.setAdapter(accessibilityCheckboxAdapter);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.recyclerview_divider_gray, null));
-
-        binding.includeAccessibilityCheckboxes.accessibilitiesRv.addItemDecoration(dividerItemDecoration);
-        binding.includeAccessibilityCheckboxes.accessibilitiesRv.setLayoutManager(new LinearLayoutManager(requireContext()));
-    }
 
 
     /****************************************** Code for making full screen Dialog *******************************/
