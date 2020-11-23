@@ -25,6 +25,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddNewEventDialogFragment;
@@ -40,6 +46,9 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,30 +62,34 @@ public class HomeFragment extends Fragment {
         return new HomeFragment();
     }
 
-    private static final int AUTOCOMPLETE_REQUEST_CODE = 200;
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 100;
     private FragmentHomeBinding binding;
     private final String TAG = getClass().getSimpleName();
     private LocationManager mLocManager;
     private LocationListener mLocListener;
+    private RequestQueue queue;
     private final int LOCATION_REQUEST_CODE = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = FragmentHomeBinding.inflate(getLayoutInflater());
 
-        setHasOptionsMenu(true);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("");
-         mLocManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);;
-         mLocListener = location -> {
-             //
-         };
+        mLocManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);;
+        mLocListener = location -> {
+            //
+        };
+        queue = Volley.newRequestQueue(this.getActivity());
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+
+        setHasOptionsMenu(true);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("");
+
         return binding.getRoot();
     }
 
@@ -118,6 +131,7 @@ public class HomeFragment extends Fragment {
             Log.i(TAG, "Cancelled");
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
+                binding.landingEt.setText(place.getName());
                 Log.i(TAG, "Place: " + place.getAddress() + ", " + place.getId());
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
@@ -137,7 +151,7 @@ public class HomeFragment extends Fragment {
             fragment.show(getChildFragmentManager(), "");
         });
 
-        binding.landingEditText.setOnClickListener(view -> {
+        binding.landingEt.setOnClickListener(view -> {
             initializeLocationSearch();
         });
 
@@ -152,6 +166,7 @@ public class HomeFragment extends Fragment {
                         LocationManager.GPS_PROVIDER, 0, 0, mLocListener);
                 Location location = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 Log.i(TAG, "Location: " + location.toString());
+                makeGeoRequest(location);
                 startActivityForResult(i, 200);
             } else {
                 // Location permission not granted.
@@ -185,6 +200,36 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private void makeGeoRequest(Location location) {
+        final String GEO_URL = "https://maps.googleapis.com/maps/api/geocode/json";
+        if (location != null) {
+            // Request a string response from the provided URL.
+            String fullGeoUrl = GEO_URL + "?latlng=" + location.getLatitude() + ','
+                    + location.getLongitude() + "&key=" + BuildConfig.API_KEY;
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.GET,
+                    fullGeoUrl,
+                    null,
+                    response -> {
+                        try {
+                            JSONArray results = response.getJSONArray("results");
+                            Log.i(TAG, "Results: " + response.toString());
+                            JSONObject firstResult = results.getJSONObject(0);
+                            String formattedAddress = firstResult.getString("formatted_address");
+                            Log.i(TAG, "Address: " + formattedAddress);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "Error getting response from GeoCoding API: " + error);
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(jsonObjectRequest);
+        }
+    }
 
     private void initializeLocationSearch() {
         // Set the fields to specify which types of place data to
@@ -194,7 +239,7 @@ public class HomeFragment extends Fragment {
         Places.initialize(requireContext(), BuildConfig.API_KEY);
         Places.createClient(requireContext());
 
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS);
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS, Place.Field.NAME);
 
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)

@@ -15,12 +15,13 @@ import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemAccessibilityAvailabilityBinding;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class AccessibilityAdapter extends RecyclerView.Adapter<AccessibilityAdapter.ViewHolder> {
 
-    private ArrayList<Accessibility> accessibilities;
+    private ArrayList<Map.Entry<String, Boolean>> accessibilities;
 
-    public AccessibilityAdapter(ArrayList<Accessibility> accessibilityList) {
+    public AccessibilityAdapter(ArrayList<Map.Entry<String, Boolean>> accessibilityList) {
         accessibilities = accessibilityList;
     }
 
@@ -36,7 +37,7 @@ public class AccessibilityAdapter extends RecyclerView.Adapter<AccessibilityAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int resID;
-        if (accessibilities.get(position).getAvailable()) {
+        if (accessibilities.get(position).getValue()) {
             resID = R.drawable.ic_available;
         } else {
             resID = R.drawable.ic_unavailable;
@@ -48,7 +49,7 @@ public class AccessibilityAdapter extends RecyclerView.Adapter<AccessibilityAdap
                 .into(holder.availabilityIv);
         holder.getAvailabilityIv();
 
-        holder.getResourceTv().setText(accessibilities.get(position).getResource());
+        holder.getResourceTv().setText(accessibilities.get(position).getKey());
     }
 
     @Override
