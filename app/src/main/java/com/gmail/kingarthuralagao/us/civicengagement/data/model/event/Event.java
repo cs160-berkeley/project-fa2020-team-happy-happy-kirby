@@ -7,8 +7,8 @@ import java.util.Map;
 public class Event implements Serializable {
 
     private String name;
-    private String dateStart;
-    private String dateEnd;
+    private Long dateStart;
+    private Long dateEnd;
     private String timeStart;
     private String timeEnd;
     private String description;
@@ -23,7 +23,7 @@ public class Event implements Serializable {
         // Empty Constructor for Firebase
     }
 
-    public Event(String name, String dateStart, String dateEnd, String timeStart, String timeEnd,
+    public Event(String name, Long dateStart, Long dateEnd, String timeStart, String timeEnd,
                  String description, String location, String timeZone, Integer checkIns, List<String> causes,
                  Map<String, Boolean> accessibilities, Integer eventID) {
         this.name = name;
@@ -56,19 +56,19 @@ public class Event implements Serializable {
         this.name = name;
     }
 
-    public String getDateStart() {
+    public Long getDateStart() {
         return dateStart;
     }
 
-    public void setDateStart(String dateStart) {
+    public void setDateStart(Long dateStart) {
         this.dateStart = dateStart;
     }
 
-    public String getDateEnd() {
+    public Long getDateEnd() {
         return dateEnd;
     }
 
-    public void setDateEnd(String dateEnd) {
+    public void setDateEnd(Long dateEnd) {
         this.dateEnd = dateEnd;
     }
 

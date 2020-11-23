@@ -27,7 +27,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class AddNewEventDialogFragment extends DialogFragment {
 
@@ -158,16 +161,53 @@ public class AddNewEventDialogFragment extends DialogFragment {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Event event1 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, null, 123);
+        String date1 = "11/22/2020 21:14:00";
+        String date2 = "11/23/2020 21:14:00";
+        Long dateStart = getTimeStampFromDate(date1);
+        Long dateEnd = getTimeStampFromDate(date2);
+
+        List<String> causes = new ArrayList<>();
+        causes.add("School");
+        causes.add("Climate");
+        HashMap<String, Boolean> accessibilities = new HashMap<>();
+        accessibilities.put("Curb cuts for wheelchair", true);
+        accessibilities.put("Medic station with supplies", true);
+        accessibilities.put("Medic station with trained staff", false);
+        accessibilities.put("Easy access to seating", false);
+        Event event1 = new Event("#SchoolStrike4Climate", dateStart, dateEnd, "8:00AM", "4:00PM",
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, causes, accessibilities, 123);
+
+        for(int i = 0; i < 10; i++) {
+            String name = "event" + i;
+            db.collection("events")
+                    .document(name)
+                    .set(event1)
+                    .addOnCompleteListener(task -> {
+                        Toast.makeText(requireActivity(), "Success!", Toast.LENGTH_SHORT).show();
+                    }).addOnFailureListener(e -> {
+                Toast.makeText(requireActivity(), "Fail!", Toast.LENGTH_SHORT).show();
+            });
+        }
         db.collection("events")
-                .document("events")
+                .document("event1")
                 .set(event1)
                 .addOnCompleteListener(task -> {
                     Toast.makeText(requireActivity(), "Success!", Toast.LENGTH_SHORT).show();
                 }).addOnFailureListener(e -> {
                     Toast.makeText(requireActivity(), "Fail!", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    public static Long getTimeStampFromDate(String date) {
+        long epoch = 0L;
+        try {
+            epoch = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(date).getTime() / 1000;
+
+            Log.i("EventsViewFragment", "Timestamp: " + epoch);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return epoch;
     }
 
 
