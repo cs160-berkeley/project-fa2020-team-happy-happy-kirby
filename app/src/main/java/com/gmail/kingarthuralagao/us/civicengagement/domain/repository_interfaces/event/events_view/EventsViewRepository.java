@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 public interface EventsViewRepository {
 
-    Observable<Map<String, Object>> fetchEventsHappeningNow(Long timeStamp);
+    Observable<Map<String, Object>> fetchEventsHappeningNow(Long timeStamp, String city);
 
     Observable<Status> fetchEventsHappeningSoon(Long timeStamp);
 }

@@ -10,6 +10,7 @@ public class Event implements Serializable {
     private Long dateStart;
     private Long dateEnd;
     private String timeStart;
+    private String city;
     private String timeEnd;
     private String description;
     private String location;
@@ -25,7 +26,7 @@ public class Event implements Serializable {
 
     public Event(String name, Long dateStart, Long dateEnd, String timeStart, String timeEnd,
                  String description, String location, String timeZone, Integer checkIns, List<String> causes,
-                 Map<String, Boolean> accessibilities, Integer eventID) {
+                 Map<String, Boolean> accessibilities, Integer eventID, String city) {
         this.name = name;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
@@ -38,6 +39,7 @@ public class Event implements Serializable {
         this.causes = causes;
         this.accessibilities = accessibilities;
         this.eventID = eventID;
+        this.city = city;
     }
 
     public Integer getID() {
@@ -134,6 +136,14 @@ public class Event implements Serializable {
 
     public void setAccessibilities(Map<String, Boolean> accessibilities) {
         this.accessibilities = accessibilities;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }
 

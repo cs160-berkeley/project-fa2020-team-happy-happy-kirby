@@ -24,19 +24,21 @@ public class FetchEventsHappeningNowUseCase extends BaseUseCase<Map<String, Obje
 
     @Override
     protected Observable<Map<String, Object>> createObservableUseCase(Params params) {
-        return eventsViewRepository.fetchEventsHappeningNow(params.timeStamp);
+        return eventsViewRepository.fetchEventsHappeningNow(params.timeStamp, params.city);
     }
 
     public static final class Params {
 
         private final Long timeStamp;
+        private String city;
 
-        private Params(Long timeStamp) {
+        private Params(Long timeStamp, String city) {
             this.timeStamp = timeStamp;
+            this.city = city;
         }
 
-        public static Params fetchEventsHappeningNow(Long timeStamp) {
-            return new Params(timeStamp);
+        public static Params fetchEventsHappeningNow(Long timeStamp, String city) {
+            return new Params(timeStamp, city);
         }
     }
 }

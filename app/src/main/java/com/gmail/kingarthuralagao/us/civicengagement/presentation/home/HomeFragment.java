@@ -47,6 +47,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -223,10 +224,14 @@ public class HomeFragment extends Fragment {
                                 Log.i(TAG, "Response: " + response.toString());
                                 JSONArray results = response.getJSONArray("results");
                                 JSONObject firstResult = results.getJSONObject(0);
-                                String formattedAddress = firstResult.getString("formatted_address");
-                                Log.i(TAG, "Address: " + formattedAddress);
+                                JSONArray addressComponents = firstResult.getJSONArray("address_components");
+
+                                JSONObject cityInfo = addressComponents.getJSONObject(3);
+                                String city = cityInfo.getString("long_name");
+                                //String formattedAddress = firstResult.getString("formatted_address");
+                                Log.i(TAG, "Address: " + city);
                                 Intent i = new Intent(requireActivity(), EventsViewActivity.class);
-                                i.putExtra("Address", formattedAddress);
+                                i.putExtra("Address", city);
                                 startActivity(i);
                             } catch (Exception e) {
                                 Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);

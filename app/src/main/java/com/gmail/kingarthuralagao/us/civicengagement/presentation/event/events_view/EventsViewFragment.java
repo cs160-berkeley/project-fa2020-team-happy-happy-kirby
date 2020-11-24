@@ -83,7 +83,7 @@ public class EventsViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         subscribeToLiveData();
-        viewModel.fetchEventsHappeningNow(System.currentTimeMillis());
+        viewModel.fetchEventsHappeningNow(System.currentTimeMillis(), inputLocation);
         setUpEvents();
     }
 
@@ -202,7 +202,7 @@ public class EventsViewFragment extends Fragment {
         events.add(event1);
         events.add(event1);
         events.add(event1);*/
-        viewModel.fetchEventsHappeningNow(System.currentTimeMillis());
+        viewModel.fetchEventsHappeningNow(System.currentTimeMillis(), inputLocation);
         eventsAdapter = new EventsAdapter(events);
 
         binding.eventsRv.setAdapter(eventsAdapter);

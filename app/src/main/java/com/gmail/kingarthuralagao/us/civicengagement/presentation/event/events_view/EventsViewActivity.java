@@ -27,7 +27,7 @@ public class EventsViewActivity extends AppCompatActivity implements FilterDialo
     }
 
     private void initializeFragment() {
-        EventsViewFragment fragment = EventsViewFragment.newInstance("Engage me at " + address);
+        EventsViewFragment fragment = EventsViewFragment.newInstance(address);
 
         getSupportFragmentManager()
                 .beginTransaction()

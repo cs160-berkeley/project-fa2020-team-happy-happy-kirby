@@ -177,7 +177,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
         accessibilities.put("Medic station with trained staff", false);
         accessibilities.put("Easy access to seating", false);
         Event event1 = new Event("#SchoolStrike4Climate", dateStart, dateEnd, "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, causes, accessibilities, 123);
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, causes, accessibilities, 123, "Cali");
 
         for(int i = 0; i < 10; i++) {
             String name = "event" + i;

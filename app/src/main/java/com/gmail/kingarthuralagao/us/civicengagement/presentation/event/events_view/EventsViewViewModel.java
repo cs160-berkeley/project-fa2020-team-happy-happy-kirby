@@ -36,7 +36,7 @@ public class EventsViewViewModel extends ViewModel {
         fetchEventsHappeningNowUseCase.dispose();
     }
 
-    public void fetchEventsHappeningNow(Long timeStamp) {
+    public void fetchEventsHappeningNow(Long timeStamp, String city) {
         fetchEventsHappeningNowResponse.postLoading();
 
         DisposableObserver<Map<String, Object>> disposableObserver = new DisposableObserver<Map<String, Object>>() {
@@ -54,6 +54,6 @@ public class EventsViewViewModel extends ViewModel {
             public void onComplete() {}
         };
 
-        fetchEventsHappeningNowUseCase.execute(disposableObserver, FetchEventsHappeningNowUseCase.Params.fetchEventsHappeningNow(timeStamp));
+        fetchEventsHappeningNowUseCase.execute(disposableObserver, FetchEventsHappeningNowUseCase.Params.fetchEventsHappeningNow(timeStamp, city));
     }
 }

@@ -82,6 +82,14 @@ public class User {
     public void setAccessibilities(Map<String, Boolean> accessibilities) {
         this.accessibilities = accessibilities;
     }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
 }
 
 

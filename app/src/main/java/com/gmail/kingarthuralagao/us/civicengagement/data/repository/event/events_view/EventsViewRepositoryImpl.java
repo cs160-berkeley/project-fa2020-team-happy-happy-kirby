@@ -31,24 +31,31 @@ public class EventsViewRepositoryImpl implements EventsViewRepository {
     private final String TAG = getClass().getSimpleName();
 
     @Override
-    public Observable<Map<String, Object>> fetchEventsHappeningNow(Long timeStamp) {
+    public Observable<Map<String, Object>> fetchEventsHappeningNow(Long timeStamp, String city) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Log.d(TAG, "Called");
 
+        Log.d(TAG, "City : " + city);
+        Log.d(TAG, "TimeStamp : " + timeStamp);
         Observable<Map<String, Object>> observable = Observable.create(emitter -> {
             db.collection("events")
-                    .whereEqualTo("capital", true)
+                    .whereEqualTo("city", city)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
+                                    emitter.onNext(document.getData());
                                     Log.d(TAG, document.getId() + " => " + document.getData());
                                 }
+                                Log.d(TAG, task.getResult().getDocuments().toString());
                             } else {
                                 Log.d(TAG, "Error getting documents: ", task.getException());
+                                emitter.onError(task.getException());
                             }
+                            emitter.onComplete();
                         }
                     });
         });
