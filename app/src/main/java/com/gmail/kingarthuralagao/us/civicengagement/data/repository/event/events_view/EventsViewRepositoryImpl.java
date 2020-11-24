@@ -9,6 +9,8 @@ import com.gmail.kingarthuralagao.us.civicengagement.data.repository.authenticat
 import com.gmail.kingarthuralagao.us.civicengagement.domain.repository_interfaces.event.events_view.EventsViewRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,16 +39,18 @@ public class EventsViewRepositoryImpl implements EventsViewRepository {
         Log.d(TAG, "Called");
 
         Log.d(TAG, "City : " + city);
-        Log.d(TAG, "TimeStamp : " + timeStamp);
+        Log.d(TAG, "TimeStamp : " + (timeStamp / 1000));
         Observable<Map<String, Object>> observable = Observable.create(emitter -> {
             db.collection("events")
                     .whereEqualTo("city", city)
+                    .whereLessThan("dateStart", timeStamp / 1000)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
+
                                     emitter.onNext(document.getData());
                                     Log.d(TAG, document.getId() + " => " + document.getData());
                                 }
