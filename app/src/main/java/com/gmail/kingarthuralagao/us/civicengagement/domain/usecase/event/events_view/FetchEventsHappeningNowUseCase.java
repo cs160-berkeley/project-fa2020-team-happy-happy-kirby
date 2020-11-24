@@ -6,14 +6,16 @@ import com.gmail.kingarthuralagao.us.civicengagement.data.model.user.User;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.repository_interfaces.authentication.SignUpRepository;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.repository_interfaces.event.events_view.EventsViewRepository;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class FetchEventsHappeningNowUseCase extends BaseUseCase<Map<String, Object>, FetchEventsHappeningNowUseCase.Params> {
+public class FetchEventsHappeningNowUseCase extends BaseUseCase<List<DocumentSnapshot>, FetchEventsHappeningNowUseCase.Params> {
 
     private EventsViewRepository eventsViewRepository;
 
@@ -23,7 +25,7 @@ public class FetchEventsHappeningNowUseCase extends BaseUseCase<Map<String, Obje
     }
 
     @Override
-    protected Observable<Map<String, Object>> createObservableUseCase(Params params) {
+    protected Observable<List<DocumentSnapshot>> createObservableUseCase(Params params) {
         return eventsViewRepository.fetchEventsHappeningNow(params.timeStamp, params.city);
     }
 

@@ -27,6 +27,8 @@ import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.detail.E
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventsViewBinding;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -91,12 +94,50 @@ public class EventsViewFragment extends Fragment {
         viewModel.fetchEventsHappeningNowResponse.observe(this, mapResource -> {
             switch (mapResource.getStatus()) {
                 case LOADING:
+                    //binding.progressBar.setVisibility(View.VISIBLE);
+                    //binding.eventsRv.setVisibility(View.INVISIBLE);
                     break;
                 case SUCCESS:
-                    Log.i(TAG, mapResource.getData().toString());
+                    ArrayList<Event> events = new ArrayList<>();
+                    for (DocumentSnapshot document : mapResource.getData()) {
+                        buildEvent(document.getData());
+                        events.add(buildEvent(document.getData()));
+                    }
+                    initializeRecyclerView(events);
+                    //binding.progressBar.setVisibility(View.GONE);
+                    //binding.eventsRv.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
                     Log.i(TAG, mapResource.getError().getMessage());
+                    //binding.progressBar.setVisibility(View.GONE);
+                    //binding.eventsRv.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    Log.d(TAG, "Created");
+                    break;
+            }
+        });
+
+        viewModel.fetchEventsHappeningSoonResponse.observe(this, listResource -> {
+            switch (listResource.getStatus()) {
+                case LOADING:
+                    //binding.progressBar.setVisibility(View.VISIBLE);
+                    //binding.eventsRv.setVisibility(View.INVISIBLE);
+                    break;
+                case SUCCESS:
+                    ArrayList<Event> events = new ArrayList<>();
+                    for (DocumentSnapshot document : listResource.getData()) {
+                        buildEvent(document.getData());
+                        events.add(buildEvent(document.getData()));
+                    }
+                    eventsAdapter.setData(events);
+                    //binding.progressBar.setVisibility(View.GONE);
+                    //binding.eventsRv.setVisibility(View.VISIBLE);
+                    break;
+                case ERROR:
+                    Log.i(TAG, listResource.getError().getMessage());
+                    //binding.progressBar.setVisibility(View.GONE);
+                    //binding.eventsRv.setVisibility(View.VISIBLE);
                     break;
                 default:
                     Log.d(TAG, "Created");
@@ -105,39 +146,30 @@ public class EventsViewFragment extends Fragment {
         });
     }
 
+    private Event buildEvent(Map<String, Object> data) {
+        Map<String, Object> m = data;
+        String name = (String) m.get("name");
+        Long dateStart = (Long) m.get("dateStart");
+        Long dateEnd = (Long) m.get("dateEnd");
+        String timeStart = (String) m.get("timeStart");
+        String city = (String) m.get("city");
+        String timeEnd = (String) m.get("timeEnd");
+        String description = (String) m.get("description");
+        String location = (String) m.get("location");
+        String timeZone = (String) m.get("timeZone");
+        //Integer checkIns = (Integer) m.get("checkIns");
+        List<String> causes = (List<String>) m.get("causes");
+        Map<String, Boolean> accessibilities = (Map<String, Boolean>) m.get("accessibilities");
+        Integer eventID = (Integer) m.get("eventID");
+        Event event = new Event(name, dateStart, dateEnd, timeStart, timeEnd, description, location, timeZone,
+                40000, causes, accessibilities, eventID, city);
+        return event;
+    }
+
     private void setUpEvents() {
         binding.includeNowSoon.happeningNowBtn.setOnClickListener(view -> {
             binding.includeNowSoon.happeningNowBtn.setEnabled(false);
             binding.includeNowSoon.happeningSoonBtn.setEnabled(true);
-
-            /*
-            HashMap<String, Boolean> accessibilities = new HashMap<>();
-            accessibilities.put("Curb cuts for wheelchair", true);
-            accessibilities.put("Medic station with supplies", true);
-            accessibilities.put("Medic station with trained staff", false);
-            accessibilities.put("Easy access to seating", false);
-            ArrayList<Event> events = new ArrayList<>();
-
-            String date1 = "11/22/2020 21:14:00";
-            String date2 = "11/23/2020 21:14:00";
-            Long dateStart = getTimeStampFromDate(date1);
-            Long dateEnd = getTimeStampFromDate(date2);
-            Event event1 = new Event("#SchoolStrike4Climate", dateStart, dateEnd, "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-            Event event2 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-            Event event3 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-
-            Event event4 = new Event("#SchoolStrike4Climate", "11/01/20", "11/03/20", "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-            //events.add(event1);
-
-            eventsAdapter.setData(events);*/
         });
 
         binding.includeNowSoon.happeningSoonBtn.setOnClickListener(view -> {
@@ -145,22 +177,7 @@ public class EventsViewFragment extends Fragment {
             binding.includeNowSoon.happeningNowBtn.setEnabled(true);
             binding.includeNowSoon.happeningSoonBtn.setEnabled(false);
 
-            /*
-            HashMap<String, Boolean> accessibilities = new HashMap<>();
-            accessibilities.put("Curb cuts for wheelchair", true);
-            accessibilities.put("Medic station with supplies", true);
-            accessibilities.put("Medic station with trained staff", false);
-            accessibilities.put("Easy access to seating", false);
-            ArrayList<Event> events = new ArrayList<>();
-
-            String date1 = "11/22/2020 21:14:00";
-            String date2 = "11/23/2020 21:14:00";
-            Long dateStart = getTimeStampFromDate(date1);
-            Long dateEnd = getTimeStampFromDate(date2);
-            Event event1 = new Event("#SchoolStrike4Climate", dateStart, dateEnd, "8:00AM", "4:00PM",
-                    "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-            eventsAdapter.setData(events);*/
+            viewModel.fetchEventsHappeningSoon(System.currentTimeMillis(), inputLocation);
         });
 
 
@@ -181,8 +198,7 @@ public class EventsViewFragment extends Fragment {
         }));
     }
 
-    private void initializeRecyclerView() {
-        ArrayList<Event> events = new ArrayList<>();
+    private void initializeRecyclerView(ArrayList<Event> events) {
         /*
         HashMap<String, Boolean> accessibilities = new HashMap<>();
         accessibilities.put("Curb cuts for wheelchair", true);
@@ -202,7 +218,6 @@ public class EventsViewFragment extends Fragment {
         events.add(event1);
         events.add(event1);
         events.add(event1);*/
-        viewModel.fetchEventsHappeningNow(System.currentTimeMillis(), inputLocation);
         eventsAdapter = new EventsAdapter(events);
 
         binding.eventsRv.setAdapter(eventsAdapter);
