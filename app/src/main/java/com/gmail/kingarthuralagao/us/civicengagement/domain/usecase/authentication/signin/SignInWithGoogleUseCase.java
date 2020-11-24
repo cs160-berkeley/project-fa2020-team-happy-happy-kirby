@@ -4,13 +4,14 @@ import com.gmail.kingarthuralagao.us.civicengagement.core.base.BaseUseCase;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.repository_interfaces.authentication.SignInRepository;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.repository_interfaces.authentication.SignUpRepository;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.authentication.signup.SignUpWithGoogleUseCase;
+import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.FirebaseUser;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class SignInWithGoogleUseCase extends BaseUseCase<FirebaseUser, SignInWithGoogleUseCase.Params> {
+public class SignInWithGoogleUseCase extends BaseUseCase<AdditionalUserInfo, SignInWithGoogleUseCase.Params> {
     private SignInRepository signInRepository;
 
     public SignInWithGoogleUseCase(SignInRepository signInRepository) {
@@ -19,7 +20,7 @@ public class SignInWithGoogleUseCase extends BaseUseCase<FirebaseUser, SignInWit
     }
 
     @Override
-    protected Observable<FirebaseUser> createObservableUseCase(Params params) {
+    protected Observable<AdditionalUserInfo> createObservableUseCase(Params params) {
         return signInRepository.signInWithGoogle(params.idToken);
     }
 

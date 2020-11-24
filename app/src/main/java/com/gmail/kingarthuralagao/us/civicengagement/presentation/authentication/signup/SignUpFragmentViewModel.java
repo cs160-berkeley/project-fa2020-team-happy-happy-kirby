@@ -9,12 +9,19 @@ import com.gmail.kingarthuralagao.us.civicengagement.core.utils.InvalidEmailExce
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.StateLiveData;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
 import com.gmail.kingarthuralagao.us.civicengagement.data.Status;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.user.User;
 import com.gmail.kingarthuralagao.us.civicengagement.data.repository.authentication.signup.SignUpRepositoryImpl;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.authentication.signup.CheckIfEmailIsTakenUseCase;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.authentication.signup.CreateUserWithEmailAndPasswordUseCase;
+import com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.authentication.signup.InitializeUserUseCase;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.authentication.signup.SetUserDisplayNameUseCase;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.authentication.signup.SignUpWithGoogleUseCase;
+import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.rxjava3.observers.DisposableObserver;
@@ -22,9 +29,10 @@ import io.reactivex.rxjava3.observers.DisposableObserver;
 public class SignUpFragmentViewModel extends AndroidViewModel {
 
     public StateLiveData<Boolean> isEmailTakenResponse = new StateLiveData<>();
-    public StateLiveData<FirebaseUser> googleSignInResponse = new StateLiveData<>();
+    public StateLiveData<AdditionalUserInfo> googleSignInResponse = new StateLiveData<>();
     public StateLiveData<FirebaseUser> createNewUserResponse = new StateLiveData<>();
     public StateLiveData<FirebaseUser> setUserDisplayNameResponse = new StateLiveData<>();
+    public StateLiveData<Status> initializeUserResponse = new StateLiveData<>();
 
     private CheckIfEmailIsTakenUseCase checkIfEmailIsTakenUseCase =
             new CheckIfEmailIsTakenUseCase(SignUpRepositoryImpl.newInstance(getApplication()));
@@ -37,6 +45,9 @@ public class SignUpFragmentViewModel extends AndroidViewModel {
 
     private SetUserDisplayNameUseCase setUserDisplayNameUseCase =
             new SetUserDisplayNameUseCase(SignUpRepositoryImpl.newInstance(getApplication()));
+
+    private InitializeUserUseCase initializeUserUseCase =
+            new InitializeUserUseCase(SignUpRepositoryImpl.newInstance(getApplication()));
 
     public SignUpFragmentViewModel(@androidx.annotation.NonNull Application application) {
         super(application);
@@ -79,10 +90,10 @@ public class SignUpFragmentViewModel extends AndroidViewModel {
     public void initializeSignUpWithGoogle(String idToken) {
         googleSignInResponse.postLoading();
 
-        DisposableObserver<FirebaseUser> disposableObserver = new DisposableObserver<FirebaseUser>() {
+        DisposableObserver<AdditionalUserInfo> disposableObserver = new DisposableObserver<AdditionalUserInfo>() {
             @Override
-            public void onNext(@io.reactivex.rxjava3.annotations.NonNull FirebaseUser firebaseUser) {
-                googleSignInResponse.postSuccess(firebaseUser);
+            public void onNext(@io.reactivex.rxjava3.annotations.NonNull AdditionalUserInfo additionalUserInfo) {
+                googleSignInResponse.postSuccess(additionalUserInfo);
             }
 
             @Override
@@ -139,5 +150,28 @@ public class SignUpFragmentViewModel extends AndroidViewModel {
 
         setUserDisplayNameUseCase.execute(disposableObserver,
                 SetUserDisplayNameUseCase.Params.setUserDisplayName(name, user));
+    }
+
+    public void initializeUser(FirebaseUser user, String name) {
+        User newUser = new User(name, "", null, null, new ArrayList<>(), null, user.getUid());
+
+        initializeUserResponse.postLoading();
+
+        DisposableObserver<Status> disposableObserver = new DisposableObserver<Status>() {
+            @Override
+            public void onNext(@io.reactivex.rxjava3.annotations.NonNull Status status) {
+                initializeUserResponse.postSuccess(status);
+            }
+
+            @Override
+            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                initializeUserResponse.postError(e);
+            }
+
+            @Override
+            public void onComplete() {}
+        };
+
+        initializeUserUseCase.execute(disposableObserver, InitializeUserUseCase.Params.initializeUser(user, newUser));
     }
 }

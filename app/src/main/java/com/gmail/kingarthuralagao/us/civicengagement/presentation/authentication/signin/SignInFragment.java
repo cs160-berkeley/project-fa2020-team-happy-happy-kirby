@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
 import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
+import com.gmail.kingarthuralagao.us.civicengagement.data.Status;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.IAuthenticationEventsListener;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentSignInBinding;
@@ -107,18 +108,22 @@ public class SignInFragment extends Fragment {
     }
 
     private void subscribeToLiveData() {
-        signInFragmentViewModel.googleSignInResponse.observe(this, firebaseUserResource -> {
-            switch (firebaseUserResource.getStatus()) {
+        signInFragmentViewModel.googleSignInResponse.observe(this, resource -> {
+            switch (resource.getStatus()) {
                 case LOADING:
                     break;
                 case SUCCESS:
-                    FirebaseUser user = firebaseUserResource.getData();
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
                     googleSignInClient.signOut();
-                    iAuthenticationEventsListener.onStopLoading();
-                    updateUI(user);
+                    if (resource.getData().isNewUser()) {
+                        initializeUser(user, user.getDisplayName());
+                    } else {
+                        iAuthenticationEventsListener.onStopLoading();
+                        updateUI(user);
+                    }
                     break;
                 case ERROR:
-                    Log.w(TAG, "signInWithCredential:failure", firebaseUserResource.getError());
+                    Log.w(TAG, "signInWithCredential:failure", resource.getError());
                     Toasty.error(requireActivity(), "Authentication failed.", Toast.LENGTH_SHORT, true).show();
                     iAuthenticationEventsListener.onStopLoading();
                     break;
@@ -148,7 +153,29 @@ public class SignInFragment extends Fragment {
                     break;
             }
         });
+
+        signInFragmentViewModel.initializeUserResponse.observe(this, new Observer<Resource<Status>>() {
+            @Override
+            public void onChanged(Resource<Status> statusResource) {
+                switch (statusResource.getStatus()) {
+                    case LOADING:
+                        break;
+                    case SUCCESS:
+                        iAuthenticationEventsListener.onStopLoading();
+                        updateUI(firebaseAuth.getCurrentUser());
+                        break;
+                    case ERROR:
+                        Toasty.error(requireActivity(), statusResource.getError().getMessage(), Toast.LENGTH_SHORT, true);
+                        iAuthenticationEventsListener.onStopLoading();
+                        break;
+                    default:
+                        Log.d(TAG, "Created");
+                        break;
+                }
+            }
+        });
     }
+
 
     private void setUpEvents() {
         binding.signUpTv.setOnClickListener(signUpTv -> iAuthenticationEventsListener.onSwitchToSignUp());
@@ -195,6 +222,10 @@ public class SignInFragment extends Fragment {
                     binding.emailLayout.setError("");
             }
         });
+    }
+
+    private void initializeUser(FirebaseUser user, String displayName) {
+        signInFragmentViewModel.initializeUser(user, displayName);
     }
 
     /******************************* Password-based SignIn **********************************/
@@ -264,6 +295,7 @@ public class SignInFragment extends Fragment {
 
     private void initializeTwitterSignIn() {
         OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
+        iAuthenticationEventsListener.onStartLoading();
 
         Task<AuthResult> pendingResultTask = firebaseAuth.getPendingAuthResult();
         if (pendingResultTask != null) {
@@ -286,11 +318,17 @@ public class SignInFragment extends Fragment {
                             // authResult.getCredential().getAccessToken().
                             // The OAuth secret can be retrieved by calling:
                             // authResult.getCredential().getSecret().
-                            updateUI(authResult.getUser());
+                            if (authResult.getAdditionalUserInfo().isNewUser()) {
+                                initializeUser(authResult.getUser(), authResult.getUser().getDisplayName());
+                            } else {
+                                iAuthenticationEventsListener.onStopLoading();
+                                updateUI(authResult.getUser());
+                            }
                         })
                 .addOnFailureListener(
                         exception -> {
                             Toasty.error(requireActivity(), exception.getMessage(), Toast.LENGTH_SHORT, true).show();
+                            iAuthenticationEventsListener.onStopLoading();
                         });
     }
 
@@ -298,11 +336,17 @@ public class SignInFragment extends Fragment {
         pendingResultTask
                 .addOnSuccessListener(
                         authResult -> {
-                            updateUI(authResult.getUser());
+                            if (authResult.getAdditionalUserInfo().isNewUser()) {
+                                initializeUser(authResult.getUser(), authResult.getUser().getDisplayName());
+                            } else {
+                                iAuthenticationEventsListener.onStopLoading();
+                                updateUI(authResult.getUser());
+                            }
                         })
                 .addOnFailureListener(
                         exception -> {
                             Toasty.error(requireActivity(), exception.getMessage(), Toast.LENGTH_SHORT, true).show();
+                            iAuthenticationEventsListener.onStopLoading();
                         });
     }
     

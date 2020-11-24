@@ -14,21 +14,20 @@ import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityEventsV
 public class EventsViewActivity extends AppCompatActivity implements FilterDialog.IFilterClickListener {
 
     private ActivityEventsViewBinding binding;
+    private String address;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        getWindow().setEnterTransition(new Slide());
-
         binding = ActivityEventsViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        address = getIntent().getStringExtra("Address");
         initializeFragment();
     }
 
     private void initializeFragment() {
-        EventsViewFragment fragment = EventsViewFragment.newInstance("Engage me at 1234 Main Street");
+        EventsViewFragment fragment = EventsViewFragment.newInstance("Engage me at " + address);
 
         getSupportFragmentManager()
                 .beginTransaction()

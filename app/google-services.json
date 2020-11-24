@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "156929816574-d427bh0smlbm6vm5jt1o5mm63cr9sp20.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gmail.kingarthuralagao.us.civicengagement",
+            "certificate_hash": "c7f1a9fa5fe5721d9c29af24c3dc83991dc40502"
+          }
+        },
+        {
           "client_id": "156929816574-7i2a1kc59ec2s3lfsmlur5rdl9mvco8a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

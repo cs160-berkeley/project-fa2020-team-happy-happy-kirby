@@ -23,15 +23,16 @@
         <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity">
         </activity>
         <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity">
+        </activity>
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.splash.SplashScreenActivity"
+            android:theme="@style/Theme.SplashScreen">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.splash.SplashScreenActivity"
-            android:theme="@style/Theme.SplashScreen">
 
         </activity>
         <meta-data

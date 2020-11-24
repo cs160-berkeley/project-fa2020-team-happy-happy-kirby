@@ -83,4 +83,7 @@ dependencies {
 
     // Google Places
     implementation "com.google.android.libraries.places:places:$google_places_version"
+
+    // Volley
+    implementation 'com.android.volley:volley:1.1.1'
 }

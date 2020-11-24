@@ -34,6 +34,7 @@ import com.android.volley.toolbox.Volley;
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddNewEventDialogFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.detail.EventDetailActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
@@ -41,6 +42,7 @@ import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentHomeBin
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
@@ -131,7 +133,9 @@ public class HomeFragment extends Fragment {
             Log.i(TAG, "Cancelled");
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
-                binding.landingEt.setText(place.getName());
+                Intent i = new Intent(requireActivity(), EventsViewActivity.class);
+                i.putExtra("Address", place.getAddress());
+                startActivity(i);
                 Log.i(TAG, "Place: " + place.getAddress() + ", " + place.getId());
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
@@ -151,15 +155,15 @@ public class HomeFragment extends Fragment {
             fragment.show(getChildFragmentManager(), "");
         });
 
-        binding.landingEt.setOnClickListener(view -> {
+        binding.searchForLocationTv.setOnClickListener(view -> {
             initializeLocationSearch();
         });
 
-        binding.locationImage.setOnClickListener(view -> {
+        binding.useCurrentLocationTv.setOnClickListener(view -> {
             Intent i = new Intent(requireActivity(), EventsViewActivity.class);
             Log.i(TAG, "In onclicklistener for location image");
             // Location permission granted.
-            if (ContextCompat.checkSelfPermission(getActivity(),
+            if (ContextCompat.checkSelfPermission(requireActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
                 // Update location.
                 mLocManager.requestLocationUpdates(
@@ -167,7 +171,6 @@ public class HomeFragment extends Fragment {
                 Location location = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 Log.i(TAG, "Location: " + location.toString());
                 makeGeoRequest(location);
-                startActivityForResult(i, 200);
             } else {
                 // Location permission not granted.
                 Log.i(TAG, "Requesting location permission.");
@@ -186,7 +189,11 @@ public class HomeFragment extends Fragment {
 
                 // Permission was granted.
                 Intent i = new Intent(requireActivity(), EventsViewActivity.class);
-                startActivityForResult(i, 200);
+                mLocManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, 0, 0, mLocListener);
+                Location location = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Log.i(TAG, "Location: " + location.toString());
+                makeGeoRequest(location);
             } else {
                 // Permission denied.
                 // Tell the user the action is cancelled.
@@ -209,16 +216,21 @@ public class HomeFragment extends Fragment {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.GET,
                     fullGeoUrl,
-                    null,
-                    response -> {
-                        try {
-                            JSONArray results = response.getJSONArray("results");
-                            Log.i(TAG, "Results: " + response.toString());
-                            JSONObject firstResult = results.getJSONObject(0);
-                            String formattedAddress = firstResult.getString("formatted_address");
-                            Log.i(TAG, "Address: " + formattedAddress);
-                        } catch (Exception e) {
-                            Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);
+                    null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Log.i(TAG, "Response: " + response.toString());
+                                JSONArray results = response.getJSONArray("results");
+                                JSONObject firstResult = results.getJSONObject(0);
+                                String formattedAddress = firstResult.getString("formatted_address");
+                                Log.i(TAG, "Address: " + formattedAddress);
+                                Intent i = new Intent(requireActivity(), EventsViewActivity.class);
+                                i.putExtra("Address", formattedAddress);
+                                startActivity(i);
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);
+                            }
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -243,6 +255,7 @@ public class HomeFragment extends Fragment {
 
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                .setTypeFilter(TypeFilter.CITIES)
                 .build(requireContext());
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }

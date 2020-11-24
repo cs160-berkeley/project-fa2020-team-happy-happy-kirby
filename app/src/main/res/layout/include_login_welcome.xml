@@ -3,31 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/primary_blue"
     android:orientation="vertical"
     android:paddingBottom="@dimen/_4sdp">
-
-    <TextView
-        android:id="@+id/welcome_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/_4sdp"
-        android:fontFamily="@font/inter_regular"
-        android:text="@string/welcome"
-        android:textColor="#F4F3F3"
-        android:textSize="@dimen/_24sdp" />
 
     <TextView
         android:id="@+id/app_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="@dimen/_16sdp"
         android:text="@string/app_name"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_36sdp"
-        android:fontFamily="@font/inter_extra_bold"/>
+        android:theme="@style/Theme.App.Logo"/>
+
+    <TextView
+        android:id="@+id/welcome_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:fontFamily="@font/inter_regular"
+        android:text="@string/app_description"
+        android:gravity="center"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/_14sdp" />
 
 </LinearLayout>

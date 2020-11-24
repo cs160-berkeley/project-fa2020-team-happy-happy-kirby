@@ -10,14 +10,14 @@ public class User {
     private List<Integer> events;
     private List<Integer> checkins;
     private Map<String, Boolean> accessibilities;
-    private Integer userID;
+    private String userID;
 
     public User() {
 
     }
 
     public User(String name, String location, List<String> causes, List<Integer> events, List<Integer> checkins,
-                 Map<String, Boolean> accessibilities, Integer userID) {
+                 Map<String, Boolean> accessibilities, String userID) {
         this.name = name;
         this.location = location;
         this.events = events;
@@ -27,11 +27,11 @@ public class User {
         this.userID = userID;
     }
 
-    public Integer getID() {
+    public String getID() {
         return userID;
     }
 
-    public void setID(Integer id) {
+    public void setID(String id) {
         this.userID = id;
     }
 

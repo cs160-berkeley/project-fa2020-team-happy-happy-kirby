@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
                 android:layout_marginStart="@dimen/_12sdp"
-                android:backgroundTint="@color/secondary_blue"
+                android:backgroundTint="@color/primary_blue_variant"
                 app:cardCornerRadius="@dimen/_8sdp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
