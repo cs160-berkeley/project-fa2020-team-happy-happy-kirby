@@ -68,6 +68,8 @@ public class Utils {
         int hour = cal.get(Calendar.HOUR_OF_DAY);  // 15
         int minute = cal.get(Calendar.MINUTE);  // 16
         int second = cal.get(Calendar.SECOND);  // 17
-        return month + " " + day + " " + year + " at " + (hour%12) + " " + minute + " " + (hour > 12 && hour < 24 ? "PM" : "AM");
+        return month + "/" + day + "/" + year ;
     }
+
+
 }

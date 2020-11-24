@@ -61,6 +61,8 @@ public class EventsViewFragment extends Fragment {
     private String inputLocation;
     private final String TAG = getClass().getSimpleName();
     private static final String INPUT_LOCATION = "Input Location";
+    private ArrayList<Event> happeningNow = new ArrayList<>();
+    private ArrayList<Event> happeningSoon = new ArrayList<>();
     private FragmentEventsViewBinding binding;
     private EventsAdapter eventsAdapter;
     private EventsViewViewModel viewModel;
@@ -94,23 +96,23 @@ public class EventsViewFragment extends Fragment {
         viewModel.fetchEventsHappeningNowResponse.observe(this, mapResource -> {
             switch (mapResource.getStatus()) {
                 case LOADING:
-                    //binding.progressBar.setVisibility(View.VISIBLE);
-                    //binding.eventsRv.setVisibility(View.INVISIBLE);
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    binding.eventsRv.setVisibility(View.INVISIBLE);
                     break;
                 case SUCCESS:
-                    ArrayList<Event> events = new ArrayList<>();
+                    happeningNow.clear();
                     for (DocumentSnapshot document : mapResource.getData()) {
                         buildEvent(document.getData());
-                        events.add(buildEvent(document.getData()));
+                        happeningNow.add(buildEvent(document.getData()));
                     }
-                    initializeRecyclerView(events);
-                    //binding.progressBar.setVisibility(View.GONE);
-                    //binding.eventsRv.setVisibility(View.VISIBLE);
+                    initializeRecyclerView(happeningNow);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.eventsRv.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
                     Log.i(TAG, mapResource.getError().getMessage());
-                    //binding.progressBar.setVisibility(View.GONE);
-                    //binding.eventsRv.setVisibility(View.VISIBLE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.eventsRv.setVisibility(View.VISIBLE);
                     break;
                 default:
                     Log.d(TAG, "Created");
@@ -121,23 +123,23 @@ public class EventsViewFragment extends Fragment {
         viewModel.fetchEventsHappeningSoonResponse.observe(this, listResource -> {
             switch (listResource.getStatus()) {
                 case LOADING:
-                    //binding.progressBar.setVisibility(View.VISIBLE);
-                    //binding.eventsRv.setVisibility(View.INVISIBLE);
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    binding.eventsRv.setVisibility(View.INVISIBLE);
                     break;
                 case SUCCESS:
-                    ArrayList<Event> events = new ArrayList<>();
+                    happeningSoon.clear();
                     for (DocumentSnapshot document : listResource.getData()) {
                         buildEvent(document.getData());
-                        events.add(buildEvent(document.getData()));
+                        happeningSoon.add(buildEvent(document.getData()));
                     }
-                    eventsAdapter.setData(events);
-                    //binding.progressBar.setVisibility(View.GONE);
-                    //binding.eventsRv.setVisibility(View.VISIBLE);
+                    eventsAdapter.setData(happeningSoon);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.eventsRv.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
                     Log.i(TAG, listResource.getError().getMessage());
-                    //binding.progressBar.setVisibility(View.GONE);
-                    //binding.eventsRv.setVisibility(View.VISIBLE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.eventsRv.setVisibility(View.VISIBLE);
                     break;
                 default:
                     Log.d(TAG, "Created");
@@ -170,6 +172,12 @@ public class EventsViewFragment extends Fragment {
         binding.includeNowSoon.happeningNowBtn.setOnClickListener(view -> {
             binding.includeNowSoon.happeningNowBtn.setEnabled(false);
             binding.includeNowSoon.happeningSoonBtn.setEnabled(true);
+
+            if (happeningNow.size() == 0) {
+                viewModel.fetchEventsHappeningNow(System.currentTimeMillis(), inputLocation);
+            } else {
+                eventsAdapter.setData(happeningNow);
+            }
         });
 
         binding.includeNowSoon.happeningSoonBtn.setOnClickListener(view -> {
@@ -177,7 +185,11 @@ public class EventsViewFragment extends Fragment {
             binding.includeNowSoon.happeningNowBtn.setEnabled(true);
             binding.includeNowSoon.happeningSoonBtn.setEnabled(false);
 
-            viewModel.fetchEventsHappeningSoon(System.currentTimeMillis(), inputLocation);
+            if (happeningSoon.size() == 0) {
+                viewModel.fetchEventsHappeningSoon(System.currentTimeMillis(), inputLocation);
+            } else {
+                eventsAdapter.setData(happeningSoon);
+            }
         });
 
 

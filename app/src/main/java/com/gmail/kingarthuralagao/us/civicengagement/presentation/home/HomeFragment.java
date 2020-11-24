@@ -134,10 +134,15 @@ public class HomeFragment extends Fragment {
             Log.i(TAG, "Cancelled");
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
+                String address = place.getAddress();
+
+                int commaIndex = address.indexOf(",");
+                String city = address.substring(0, commaIndex);
+                Log.i(TAG, "Address comp: " + place.getAddressComponents());
                 Intent i = new Intent(requireActivity(), EventsViewActivity.class);
-                i.putExtra("Address", place.getAddress());
+                i.putExtra("Address", city);
                 startActivity(i);
-                Log.i(TAG, "Place: " + place.getAddress() + ", " + place.getId());
+                //Log.i(TAG, "Place: " + place.getAddress() + ", " + place.getId());
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);
@@ -226,8 +231,19 @@ public class HomeFragment extends Fragment {
                                 JSONObject firstResult = results.getJSONObject(0);
                                 JSONArray addressComponents = firstResult.getJSONArray("address_components");
 
-                                JSONObject cityInfo = addressComponents.getJSONObject(3);
-                                String city = cityInfo.getString("long_name");
+                                String city = "";
+                                for (int i = 0; i < addressComponents.length(); i++) {
+                                    JSONObject object = addressComponents.getJSONObject(i);
+
+                                    JSONArray typesArray = object.getJSONArray("types");
+                                    for (int j = 0; j < typesArray.length(); j++) {
+                                        if (typesArray.get(j).equals("locality")) {
+                                            city = object.getString("long_name");
+                                        }
+                                    }
+
+                                }
+                                //JSONObject cityInfo = addressComponents.getJSONObject(3);
                                 //String formattedAddress = firstResult.getString("formatted_address");
                                 Log.i(TAG, "Address: " + city);
                                 Intent i = new Intent(requireActivity(), EventsViewActivity.class);

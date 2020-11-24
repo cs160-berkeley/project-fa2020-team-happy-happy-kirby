@@ -64,6 +64,13 @@
         android:scaleType="center"
         app:maxImageSize="32dp"/>
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="@dimen/_56sdp"
+        android:layout_height="@dimen/_56sdp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"/>
+
 
 
 </RelativeLayout>

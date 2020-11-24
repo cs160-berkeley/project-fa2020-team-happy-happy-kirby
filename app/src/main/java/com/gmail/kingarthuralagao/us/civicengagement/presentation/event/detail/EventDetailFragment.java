@@ -48,6 +48,7 @@ public class EventDetailFragment extends Fragment {
         tabTitles = new ArrayList<>();
         tabTitles.add("Description");
         tabTitles.add("Accessibility Info");
+
     }
 
     @Nullable
@@ -56,6 +57,10 @@ public class EventDetailFragment extends Fragment {
         binding = FragmentEventDetailBinding.inflate(inflater, container, false);
         initializeViews();
         setViewPager();
+
+        binding.backArrowImg.setOnClickListener(view -> {
+            requireActivity().finish();
+        });
         return binding.getRoot();
     }
 
