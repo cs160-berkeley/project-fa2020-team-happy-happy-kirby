@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemEventDetailsBinding;
 
@@ -35,7 +36,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Event event = events.get(position);
         holder.eventNameTv.setText(event.getName());
-        holder.eventDateTv.setText(event.getDateStart() + " - " + event.getDateEnd());
+        String startDate = Utils.getDateFromTimeStamp(event.getDateStart());
+        String endDate  = Utils.getDateFromTimeStamp(event.getDateEnd());
+        holder.eventDateTv.setText(startDate + " - " + endDate);
         holder.eventTimeTv.setText(event.getTimeStart() + " - " + event.getTimeEnd());
         holder.eventLocationTv.setText(event.getLocation());
         holder.eventCheckInsTv.setText(event.getCheckIns() + "");

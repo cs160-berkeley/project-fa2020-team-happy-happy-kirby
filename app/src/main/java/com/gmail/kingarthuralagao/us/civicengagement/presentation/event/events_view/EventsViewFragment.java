@@ -149,6 +149,7 @@ public class EventsViewFragment extends Fragment {
     }
 
     private Event buildEvent(Map<String, Object> data) {
+
         Map<String, Object> m = data;
         String name = (String) m.get("name");
         Long dateStart = (Long) m.get("dateStart");
@@ -201,35 +202,16 @@ public class EventsViewFragment extends Fragment {
         binding.eventsRv.addOnItemTouchListener(new RecyclerTouchListener(requireContext(), new IRecyclerViewItemClickListener() {
             @Override
             public void onRecyclerViewItemClick(View view, Integer position) {
-                Toast.makeText(requireContext(), "Event name is: " + eventsAdapter.getEvent(position).getName(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(requireContext(), "Event name is: " + eventsAdapter.getEvent(position).getName(), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(requireActivity(), EventDetailActivity.class);
                 i.putExtra("event", eventsAdapter.getEvent(position));
                 startActivity(i);
-                Toast.makeText(requireContext(), "Postion is: " + position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(requireContext(), "Postion is: " + position, Toast.LENGTH_SHORT).show();
             }
         }));
     }
 
     private void initializeRecyclerView(ArrayList<Event> events) {
-        /*
-        HashMap<String, Boolean> accessibilities = new HashMap<>();
-        accessibilities.put("Curb cuts for wheelchair", true);
-        accessibilities.put("Medic station with supplies", true);
-        accessibilities.put("Medic station with trained staff", false);
-        accessibilities.put("Easy access to seating", false);
-        ArrayList<Event> events = new ArrayList<>();
-        String date1 = "11/22/2020 21:14:00";
-        String date2 = "11/23/2020 21:14:00";
-        Long dateStart = getTimeStampFromDate(date1);
-        Long dateEnd = getTimeStampFromDate(date2);
-        Event event1 = new Event("#SchoolStrike4Climate", dateStart, dateEnd, "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, null, accessibilities, 123);
-
-        events.add(event1);
-        events.add(event1);
-        events.add(event1);
-        events.add(event1);
-        events.add(event1);*/
         eventsAdapter = new EventsAdapter(events);
 
         binding.eventsRv.setAdapter(eventsAdapter);

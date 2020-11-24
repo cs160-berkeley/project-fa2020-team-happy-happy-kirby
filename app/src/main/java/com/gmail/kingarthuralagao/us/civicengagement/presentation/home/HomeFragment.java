@@ -135,7 +135,6 @@ public class HomeFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 String address = place.getAddress();
-
                 int commaIndex = address.indexOf(",");
                 String city = address.substring(0, commaIndex);
                 Log.i(TAG, "Address comp: " + place.getAddressComponents());

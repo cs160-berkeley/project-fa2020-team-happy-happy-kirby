@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityFragment;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventDetailBinding;
@@ -66,7 +67,9 @@ public class EventDetailFragment extends Fragment {
 
     private void initializeViews() {
         binding.eventName.setText(event.getName());
-        binding.includeEventDetails.eventDateTv.setText(event.getDateStart() + " - " + event.getDateEnd());
+        String startDate = Utils.getDateFromTimeStamp(event.getDateStart());
+        String endDate  = Utils.getDateFromTimeStamp(event.getDateEnd());
+        binding.includeEventDetails.eventDateTv.setText(startDate + " - " + endDate);
         binding.includeEventDetails.eventLocationTv.setText(event.getLocation());
         binding.includeEventDetails.eventTimeTv.setText(event.getTimeStart() + " - " + event.getTimeEnd() + " " + event.getTimeZone());
         binding.includeEventDetails.eventCheckInsTv.setText("" + event.getCheckIns());

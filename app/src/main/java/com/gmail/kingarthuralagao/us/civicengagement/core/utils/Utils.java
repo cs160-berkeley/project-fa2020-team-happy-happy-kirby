@@ -68,7 +68,38 @@ public class Utils {
         int hour = cal.get(Calendar.HOUR_OF_DAY);  // 15
         int minute = cal.get(Calendar.MINUTE);  // 16
         int second = cal.get(Calendar.SECOND);  // 17
-        return month + "/" + day + "/" + year ;
+
+        Log.i("Utils", monthNameToNumber(month) + "/" + day + "/" + year);
+        return monthNameToNumber(month) + "/" + day + "/" + year ;
+    }
+
+    private static String monthNameToNumber(String month) {
+        switch (month) {
+            case "January" :
+                return "1";
+            case "February" :
+                return "2";
+            case "March" :
+                return "3";
+            case "April" :
+                return "4";
+            case "May" :
+                return "5";
+            case "June" :
+                return "6";
+            case "July" :
+                return "7";
+            case "August" :
+                return "8";
+            case "September" :
+                return "9";
+            case "October" :
+                return "10";
+            case "November" :
+                return "11";
+            default:
+                return "12";
+        }
     }
 
 
