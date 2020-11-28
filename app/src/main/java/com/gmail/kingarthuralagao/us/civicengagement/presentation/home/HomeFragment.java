@@ -82,6 +82,8 @@ public class HomeFragment extends Fragment {
             //
         };
         queue = Volley.newRequestQueue(this.getActivity());
+
+        Log.i("HomeFrag", (System.currentTimeMillis() / 1000) + "");
     }
 
     @Nullable
@@ -246,6 +248,8 @@ public class HomeFragment extends Fragment {
                                 //String formattedAddress = firstResult.getString("formatted_address");
                                 Log.i(TAG, "Address: " + city);
                                 Intent i = new Intent(requireActivity(), EventsViewActivity.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                                 i.putExtra("Address", city);
                                 startActivity(i);
                             } catch (Exception e) {

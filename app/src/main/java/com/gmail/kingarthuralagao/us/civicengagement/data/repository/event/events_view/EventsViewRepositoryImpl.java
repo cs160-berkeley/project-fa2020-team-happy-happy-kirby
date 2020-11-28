@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.Status;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.data.repository.authentication.signin.SignInRepositoryImpl;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.repository_interfaces.event.events_view.EventsViewRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,7 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class EventsViewRepositoryImpl implements EventsViewRepository {
 
@@ -42,28 +48,26 @@ public class EventsViewRepositoryImpl implements EventsViewRepository {
 
         Log.d(TAG, "City : " + city);
         Log.d(TAG, "TimeStamp : " + (timeStamp / 1000));
-        Observable<List<DocumentSnapshot>> observable = Observable.create(emitter -> {
-            db.collection("events")
-                    .whereEqualTo("city", city)
-                    .whereLessThan("dateStart", timeStamp / 1000)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+        Observable <List<DocumentSnapshot>> observable = Observable.create(emitter -> {
+                    db.collection("events")
+                            .whereEqualTo("city", city)
+                            .whereLessThanOrEqualTo("dateStart", timeStamp / 1000)
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                    }
+                                    Log.d(TAG, task.getResult().getDocuments().toString());
+                                    emitter.onNext(task.getResult().getDocuments());
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                    emitter.onError(task.getException());
                                 }
-                                Log.d(TAG, task.getResult().getDocuments().toString());
-                                emitter.onNext(task.getResult().getDocuments());
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
-                                emitter.onError(task.getException());
-                            }
-                            emitter.onComplete();
-                        }
-                    });
-        });
+                                emitter.onComplete();
+                            });
+                });
 
         return observable;
     }

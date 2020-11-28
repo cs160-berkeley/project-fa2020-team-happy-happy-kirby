@@ -13,6 +13,8 @@ import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActiv
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+
 public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
@@ -22,12 +24,13 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         Intent i;
-        //i = new Intent(this, AccessibilityActivity.class);
         if (((CivicEngagementApp) getApplication()).getAuthInstance().getCurrentUser() != null) {
             i = new Intent(this, HomeActivity.class);
         } else {
             i = new Intent(this, AuthenticationActivity.class);
         }
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
     }
 }

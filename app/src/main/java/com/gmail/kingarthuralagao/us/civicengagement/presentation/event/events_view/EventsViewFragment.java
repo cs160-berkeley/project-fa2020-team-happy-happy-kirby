@@ -101,10 +101,7 @@ public class EventsViewFragment extends Fragment {
                     break;
                 case SUCCESS:
                     happeningNow.clear();
-                    for (DocumentSnapshot document : mapResource.getData()) {
-                        buildEvent(document.getData());
-                        happeningNow.add(buildEvent(document.getData()));
-                    }
+                    happeningNow = (ArrayList<Event>) mapResource.getData();
                     initializeRecyclerView(happeningNow);
                     binding.progressBar.setVisibility(View.GONE);
                     binding.eventsRv.setVisibility(View.VISIBLE);
@@ -128,10 +125,7 @@ public class EventsViewFragment extends Fragment {
                     break;
                 case SUCCESS:
                     happeningSoon.clear();
-                    for (DocumentSnapshot document : listResource.getData()) {
-                        buildEvent(document.getData());
-                        happeningSoon.add(buildEvent(document.getData()));
-                    }
+                    happeningSoon = (ArrayList<Event>) listResource.getData();
                     eventsAdapter.setData(happeningSoon);
                     binding.progressBar.setVisibility(View.GONE);
                     binding.eventsRv.setVisibility(View.VISIBLE);
@@ -146,27 +140,6 @@ public class EventsViewFragment extends Fragment {
                     break;
             }
         });
-    }
-
-    private Event buildEvent(Map<String, Object> data) {
-
-        Map<String, Object> m = data;
-        String name = (String) m.get("name");
-        Long dateStart = (Long) m.get("dateStart");
-        Long dateEnd = (Long) m.get("dateEnd");
-        String timeStart = (String) m.get("timeStart");
-        String city = (String) m.get("city");
-        String timeEnd = (String) m.get("timeEnd");
-        String description = (String) m.get("description");
-        String location = (String) m.get("location");
-        String timeZone = (String) m.get("timeZone");
-        //Integer checkIns = (Integer) m.get("checkIns");
-        List<String> causes = (List<String>) m.get("causes");
-        Map<String, Boolean> accessibilities = (Map<String, Boolean>) m.get("accessibilities");
-        Integer eventID = (Integer) m.get("eventID");
-        Event event = new Event(name, dateStart, dateEnd, timeStart, timeEnd, description, location, timeZone,
-                40000, causes, accessibilities, eventID, city);
-        return event;
     }
 
     private void setUpEvents() {

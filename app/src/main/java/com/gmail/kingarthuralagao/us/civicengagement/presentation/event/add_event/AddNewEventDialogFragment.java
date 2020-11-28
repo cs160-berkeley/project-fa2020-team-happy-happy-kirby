@@ -12,25 +12,30 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.accessibility.Accessibility;
+import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.timezone.TimeZone;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.now.AddNewEventNowFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.soon.AddNewEventSoonFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewViewModel;
+import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.DialogAddNewEventBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Response;
 
 import static com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils.getTimeStampFromDate;
 
@@ -41,15 +46,19 @@ public class AddNewEventDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    public final static String ADD_EVENT_NOW_FRAGMENT = "AddEventNow";
+    public final static String ADD_EVENT_SOON_FRAGMENT = "AddEventSoon";
     private DialogAddNewEventBinding binding;
     private AddNewEventNowFragment addNewEventNowFragment;
     private AddNewEventSoonFragment addNewEventSoonFragment;
+    private AddNewEventViewModel viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addNewEventNowFragment = AddNewEventNowFragment.newInstance();
+        viewModel = new ViewModelProvider(this).get(AddNewEventViewModel.class);
 
         setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_FullScreenDialog);
     }
@@ -60,13 +69,13 @@ public class AddNewEventDialogFragment extends DialogFragment {
         binding = DialogAddNewEventBinding.inflate(inflater, container, false);
         getChildFragmentManager()
                 .beginTransaction()
-                .add(binding.fragmentContainer.getId(), addNewEventNowFragment)
+                .add(binding.fragmentContainer.getId(), addNewEventNowFragment, ADD_EVENT_NOW_FRAGMENT)
                 .commit();
 
+        subscribeToLiveData();
         setUpEvents();
         return binding.getRoot();
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -88,15 +97,29 @@ public class AddNewEventDialogFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
-
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+    }
 
-
+    private void subscribeToLiveData() {
+        viewModel.getTimeZoneResponse.observe(this, responseResource -> {
+            switch (responseResource.getStatus()) {
+                case ERROR:
+                    //AddNewEventNowFragment.getEvent(responseResource.getData());
+                    break;
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    Log.i("AddNewEventDialog", "InAddNewEvent");
+                    Event event = addNewEventNowFragment.getEvent(responseResource.getData());
+                    postNewEvent(event);
+                    break;
+                default:
+            }
+        });
     }
 
     private void setUpEvents() {
@@ -119,7 +142,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
                 getChildFragmentManager()
                         .beginTransaction()
                         .hide(addNewEventNowFragment)
-                        .add(binding.fragmentContainer.getId(), addNewEventSoonFragment)
+                        .add(binding.fragmentContainer.getId(), addNewEventSoonFragment, ADD_EVENT_SOON_FRAGMENT)
                         .commit();
             } else {
                 getChildFragmentManager()
@@ -133,7 +156,10 @@ public class AddNewEventDialogFragment extends DialogFragment {
         });
 
         binding.addEventBtn.setOnClickListener(view -> {
-            postEvent();
+            Place location = addNewEventNowFragment.getPlace();
+            String locationInput = location.getLatLng().latitude + ", " + location.getLatLng().longitude;
+            viewModel.getTimeZone(locationInput, System.currentTimeMillis() / 1000, BuildConfig.API_KEY);
+            //postEvent();
             //getEvent();
         });
     }
@@ -159,6 +185,17 @@ public class AddNewEventDialogFragment extends DialogFragment {
 
     }
 
+    private void postNewEvent(Event event) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events")
+                .document("Testing")
+                .set(event)
+                .addOnCompleteListener(task -> {
+                    Toast.makeText(requireActivity(), "Success!", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e -> {
+            Toast.makeText(requireActivity(), "Fail!", Toast.LENGTH_SHORT).show();
+        });
+    }
     private void postEvent() {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -177,7 +214,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
         accessibilities.put("Medic station with trained staff", false);
         accessibilities.put("Easy access to seating", false);
         Event event1 = new Event("#SchoolStrike4Climate", dateStart, dateEnd, "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, causes, accessibilities, 123, "Cali");
+                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, causes, accessibilities, "123", "Cali");
 
         for(int i = 0; i < 10; i++) {
             String name = "event" + i;
