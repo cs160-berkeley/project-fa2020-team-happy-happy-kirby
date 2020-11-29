@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.EventDetailActivity;
@@ -132,20 +133,25 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
         viewModel.fetchEventsHappeningNowResponse.observe(this, mapResource -> {
             switch (mapResource.getStatus()) {
                 case LOADING:
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                    binding.swipeRefreshLayout.setRefreshing(true);
                     binding.eventsRv.setVisibility(View.INVISIBLE);
                     break;
                 case SUCCESS:
                     happeningNow.clear();
                     happeningNow = (ArrayList<Event>) mapResource.getData();
+                    happeningNowFiltered.clear();
                     happeningNowFiltered.addAll(happeningNow);
-                    initializeRecyclerView(happeningNow);
-                    binding.progressBar.setVisibility(View.GONE);
+                    if (eventsAdapter == null) {
+                        initializeRecyclerView(happeningNow);
+                    } else {
+                        eventsAdapter.setData(happeningNow);
+                    }
+                    binding.swipeRefreshLayout.setRefreshing(false);
                     binding.eventsRv.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
                     Log.i(TAG, mapResource.getError().getMessage());
-                    binding.progressBar.setVisibility(View.GONE);
+                    binding.swipeRefreshLayout.setRefreshing(false);
                     binding.eventsRv.setVisibility(View.VISIBLE);
                     break;
                 default:
@@ -157,20 +163,21 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
         viewModel.fetchEventsHappeningSoonResponse.observe(this, listResource -> {
             switch (listResource.getStatus()) {
                 case LOADING:
-                    binding.progressBar.setVisibility(View.VISIBLE);
+                    binding.swipeRefreshLayout.setRefreshing(true);
                     binding.eventsRv.setVisibility(View.INVISIBLE);
                     break;
                 case SUCCESS:
                     happeningSoon.clear();
                     happeningSoon = (ArrayList<Event>) listResource.getData();
+                    happeningSoonFiltered.clear();
                     happeningSoonFiltered.addAll(happeningSoon);
                     eventsAdapter.setData(happeningSoon);
-                    binding.progressBar.setVisibility(View.GONE);
+                    binding.swipeRefreshLayout.setRefreshing(false);
                     binding.eventsRv.setVisibility(View.VISIBLE);
                     break;
                 case ERROR:
                     Log.i(TAG, listResource.getError().getMessage());
-                    binding.progressBar.setVisibility(View.GONE);
+                    binding.swipeRefreshLayout.setRefreshing(false);
                     binding.eventsRv.setVisibility(View.VISIBLE);
                     break;
                 default:
@@ -220,6 +227,21 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
                 //Toast.makeText(requireContext(), "Postion is: " + position, Toast.LENGTH_SHORT).show();
             }
         }));
+
+        binding.swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+
+                        if (binding.includeNowSoon.happeningNowBtn.isEnabled()) {
+                            viewModel.fetchEventsHappeningSoon(System.currentTimeMillis(), inputLocation);
+                        } else {
+                            viewModel.fetchEventsHappeningNow(System.currentTimeMillis(), inputLocation);
+                        }
+                    }
+                }
+        );
     }
 
     private void initializeRecyclerView(ArrayList<Event> events) {

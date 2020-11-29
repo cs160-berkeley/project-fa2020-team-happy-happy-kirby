@@ -86,10 +86,15 @@ dependencies {
     implementation "com.google.android.libraries.places:places:$google_places_version"
 
     // Volley
-    implementation 'com.android.volley:volley:1.1.1'
+    implementation "com.android.volley:volley:$volley_version"
 
     // Logging Interceptor
-    implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor_version"
 
-    implementation "com.squareup.retrofit2:adapter-rxjava3:2.9.0"
+    // RxJava-Retrofit Adapter
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$rxjava_retrofit_adapter_version"
+
+    // Swipe Refresh
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_version"
+
 }

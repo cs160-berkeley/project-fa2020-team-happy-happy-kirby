@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -105,6 +106,7 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
                 String address = place.getAddress();
                 String name = place.getName();
                 binding.eventLocationEt.setText(name + "\n" + address);
+                binding.eventLocationLayout.setError("");
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 Status status = Autocomplete.getStatusFromIntent(data);
                 Toasty.error(requireContext(), status.getStatusMessage(), Toast.LENGTH_LONG, true);
@@ -119,6 +121,7 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         binding.eventDateEndEt.setText((month + 1) + "/" + day + "/" + year);
+        binding.eventDateEndLayout.setError("");
         Log.i(TAG, "" + year);
         this.dateEnd = (month + 1) + "/" + day + "/" + year;
     }
@@ -128,6 +131,7 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
         String time = Utils.buildTimeString(hour, minute);
 
         binding.eventTimeEndEt.setText(time);
+        binding.eventTimeEndLayout.setError("");
         this.timeEnd = time;
     }
 
@@ -160,6 +164,28 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
         binding.eventNameEt.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 hideKeyboard(v);
+            }
+        });
+
+        binding.eventNotesEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (!b) {
+                    hideKeyboard(view);
+                }
+            }
+        });
+
+        binding.eventNameEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                binding.eventNameLayout.setError("");
             }
         });
     }
@@ -225,5 +251,31 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         binding.lay.requestFocus();
+    }
+
+    public static boolean hasEmptyField() {
+        boolean hasAnEmptyField = false;
+
+        if (binding.eventNameEt.getText().length() == 0) {
+            binding.eventNameLayout.setError("Must provide an event name");
+            hasAnEmptyField = true;
+        }
+
+        if (binding.eventLocationEt.getText().length() == 0) {
+            binding.eventLocationLayout.setError("Must provide a location");
+            hasAnEmptyField = true;
+        }
+
+        if (binding.eventDateEndEt.getText().length() == 0) {
+            binding.eventDateEndLayout.setError("Must provide an end date");
+            hasAnEmptyField = true;
+        }
+
+        if (binding.eventTimeEndEt.getText().length() == 0) {
+            binding.eventTimeEndLayout.setError("Must provide an end time");
+            hasAnEmptyField = true;
+        }
+
+        return hasAnEmptyField;
     }
 }

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,6 +97,7 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
                 String address = place.getAddress();
                 String name = place.getName();
                 binding.eventLocationEt.setText(name + "\n" + address);
+                binding.eventLocationLayout.setError("");
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 Status status = Autocomplete.getStatusFromIntent(data);
                 Toasty.error(requireContext(), status.getStatusMessage(), Toast.LENGTH_LONG, true);
@@ -114,7 +117,9 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         String endTime = Utils.buildTimeString(endHour, endMinute);
 
         binding.eventTimeStartEt.setText(startTime);
+        binding.eventTimeStartLayout.setError("");
         binding.eventTimeEndEt.setText(endTime);
+        binding.eventTimeEndLayout.setError("");
 
         this.timeStart = startTime;
         this.timeEnd = endTime;
@@ -153,7 +158,17 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
                 hideKeyboard(v);
             }
         });
+
+        binding.eventNameEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void afterTextChanged(Editable editable) {binding.eventNameLayout.setError("");}
+        });
     }
+
 
     private void setUpViews() {
         binding.eventLocationEt.setFocusable(false);
@@ -188,6 +203,11 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
             Log.i(TAG, selection.first + "" + selection.second);
             dateStart = selection.first / 1000;
             dateEnd = selection.second / 1000;
+
+            binding.eventDateStartEt.setText(Utils.getDateFromTimeStamp(dateStart));
+            binding.eventDateStartLayout.setError("");
+            binding.eventDateEndEt.setText(Utils.getDateFromTimeStamp(dateEnd));
+            binding.eventDateEndLayout.setError("");
         });
 
         datePicker.addOnNegativeButtonClickListener(view -> datePicker.dismiss());
@@ -225,5 +245,33 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         binding.lay.requestFocus();
+    }
+
+    public static boolean hasEmptyField() {
+        boolean hasAnEmptyField = false;
+
+        if (binding.eventNameEt.getText().length() == 0) {
+            binding.eventNameLayout.setError("Must provide an event name");
+            hasAnEmptyField = true;
+        }
+
+        if (binding.eventLocationEt.getText().length() == 0) {
+            binding.eventLocationLayout.setError("Must provide a location");
+            hasAnEmptyField = true;
+        }
+
+        if (binding.eventDateStartEt.getText().length() == 0) {
+            binding.eventDateStartLayout.setError("Must provide a start date");
+            binding.eventDateEndLayout.setError("Must provide an end date");
+            hasAnEmptyField = true;
+        }
+
+        if (binding.eventTimeStartEt.getText().length() == 0) {
+            binding.eventTimeStartLayout.setError("Must provide a start time");
+            binding.eventTimeEndLayout.setError("Must provide an end time");
+            hasAnEmptyField = true;
+        }
+
+        return hasAnEmptyField;
     }
 }

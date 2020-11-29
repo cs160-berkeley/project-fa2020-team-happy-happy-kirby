@@ -37,10 +37,14 @@ public class FetchEventsHappeningNowUseCase extends BaseUseCase<List<Event>, Fet
                     List<Event> events = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : documentSnapshots) {
                         if (documentSnapshot.exists()) {
-                            events.add(documentSnapshot.toObject(Event.class));
+                            Event e = documentSnapshot.toObject(Event.class);
+                            if (e.getDateEnd() > params.timeStamp / 1000) {
+                                events.add(e);
+                            }
                         }
                     }
                     return events;
+
                 });
     }
 

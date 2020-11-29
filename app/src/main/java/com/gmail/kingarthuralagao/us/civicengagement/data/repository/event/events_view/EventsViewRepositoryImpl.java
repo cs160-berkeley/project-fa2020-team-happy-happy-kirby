@@ -83,6 +83,8 @@ public class EventsViewRepositoryImpl implements EventsViewRepository {
             db.collection("events")
                     .whereEqualTo("city", city)
                     .whereGreaterThan("dateStart", timeStamp / 1000)
+                    .orderBy("dateStart")
+                    .limit(50)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
