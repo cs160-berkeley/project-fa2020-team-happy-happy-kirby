@@ -131,5 +131,19 @@ public class Utils {
         }
     }
 
+    public static String buildTimeString(int hour, int minute) {
+        String amOrPm = "AM";
+        String formattedMinute = String.valueOf(minute);
+
+        if (hour >= 12) {
+            amOrPm = "PM";
+            hour = Utils.convertToStandardTime(hour); // Converts 24-hour based clock to 12-hour based
+        }
+
+        if (minute < 10) {
+            formattedMinute = "0" + formattedMinute;
+        }
+        return hour + ":" + formattedMinute + " " + amOrPm;
+    }
 
 }

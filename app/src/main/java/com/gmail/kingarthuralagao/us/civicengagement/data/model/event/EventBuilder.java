@@ -30,6 +30,11 @@ public class EventBuilder {
         return this;
     }
 
+    public EventBuilder withDateStart(Long timeStamp) {
+        this.dateStart = timeStamp;
+        return this;
+    }
+
     public EventBuilder withDateStart(String dateStart, String timeStart) {
         String[] dateParts = dateStart.split("/");
         String month = dateParts[0];
@@ -40,14 +45,19 @@ public class EventBuilder {
         day = day.length() == 2 ? day : "0" + day;
 
         String[] timeParts = timeStart.split(":");
-        String hour = dateParts[0];
-        String minute = dateParts[1];
+        String hour = timeParts[0];
+        String minute = timeParts[1];
 
         hour = hour.length() == 2 ? hour : "0" + hour;
 
         String date = month + "/" + day + "/" + year;
         String time = hour + ":" + minute + ":" + "00";
         this.dateStart = Utils.getTimeStampFromDate(date + " " + time);
+        return this;
+    }
+
+    public EventBuilder withDateEnd(Long timeStamp) {
+        this.dateEnd = timeStamp;
         return this;
     }
 
@@ -61,8 +71,8 @@ public class EventBuilder {
         day = day.length() == 2 ? day : "0" + day;
 
         String[] timeParts = timeEnd.split(":");
-        String hour = dateParts[0];
-        String minute = dateParts[1];
+        String hour = timeParts[0];
+        String minute = timeParts[1];
 
         hour = hour.length() == 2 ? hour : "0" + hour;
 
@@ -98,8 +108,8 @@ public class EventBuilder {
         return this;
     }
 
-    public EventBuilder withTimeZone(TimeZone timeZone) {
-        this.timeZone = timeZone.getTimeZoneName();
+    public EventBuilder withTimeZone(String timeZone) {
+        this.timeZone = timeZone;
         return this;
     }
 

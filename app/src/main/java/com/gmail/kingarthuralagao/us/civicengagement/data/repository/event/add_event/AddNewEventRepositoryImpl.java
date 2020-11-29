@@ -1,12 +1,16 @@
 package com.gmail.kingarthuralagao.us.civicengagement.data.repository.event.add_event;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import com.gmail.kingarthuralagao.us.civicengagement.data.Status;
 import com.gmail.kingarthuralagao.us.civicengagement.data.api.timezone.ITimeZone;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.timezone.TimeZone;
 import com.gmail.kingarthuralagao.us.civicengagement.data.repository.event.events_view.EventsViewRepositoryImpl;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.repository_interfaces.event.add_event.AddNewEventRepository;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +18,7 @@ import com.google.gson.GsonBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.UUID;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.functions.Function;
@@ -45,6 +50,28 @@ public class AddNewEventRepositoryImpl implements AddNewEventRepository {
     public Observable<TimeZone> getTimeZone(String location, Long timeStamp, String apiKey) {
         return retrofitClient.getTimeZoneAPI().getTimeZone(location, timeStamp, apiKey);
     }
+
+    @Override
+    public Observable<Status> postEvent(Event event) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Observable<Status> observable = Observable.create(emitter ->
+                db.collection("events")
+                        .document(event.getID())
+                        .set(event)
+                        .addOnCompleteListener(task -> {
+                            emitter.onNext(Status.SUCCESS);
+                            emitter.onComplete();
+                        })
+                        .addOnFailureListener(e -> {
+                            emitter.onNext(Status.SUCCESS);
+                            emitter.onComplete();
+                        })
+        );
+
+        return observable;
+    }
+
 
     public static class RetrofitClient {
         private String BASE_URL = "https://maps.googleapis.com/maps/api/timezone/";

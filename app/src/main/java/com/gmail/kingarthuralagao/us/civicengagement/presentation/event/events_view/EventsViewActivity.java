@@ -3,15 +3,10 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.transition.Explode;
-import android.transition.Slide;
-import android.view.Window;
 
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
-import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityEventsViewBinding;
 
-public class EventsViewActivity extends AppCompatActivity implements FilterDialog.IFilterClickListener {
+public class EventsViewActivity extends AppCompatActivity implements FilterDialogFragment.IFilterClickListener {
 
     private ActivityEventsViewBinding binding;
     private String address;

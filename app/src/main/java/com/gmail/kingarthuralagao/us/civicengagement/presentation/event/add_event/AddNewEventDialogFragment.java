@@ -2,6 +2,8 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_eve
 
 import android.app.Dialog;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +17,12 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
+import com.gmail.kingarthuralagao.us.civicengagement.data.Status;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.timezone.TimeZone;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.EventBuilder;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.now.AddNewEventNowFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.soon.AddNewEventSoonFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewViewModel;
@@ -27,19 +32,26 @@ import com.gmail.kingarthuralagao.us.civilengagement.databinding.DialogAddNewEve
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.material.chip.Chip;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Response;
 
 import static com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils.getTimeStampFromDate;
 
 public class AddNewEventDialogFragment extends DialogFragment {
+
 
     public static AddNewEventDialogFragment newInstance() {
         AddNewEventDialogFragment fragment = new AddNewEventDialogFragment();
@@ -48,6 +60,8 @@ public class AddNewEventDialogFragment extends DialogFragment {
 
     public final static String ADD_EVENT_NOW_FRAGMENT = "AddEventNow";
     public final static String ADD_EVENT_SOON_FRAGMENT = "AddEventSoon";
+    private static Geocoder geocoder;
+    private LoadingDialog loadingDialog;
     private DialogAddNewEventBinding binding;
     private AddNewEventNowFragment addNewEventNowFragment;
     private AddNewEventSoonFragment addNewEventSoonFragment;
@@ -71,15 +85,14 @@ public class AddNewEventDialogFragment extends DialogFragment {
                 .beginTransaction()
                 .add(binding.fragmentContainer.getId(), addNewEventNowFragment, ADD_EVENT_NOW_FRAGMENT)
                 .commit();
-
-        subscribeToLiveData();
-        setUpEvents();
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        subscribeToLiveData();
+        setUpEvents();
     }
 
     @Override
@@ -107,15 +120,31 @@ public class AddNewEventDialogFragment extends DialogFragment {
     private void subscribeToLiveData() {
         viewModel.getTimeZoneResponse.observe(this, responseResource -> {
             switch (responseResource.getStatus()) {
-                case ERROR:
-                    //AddNewEventNowFragment.getEvent(responseResource.getData());
-                    break;
                 case LOADING:
+                    loadingDialog = new LoadingDialog();
+                    loadingDialog.show(getChildFragmentManager(), "");
+                    break;
+                case ERROR:
+                    initializeEventPost(TimeZone.getDefault().getDisplayName());
                     break;
                 case SUCCESS:
-                    Log.i("AddNewEventDialog", "InAddNewEvent");
-                    Event event = addNewEventNowFragment.getEvent(responseResource.getData());
-                    postNewEvent(event);
+                    String timeZoneName = responseResource.getData().getTimeZoneName();
+                    initializeEventPost(timeZoneName);
+                    break;
+                default:
+            }
+        });
+
+        viewModel.postEventResponse.observe(this, statusResource -> {
+            switch (statusResource.getStatus()) {
+                case ERROR:
+                    loadingDialog.dismiss();
+                    Toasty.error(requireContext(), "Error adding event", Toast.LENGTH_LONG, true).show();
+                    break;
+                case SUCCESS:
+                    loadingDialog.dismiss();
+                    Toasty.success(requireContext(), "Event successfully posted!", Toast.LENGTH_LONG, true).show();
+                    dismiss();
                     break;
                 default:
             }
@@ -156,122 +185,153 @@ public class AddNewEventDialogFragment extends DialogFragment {
         });
 
         binding.addEventBtn.setOnClickListener(view -> {
-            Place location = addNewEventNowFragment.getPlace();
-            String locationInput = location.getLatLng().latitude + ", " + location.getLatLng().longitude;
+            Place eventLocation;
+            if (binding.includeHappeningNowHappeningSoon.happeningSoonBtn.isEnabled()) { // In addneweventnow
+                eventLocation = addNewEventNowFragment.getPlace();
+            } else { // In addneweventsoon
+                eventLocation = addNewEventSoonFragment.getPlace();
+            }
+            String locationInput = eventLocation.getLatLng().latitude + ", " + eventLocation.getLatLng().longitude;
             viewModel.getTimeZone(locationInput, System.currentTimeMillis() / 1000, BuildConfig.API_KEY);
-            //postEvent();
-            //getEvent();
         });
     }
 
-    private void getEvent() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("events").document("events");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("AddEventDialogFragment", "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d("AddEventDialogFragment", "No such document");
-                    }
-                } else {
-                    Log.d("AddEventDialogFragment", "get failed with ", task.getException());
-                }
-            }
-        });
+    private void initializeEventPost(String timeZoneName) {
+        String timeZone = timeZoneName;
 
+        if (timeZoneName == null || timeZoneName.length() == 0)
+            timeZone = TimeZone.getDefault().getDisplayName();
+
+        if (binding.includeHappeningNowHappeningSoon.happeningSoonBtn.isEnabled()) // In addneweventnow
+            createEventHappeningNow(timeZone);
+        else  // In addneweventsoon
+            createEventHappeningSoon(timeZone);
     }
 
-    private void postNewEvent(Event event) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("events")
-                .document("Testing")
-                .set(event)
-                .addOnCompleteListener(task -> {
-                    Toast.makeText(requireActivity(), "Success!", Toast.LENGTH_SHORT).show();
-                }).addOnFailureListener(e -> {
-            Toast.makeText(requireActivity(), "Fail!", Toast.LENGTH_SHORT).show();
-        });
+    private void createEventHappeningNow(String timeZoneName) {
+        String eventName = addNewEventNowFragment.getName();
+        String eventDescription = addNewEventNowFragment.getDescription();
+        String eventDateEnd = addNewEventNowFragment.getDateEnd();
+        String eventTimeEnd = addNewEventNowFragment.getTimeEnd();
+
+        Place place = addNewEventNowFragment.getPlace();
+        String address = place.getAddress();
+        String locationName = place.getName() == null ? "" : place.getName();
+        String eventLocation = locationName.length() == 0 ? place.getAddress() : locationName + "\n" + address;
+
+        EventBuilder eventBuilder = new EventBuilder();
+
+        eventBuilder
+                .withName(eventName)
+                .withDateStart("11/27/2020", "22:30")
+                .withDateEnd(eventDateEnd, eventTimeEnd)
+                .withTimeStart("22:30")
+                .withTimeEnd(eventTimeEnd)
+                .withCity(getCityFromPlace(place))
+                .withDescription(eventDescription)
+                .withLocation(eventLocation)
+                .withTimeZone(timeZoneName)
+                .withCheckIns()
+                .withCauses(getCauses())
+                .withAccessibilities(getAccessibilities())
+                .withEventID()
+                .build();
+
+        viewModel.postEvent(eventBuilder.getEventDTO());
     }
-    private void postEvent() {
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private void createEventHappeningSoon(String timeZoneName) {
+        String eventName = addNewEventSoonFragment.getName();
+        String eventDescription = addNewEventSoonFragment.getDescription();
+        Long eventDateEnd = addNewEventSoonFragment.getDateEnd();
+        Long eventDateStart = addNewEventSoonFragment.getDateStart();
+        String eventTimeEnd = addNewEventSoonFragment.getTimeEnd();
+        String eventTimeStart = addNewEventSoonFragment.getTimeStart();
 
-        String date1 = "11/22/2020 21:14:00";
-        String date2 = "11/23/2020 21:14:00";
-        Long dateStart = getTimeStampFromDate(date1);
-        Long dateEnd = getTimeStampFromDate(date2);
+        Place place = addNewEventSoonFragment.getPlace();
+        String address = place.getAddress();
+        String locationName = place.getName() == null ? "" : place.getName();
+        String eventLocation = locationName.length() == 0 ? place.getAddress() : locationName + "\n" + address;
 
+        EventBuilder eventBuilder = new EventBuilder();
+        eventBuilder
+                .withName(eventName)
+                .withDateStart(eventDateStart)
+                .withDateEnd(eventDateEnd)
+                .withTimeStart(eventTimeStart)
+                .withTimeEnd(eventTimeEnd)
+                .withCity(getCityFromPlace(place))
+                .withDescription(eventDescription)
+                .withLocation(eventLocation)
+                .withTimeZone(timeZoneName)
+                .withCheckIns()
+                .withCauses(getCauses())
+                .withAccessibilities(getAccessibilities())
+                .withEventID()
+                .build();
+
+        viewModel.postEvent(eventBuilder.getEventDTO());
+    }
+
+    private Map<String, Boolean> getAccessibilities() {
+        Map<String, Boolean> accessibilities = new HashMap<>();
+
+        if (binding.includeAccessibilityCheckboxes.accessibilityOneCheckbox.isChecked()) {
+            accessibilities.put(getResources().getString(R.string.accessibility_one), true);
+        } else {
+            accessibilities.put(getResources().getString(R.string.accessibility_one), false);
+        }
+
+        if (binding.includeAccessibilityCheckboxes.accessibilityTwoCheckbox.isChecked()) {
+            accessibilities.put(getResources().getString(R.string.accessibility_two), true);
+        } else {
+            accessibilities.put(getResources().getString(R.string.accessibility_two), false);
+        }
+
+        if (binding.includeAccessibilityCheckboxes.accessibilityThreeCheckbox.isChecked()) {
+            accessibilities.put(getResources().getString(R.string.accessibility_three), true);
+        } else {
+            accessibilities.put(getResources().getString(R.string.accessibility_three), false);
+        }
+
+        if (binding.includeAccessibilityCheckboxes.accessibilityFourCheckbox.isChecked()) {
+            accessibilities.put(getResources().getString(R.string.accessibility_four), true);
+        } else {
+            accessibilities.put(getResources().getString(R.string.accessibility_four), false);
+        }
+
+        return accessibilities;
+    }
+
+    private List<String> getCauses() {
         List<String> causes = new ArrayList<>();
-        causes.add("School");
-        causes.add("Climate");
-        HashMap<String, Boolean> accessibilities = new HashMap<>();
-        accessibilities.put("Curb cuts for wheelchair", true);
-        accessibilities.put("Medic station with supplies", true);
-        accessibilities.put("Medic station with trained staff", false);
-        accessibilities.put("Easy access to seating", false);
-        Event event1 = new Event("#SchoolStrike4Climate", dateStart, dateEnd, "8:00AM", "4:00PM",
-                "This is an event", "2520 Sproul Hall Plaza Berkeley, CA", "PST", 40000, causes, accessibilities, "123", "Cali");
+        List<Integer> checkedChipsID = binding.includeCausesChips.chipGroup.getCheckedChipIds();
 
-        for(int i = 0; i < 10; i++) {
-            String name = "event" + i;
-            db.collection("events")
-                    .document(name)
-                    .set(event1)
-                    .addOnCompleteListener(task -> {
-                        Toast.makeText(requireActivity(), "Success!", Toast.LENGTH_SHORT).show();
-                    }).addOnFailureListener(e -> {
-                Toast.makeText(requireActivity(), "Fail!", Toast.LENGTH_SHORT).show();
-            });
+        for (Integer resourceID : checkedChipsID) {
+            Chip chip = binding.includeCausesChips.chipGroup.findViewById(resourceID);
+            causes.add(chip.getText().toString());
         }
-        db.collection("events")
-                .document("event1")
-                .set(event1)
-                .addOnCompleteListener(task -> {
-                    Toast.makeText(requireActivity(), "Success!", Toast.LENGTH_SHORT).show();
-                }).addOnFailureListener(e -> {
-                    Toast.makeText(requireActivity(), "Fail!", Toast.LENGTH_SHORT).show();
-                });
+        return causes;
     }
 
+    private static String getCityFromPlace(Place place) {
+        geocoder = new Geocoder(CivicEngagementApp.getContext(), Locale.getDefault());
 
-    /****************************************** Code for making full screen Dialog *******************************/
-    /*
-    @NonNull
-    @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override public void onShow(DialogInterface dialogInterface) {
-                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                setupFullHeight(bottomSheetDialog);
-            }
-        });
-        return  dialog;
-    }
-
-
-    private void setupFullHeight(BottomSheetDialog bottomSheetDialog) {
-        FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog.findViewById(R.id.design_bottom_sheet);
-        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
-        ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
-
-        int windowHeight = getWindowHeight();
-        if (layoutParams != null) {
-            layoutParams.height = windowHeight;
+        try {
+            return getCityNameByCoordinates(place.getLatLng().latitude, place.getLatLng().longitude);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        bottomSheet.setLayoutParams(layoutParams);
-        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        return "";
     }
 
-    private int getWindowHeight() {
-        // Calculate window height for fullscreen use
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return displayMetrics.heightPixels;
-    }*/
+    private static String getCityNameByCoordinates(double lat, double lon) throws IOException {
 
-    /****************************************** End of code for making full screen Dialog *******************************/
+        List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+        if (addresses != null && addresses.size() > 0) {
+            Log.i("AddNewEventDialogFrag", addresses.toString());
+            return addresses.get(0).getLocality() == null ? addresses.get(0).getAdminArea() : addresses.get(0).getLocality();
+        }
+        return "";
+    }
 }

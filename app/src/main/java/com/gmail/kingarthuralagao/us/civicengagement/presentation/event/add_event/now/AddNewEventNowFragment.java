@@ -1,9 +1,13 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.now;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.icu.util.Calendar;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -23,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.EventBuilder;
@@ -39,6 +45,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.chip.ChipDrawable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,9 +56,10 @@ import es.dmoral.toasty.Toasty;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static androidx.core.content.ContextCompat.getSystemService;
 
 public class AddNewEventNowFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener, CausesDialogFragment.ICausesSetListener {
+        TimePickerDialog.OnTimeSetListener {
 
 
     public static AddNewEventNowFragment newInstance() {
@@ -63,39 +71,28 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
     private static final int AUTOCOMPLETE_LOCATION_REQUEST_CODE = 100;
     private static final String TAG = "AddNewEventNowFragment";
 
-    // Params for an Event object
-    private static String name;
-    private static String dateStart;
     private static String dateEnd;
-    private static String timeStart;
-    private static String city;
     private static String timeEnd;
-    private static String description;
-    private static String location;
-    private static String timeZone;
-    private static List<String> causes = new ArrayList<>();
-    private static Map<String, Boolean> accessibilities;
     private static Place place;
-    private static TimeZone timeZoneResponse;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = IncludeAddEventHappeningNowBinding.inflate(inflater, container, false);
         setUpViews();
-        setUpEvents();
         return binding.getRoot();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setUpEvents();
     }
 
     @Override
@@ -106,7 +103,8 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 this.place = place;
                 String address = place.getAddress();
-                binding.eventLocationEt.setText(address);
+                String name = place.getName();
+                binding.eventLocationEt.setText(name + "\n" + address);
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 Status status = Autocomplete.getStatusFromIntent(data);
                 Toasty.error(requireContext(), status.getStatusMessage(), Toast.LENGTH_LONG, true);
@@ -126,94 +124,43 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        String amOrPm = "AM";
-        String formattedMinute = String.valueOf(minute);
+        String time = Utils.buildTimeString(hour, minute);
 
-        if (hour >= 12) {
-            amOrPm = "PM";
-            hour = Utils.convertToStandardTime(hour); // Converts 24-hour based clock to 12-hour based
-        }
-
-        if (minute < 10) {
-            formattedMinute = "0" + formattedMinute;
-        }
-
-        binding.eventTimeEndEt.setText(hour + ":" + formattedMinute + " " + amOrPm);
-        this.timeEnd = hour + ":" + formattedMinute;
-    }
-
-    @Override
-    public void onCausesSet(List<String> checkedCauses) {
-        binding.eventCausesEt.setText(checkedCauses.toString().substring(1, checkedCauses.toString().length() - 1));
-
-        this.causes.clear();
-        this.causes.addAll(checkedCauses);
+        binding.eventTimeEndEt.setText(time);
+        this.timeEnd = time;
     }
 
     private void setUpViews() {
-        binding.eventCausesEt.setFocusable(false);
         binding.eventLocationEt.setFocusable(false);
         binding.eventTimeEndEt.setFocusable(false);
         binding.eventDateEndEt.setFocusable(false);
-
-        /*
-        Chip chip = new Chip(requireContext());
-        chip.setText("Hello");
-        chip.setCloseIconVisible(true);
-        chip.setCheckable(false);
-        chip.setClickable(false);*/
-
-
-        /*
-        int[] DEFAULT = new int[android.R.attr.state_pressed];
-
-        ChipDrawable chipDrawable = ChipDrawable.createFromResource(getContext(), R.xml.standalone_chip);
-        chipDrawable.setText("Hello");
-        chipDrawable.setBounds(0, 0, chipDrawable.getIntrinsicWidth(), chipDrawable.getIntrinsicHeight());
-        ImageSpan imageSpan = new ImageSpan(chipDrawable);
-
-        ChipDrawable chipDrawable1 = ChipDrawable.createFromResource(getContext(), R.xml.standalone_chip);
-        chipDrawable1.setText("Hi");
-        chipDrawable.setBounds(0, 0, chipDrawable1.getIntrinsicWidth(), chipDrawable1.getIntrinsicHeight());
-        ImageSpan imageSpan1 = new ImageSpan(chipDrawable1);
-
-        binding.eventCausesEt.setText("HelloHi");
-        Editable spannableString = binding.eventCausesEt.getText();
-        spannableString.setSpan(imageSpan, 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(imageSpan1, 6, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        chipDrawable.setCloseIconState(DEFAULT);
-        binding.eventCausesEt.setText(spannableString);
-
-
-        Log.i(getClass().getSimpleName(), chipDrawable.getCloseIconState().toString());
-
-        causesChipGroup.addView();
-        causesChipGroup.addView(chip);*/
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setUpEvents() {
         // Present user with a calendar to select a date from.
         binding.eventDateEndEt.setOnClickListener(view -> {
+            hideKeyboard(binding.eventDateEndEt);
             showDatePickerDialog();
         });
 
         binding.eventLocationEt.setOnClickListener( view -> {
+            hideKeyboard(binding.eventLocationEt);
             initializeLocationSearch();
         });
 
         binding.eventTimeEndEt.setOnClickListener( view -> {
+            hideKeyboard(binding.eventTimeEndEt);
             showTimePickerDialog();
         });
 
-        binding.eventCausesEt.setOnClickListener(view -> {
-            showCausesDialog();
-        });
-    }
+        binding.lay.setOnClickListener(view -> hideKeyboard(binding.lay));
 
-    private void showCausesDialog() {
-        CausesDialogFragment causesDialogFragment = CausesDialogFragment.newInstance((ArrayList) causes);
-        causesDialogFragment.show(getChildFragmentManager(), null);
+        binding.eventNameEt.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                hideKeyboard(v);
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -252,30 +199,29 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
         startActivityForResult(intent, AUTOCOMPLETE_LOCATION_REQUEST_CODE);
     }
 
+    public static String getName() {
+        return binding.eventNameEt.getText().toString();
+    }
+
+    public static String getDateEnd() {
+        return dateEnd;
+    }
+
+    public static String getTimeEnd() {
+        return timeEnd;
+    }
+
+    public static String getDescription() {
+        return binding.eventNotesEt.getText().toString();
+    }
+
     public static Place getPlace() {
         return place;
     }
 
-    public static Event getEvent(TimeZone timeZone) {
-        EventBuilder eventBuilder = new EventBuilder();
-
-        eventBuilder
-                .withName(binding.eventNameEt.getText().toString())
-                .withDateStart("11/27/2020", "22:30")
-                .withDateEnd(dateEnd, timeEnd)
-                .withTimeStart("22:30")
-                .withTimeEnd(timeEnd)
-                .withCity("San Francisco")
-                .withDescription(binding.eventNotesEt.getText().toString())
-                .withLocation(place.getAddress())
-                .withTimeZone(timeZone)
-                .withCheckIns()
-                .withCauses(causes)
-                .withAccessibilities(accessibilities)
-                .withEventID()
-                .build();
-
-        Log.i(TAG, eventBuilder.toString());
-        return eventBuilder.getEventDTO();
+    public void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        binding.lay.requestFocus();
     }
 }
