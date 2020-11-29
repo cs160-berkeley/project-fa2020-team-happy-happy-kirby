@@ -2,20 +2,50 @@ package com.gmail.kingarthuralagao.us.civicengagement;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.user.User;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.model.Document;
 
 public class CivicEngagementApp extends Application {
 
-    private FirebaseAuth mAuth;
+    private static FirebaseAuth mAuth;
     private static Context context;
+    private static User user;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mAuth = FirebaseAuth.getInstance();
         this.context = getApplicationContext();
+    }
+
+    public static void fetchUserDocument() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        firestore
+                .collection("Users")
+                .document(mAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    user = task.getResult().toObject(User.class);
+                })
+                .addOnFailureListener(error -> {
+
+                });
+    }
+
+    public static User getUser() {
+        return user;
     }
 
     public static Context getContext() {

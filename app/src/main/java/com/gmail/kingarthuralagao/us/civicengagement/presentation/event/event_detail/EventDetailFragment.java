@@ -1,19 +1,30 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
+import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
+import com.gmail.kingarthuralagao.us.civicengagement.data.Status;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.user.User;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.viewmodel.EventDetailViewModel;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.viewmodel.EventsViewViewModel;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventDetailBinding;
 import com.google.android.material.chip.Chip;
@@ -22,7 +33,10 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class EventDetailFragment extends Fragment {
+
 
     public static EventDetailFragment newInstance(Event event) {
         EventDetailFragment fragment = new EventDetailFragment();
@@ -33,15 +47,19 @@ public class EventDetailFragment extends Fragment {
         return fragment;
     }
 
+    private static final String TAG = "EventDetailFrag";
+    private EventDetailViewModel viewModel;
     private Event event;
     private FragmentEventDetailBinding binding;
     private ArrayList<String> tabTitles;
     private PagerAdapter pagerAdapter;
+    private LoadingDialog loadingDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(EventDetailViewModel.class);
         event = (Event) getArguments().getSerializable("event");
 
         tabTitles = new ArrayList<>();
@@ -55,12 +73,44 @@ public class EventDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentEventDetailBinding.inflate(inflater, container, false);
         initializeViews();
-        setViewPager();
-
-        binding.backArrowImg.setOnClickListener(view -> {
-            requireActivity().finish();
-        });
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        subscribeToLiveData();
+        setViewPager();
+        setUpEvents();
+    }
+
+    private void subscribeToLiveData() {
+        viewModel.postUserCheckInResponse.observe(this, new Observer<Resource<Status>>() {
+            @Override
+            public void onChanged(Resource<Status> statusResource) {
+                switch (statusResource.getStatus()) {
+                    case SUCCESS:
+                        CivicEngagementApp.getUser().getCheckIns().add(event.getID());
+                        setCheckInButtonStatus();
+                        Toasty.success(requireContext(),
+                                "You have successfully checked in to this event",
+                                Toasty.LENGTH_LONG,
+                                true).show();
+                        loadingDialog.dismiss();
+                        break;
+                    case LOADING:
+                        loadingDialog = new LoadingDialog();
+                        loadingDialog.show(getChildFragmentManager(), "");
+                        break;
+                    case ERROR:
+                        loadingDialog.dismiss();
+                        Log.i(TAG, statusResource.getError().getMessage());
+                        Toasty.error(requireContext(), "Error checkin in", Toast.LENGTH_SHORT, true);
+                        break;
+                    default:
+                }
+            }
+        });
     }
 
     private void initializeViews() {
@@ -74,7 +124,28 @@ public class EventDetailFragment extends Fragment {
 
         List<String> causes = event.getCauses();
         binding.includeEventDetails.causesTv.setText(causes.toString().substring(1, causes.toString().length() - 1));
-        //binding.includeEventDetails.causesTv.setText(event.getCauses().toString().substring(1, event.getCauses().size() - 1));
+
+        setCheckInButtonStatus();
+    }
+
+    private void setUpEvents() {
+        binding.backArrowImg.setOnClickListener(v -> {
+            requireActivity().finish();
+        });
+
+        binding.checkInBtn.setOnClickListener(view -> {
+            viewModel.postUserCheckIn(event.getID(), CivicEngagementApp.getUser().getUserID());
+        });
+    }
+
+    private void setCheckInButtonStatus() {
+        User userDoc = CivicEngagementApp.getUser();
+
+        if (userDoc.getCheckIns().contains(event.getID())) {
+            Log.i(TAG, userDoc.getCheckIns().toString());
+            binding.checkInBtn.setText("Checked In");
+            binding.checkInBtn.setBackgroundColor(getResources().getColor(R.color.checked_in_green, null));
+        }
     }
 
     private void setViewPager() {

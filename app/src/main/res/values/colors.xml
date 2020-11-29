@@ -13,4 +13,5 @@
     <color name="disabled_happening_button">#FFF6F6F6</color>
     <color name="primary_blue_with_alpha">#9926C5DA</color>
     <color name="secondary_blue_with_alpha">#991976D2</color>
+    <color name="checked_in_green">#FF219653</color>
 </resources>
