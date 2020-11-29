@@ -119,6 +119,7 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         binding.eventDateEndEt.setText((month + 1) + "/" + day + "/" + year);
+        Log.i(TAG, "" + year);
         this.dateEnd = (month + 1) + "/" + day + "/" + year;
     }
 
@@ -182,6 +183,7 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
+        Log.i(TAG, "" + year);
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 requireContext(), this, year, month, day);
         datePickerDialog.show();

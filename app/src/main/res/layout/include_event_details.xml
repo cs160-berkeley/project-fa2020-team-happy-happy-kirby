@@ -1,6 +1,8 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
-            android:gravity="center"
+            android:gravity="left"
             android:text="Event Location"
             android:theme="@style/Theme.Event.Details"/>
     </LinearLayout>
@@ -80,6 +82,27 @@
             android:layout_marginStart="16dp"
             android:text="Event Check Ins"
             android:theme="@style/Theme.Event.Details"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Causes:"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/primary_text"/>
+
+        <TextView
+            android:id="@+id/causes_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.Event.Details"
+            android:layout_marginStart="@dimen/_4sdp" />
     </LinearLayout>
 
 </LinearLayout>

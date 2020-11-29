@@ -19,14 +19,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.detail.EventDetailActivity;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.EventDetailActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.viewmodel.EventsViewViewModel;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventsViewBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class EventsViewFragment extends Fragment {
+public class EventsViewFragment extends Fragment implements FilterDialogFragment.IFilterClickListener {
 
     interface IRecyclerViewItemClickListener {
         void onRecyclerViewItemClick(View view, Integer position);
@@ -45,6 +47,8 @@ public class EventsViewFragment extends Fragment {
     private static final String INPUT_LOCATION = "Input Location";
     private ArrayList<Event> happeningNow = new ArrayList<>();
     private ArrayList<Event> happeningSoon = new ArrayList<>();
+    private ArrayList<Event> happeningNowFiltered = new ArrayList<>();
+    private ArrayList<Event> happeningSoonFiltered = new ArrayList<>();
     private FragmentEventsViewBinding binding;
     private EventsAdapter eventsAdapter;
     private EventsViewViewModel viewModel;
@@ -70,8 +74,58 @@ public class EventsViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         subscribeToLiveData();
-        viewModel.fetchEventsHappeningNow(System.currentTimeMillis(), inputLocation);
         setUpEvents();
+        viewModel.fetchEventsHappeningNow(System.currentTimeMillis(), inputLocation);
+    }
+
+    @Override
+    public void onFilterApply(List<String> causes) {
+        updateData(causes);
+
+    }
+
+    private void updateData(List<String> causes) {
+        if (causes.isEmpty()) {
+            if (binding.includeNowSoon.happeningNowBtn.isEnabled()) {
+                happeningSoonFiltered.clear();
+                happeningSoonFiltered.addAll(happeningSoon);
+                eventsAdapter.setData(happeningSoon);
+            } else {
+                eventsAdapter.setData(happeningNow);
+                happeningNowFiltered.clear();
+                happeningNowFiltered.addAll(happeningNow);
+            }
+            return;
+        }
+
+        happeningNowFiltered.clear();
+        happeningSoonFiltered.clear();
+
+        List<Event> happeningNowDummy = new ArrayList<>();
+        List<Event> happeningSoonDummy = new ArrayList<>();
+        happeningNowDummy.addAll(happeningNow);
+        happeningSoonDummy.addAll(happeningSoon);
+
+        for (String cause : causes) {
+            for (int i = 0 ; i < happeningNowDummy.size(); i++) {
+                if (happeningNowDummy.get(i).getCauses().contains(cause)) {
+                    happeningNowFiltered.add(happeningNowDummy.remove(i));
+                }
+            }
+
+            for (int i = 0; i < happeningSoonDummy.size(); i++) {
+                if (happeningSoonDummy.get(i).getCauses().contains(cause)) {
+                    happeningSoonFiltered.add(happeningSoonDummy.remove(i));
+                }
+            }
+        }
+
+        if (binding.includeNowSoon.happeningNowBtn.isEnabled()) {
+            eventsAdapter.setData(happeningSoonFiltered);
+        } else {
+            eventsAdapter.setData(happeningNowFiltered);
+        }
+
     }
 
     private void subscribeToLiveData() {
@@ -84,6 +138,7 @@ public class EventsViewFragment extends Fragment {
                 case SUCCESS:
                     happeningNow.clear();
                     happeningNow = (ArrayList<Event>) mapResource.getData();
+                    happeningNowFiltered.addAll(happeningNow);
                     initializeRecyclerView(happeningNow);
                     binding.progressBar.setVisibility(View.GONE);
                     binding.eventsRv.setVisibility(View.VISIBLE);
@@ -108,6 +163,7 @@ public class EventsViewFragment extends Fragment {
                 case SUCCESS:
                     happeningSoon.clear();
                     happeningSoon = (ArrayList<Event>) listResource.getData();
+                    happeningSoonFiltered.addAll(happeningSoon);
                     eventsAdapter.setData(happeningSoon);
                     binding.progressBar.setVisibility(View.GONE);
                     binding.eventsRv.setVisibility(View.VISIBLE);
@@ -132,7 +188,7 @@ public class EventsViewFragment extends Fragment {
             if (happeningNow.size() == 0) {
                 viewModel.fetchEventsHappeningNow(System.currentTimeMillis(), inputLocation);
             } else {
-                eventsAdapter.setData(happeningNow);
+                eventsAdapter.setData(happeningNowFiltered);
             }
         });
 
@@ -144,14 +200,14 @@ public class EventsViewFragment extends Fragment {
             if (happeningSoon.size() == 0) {
                 viewModel.fetchEventsHappeningSoon(System.currentTimeMillis(), inputLocation);
             } else {
-                eventsAdapter.setData(happeningSoon);
+                eventsAdapter.setData(happeningSoonFiltered);
             }
         });
 
 
         binding.filterBtn.setOnClickListener(view -> {
             FilterDialogFragment dialog = new FilterDialogFragment();
-            dialog.show(getFragmentManager(), "");
+            dialog.show(getChildFragmentManager(), "");
         });
 
         binding.eventsRv.addOnItemTouchListener(new RecyclerTouchListener(requireContext(), new IRecyclerViewItemClickListener() {

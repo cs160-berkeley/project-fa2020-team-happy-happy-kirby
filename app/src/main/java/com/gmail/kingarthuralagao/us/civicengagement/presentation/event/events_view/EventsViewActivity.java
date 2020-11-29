@@ -6,7 +6,9 @@ import android.os.Bundle;
 
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityEventsViewBinding;
 
-public class EventsViewActivity extends AppCompatActivity implements FilterDialogFragment.IFilterClickListener {
+import java.util.List;
+
+public class EventsViewActivity extends AppCompatActivity {
 
     private ActivityEventsViewBinding binding;
     private String address;
@@ -28,15 +30,5 @@ public class EventsViewActivity extends AppCompatActivity implements FilterDialo
                 .beginTransaction()
                 .add(binding.fragmentContainer.getId(), fragment)
                 .commit();
-    }
-
-    @Override
-    public void onApplyClick() {
-        //
-    }
-
-    @Override
-    public void onCloseClick() {
-        //
     }
 }

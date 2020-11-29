@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CivilEngagement">
-        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.detail.EventDetailActivity">
+        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.EventDetailActivity">
         </activity>
         <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity">
 

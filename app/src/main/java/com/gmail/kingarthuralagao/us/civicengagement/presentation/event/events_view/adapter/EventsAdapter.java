@@ -11,9 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
+import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.RowItemEventDetailsBinding;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
@@ -42,6 +46,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         holder.eventTimeTv.setText(event.getTimeStart() + " - " + event.getTimeEnd());
         holder.eventLocationTv.setText(event.getLocation());
         holder.eventCheckInsTv.setText(event.getCheckIns() + "");
+
+        createChips(event.getCauses(), holder);
+    }
+
+    private void createChips(List<String> causes, ViewHolder holder) {
+        holder.getChipGroup().removeAllViews();
+        for (String cause : causes) {
+            Chip chip = new Chip(holder.chipGroup.getContext());
+            chip.setText(cause);
+            chip.setTextColor(holder.chipGroup.getContext().getColor(R.color.white));
+            chip.setShapeAppearanceModel(chip.getShapeAppearanceModel().withCornerSize(32));
+            chip.setChipBackgroundColorResource(R.color.secondary_blue_with_alpha);
+            holder.chipGroup.addView(chip);
+        }
     }
 
     @Override
@@ -66,6 +84,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         private TextView eventDateTv;
         private TextView eventTimeTv;
         private TextView eventCheckInsTv;
+        private ChipGroup chipGroup;
 
         public ViewHolder(@NonNull RowItemEventDetailsBinding binding) {
             super(binding.getRoot());
@@ -75,6 +94,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             eventDateTv = binding.eventDateTv;
             eventTimeTv = binding.eventTimeTv;
             eventCheckInsTv = binding.checkInsTv;
+            chipGroup = binding.chipGroup;
         }
 
         public TextView getEventNameTv() {
@@ -95,6 +115,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
         public TextView getEventCheckInsTv() {
             return eventCheckInsTv;
+        }
+
+        public ChipGroup getChipGroup() {
+            return chipGroup;
         }
     }
 }

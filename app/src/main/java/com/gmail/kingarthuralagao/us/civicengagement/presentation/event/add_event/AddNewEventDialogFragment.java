@@ -14,28 +14,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
-import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
-import com.gmail.kingarthuralagao.us.civicengagement.data.Status;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.EventBuilder;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.now.AddNewEventNowFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.soon.AddNewEventSoonFragment;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewViewModel;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.viewmodel.AddNewEventViewModel;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.DialogAddNewEventBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.chip.Chip;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,9 +37,6 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import es.dmoral.toasty.Toasty;
-import retrofit2.Response;
-
-import static com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils.getTimeStampFromDate;
 
 public class AddNewEventDialogFragment extends DialogFragment {
 

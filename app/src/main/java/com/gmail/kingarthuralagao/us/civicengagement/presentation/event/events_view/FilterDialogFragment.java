@@ -11,15 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.DialogFilterBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils.getScreenWidth;
 
 public class FilterDialogFragment extends DialogFragment {
 
     public interface IFilterClickListener {
-        void onApplyClick();
-        void onCloseClick();
+        void onFilterApply(List<String> causes);
     }
 
     public static FilterDialogFragment newInstance() {
@@ -33,6 +36,12 @@ public class FilterDialogFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DialogFilterBinding.inflate(getLayoutInflater());
+
+        try {
+            iFilterClickListener = (IFilterClickListener) getParentFragment();
+        } catch (ClassCastException e) {
+            throw e;
+        }
     }
 
     @Nullable
@@ -44,17 +53,12 @@ public class FilterDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setUpViews();
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
-        if (context instanceof IFilterClickListener) {
-            iFilterClickListener = (IFilterClickListener) context;
-        } else {
-            throw new RuntimeException("Must implement listener");
-        }
     }
 
     @Override
@@ -73,5 +77,52 @@ public class FilterDialogFragment extends DialogFragment {
             int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             dialog.getWindow().setLayout(width, height);
         }
+    }
+
+    private void setUpViews() {
+        binding.closeBtn.setOnClickListener(view -> dismiss());
+
+        binding.applyBtn.setOnClickListener(view -> {
+            iFilterClickListener.onFilterApply(getCausesList());
+            dismiss();
+        });
+    }
+
+    private List<String> getCausesList() {
+        List<String> causes = new ArrayList<>();
+
+        if (binding.includeCausesFilter.climateCheckbox.isChecked()) {
+            causes.add(getResources().getString(R.string.climate));
+        }
+
+        if (binding.includeCausesFilter.gunViolenceCheckbox.isChecked()) {
+            causes.add(getResources().getString(R.string.gun_violence));
+        }
+
+        if (binding.includeCausesFilter.healthcareCheckbox.isChecked()) {
+            causes.add(getResources().getString(R.string.health_care));
+        }
+
+        if (binding.includeCausesFilter.immigrationCheckbox.isChecked()) {
+            causes.add(getResources().getString(R.string.immigration));
+        }
+
+        if (binding.includeCausesFilter.lgbtqCheckbox.isChecked()) {
+            causes.add(getResources().getString(R.string.lgbtq));
+        }
+
+        if (binding.includeCausesFilter.povertyCheckbox.isChecked()) {
+            causes.add(getResources().getString(R.string.poverty));
+        }
+
+        if (binding.includeCausesFilter.racialJusticeCheckbox.isChecked()) {
+            causes.add(getResources().getString(R.string.racial_justice));
+        }
+
+        if (binding.includeCausesFilter.womxnsRightsCheckbox.isChecked()) {
+            causes.add(getResources().getString(R.string.womxns_right));
+        }
+
+        return causes;
     }
 }

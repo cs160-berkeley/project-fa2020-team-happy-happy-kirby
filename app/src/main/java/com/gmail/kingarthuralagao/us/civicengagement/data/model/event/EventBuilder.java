@@ -1,5 +1,7 @@
 package com.gmail.kingarthuralagao.us.civicengagement.data.model.event;
 
+import android.util.Log;
+
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.timezone.TimeZone;
 
@@ -51,7 +53,7 @@ public class EventBuilder {
         hour = hour.length() == 2 ? hour : "0" + hour;
 
         String date = month + "/" + day + "/" + year;
-        String time = hour + ":" + minute + ":" + "00";
+        String time = 12 + ":" + "00" + ":" + "00";
         this.dateStart = Utils.getTimeStampFromDate(date + " " + time);
         return this;
     }
@@ -77,7 +79,8 @@ public class EventBuilder {
         hour = hour.length() == 2 ? hour : "0" + hour;
 
         String date = month + "/" + day + "/" + year;
-        String time = hour + ":" + minute + ":" + "00";
+        String time = 12 + ":" + "00" + ":" + "00";
+        Log.i("EventBuilder", date + " " + time);
         this.dateEnd = Utils.getTimeStampFromDate(date + " " + time);
         return this;
     }

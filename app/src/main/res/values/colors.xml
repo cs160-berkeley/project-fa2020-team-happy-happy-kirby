@@ -11,4 +11,6 @@
     <color name="divider_color">#FFBDBDBD</color>
     <color name="disabled_blue_button">#6626C5DA</color>
     <color name="disabled_happening_button">#FFF6F6F6</color>
+    <color name="primary_blue_with_alpha">#9926C5DA</color>
+    <color name="secondary_blue_with_alpha">#991976D2</color>
 </resources>
