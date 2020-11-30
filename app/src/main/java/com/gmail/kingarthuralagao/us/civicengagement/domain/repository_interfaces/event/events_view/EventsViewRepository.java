@@ -16,4 +16,8 @@ public interface EventsViewRepository {
     Observable<List<DocumentSnapshot>> fetchEventsHappeningNow(Long timeStamp, String city);
 
     Observable<List<DocumentSnapshot>> fetchEventsHappeningSoon(Long timeStamp, String city);
+
+    Observable<List<DocumentSnapshot>> fetchEventsHappeningNowWithFilter(Long timeStamp, String city, List<String> causes);
+
+    Observable<List<DocumentSnapshot>> fetchEventsHappeningSoonWithFilter(Long timeStamp, String city, List<String> causes);
 }

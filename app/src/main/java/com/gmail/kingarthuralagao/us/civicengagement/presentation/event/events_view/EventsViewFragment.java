@@ -13,12 +13,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.EventDetailActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
@@ -50,6 +52,7 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
     private ArrayList<Event> happeningSoon = new ArrayList<>();
     private ArrayList<Event> happeningNowFiltered = new ArrayList<>();
     private ArrayList<Event> happeningSoonFiltered = new ArrayList<>();
+    private ArrayList<String> filters = new ArrayList<>();
     private FragmentEventsViewBinding binding;
     private EventsAdapter eventsAdapter;
     private EventsViewViewModel viewModel;
@@ -82,7 +85,8 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
     @Override
     public void onFilterApply(List<String> causes) {
         updateData(causes);
-
+        filters.clear();
+        filters.addAll(causes);
     }
 
     private void updateData(List<String> causes) {
@@ -185,6 +189,54 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
                     break;
             }
         });
+
+        viewModel.fetchEventsHappeningNowWithFilterResponse.observe(this, listResource -> {
+            switch (listResource.getStatus()) {
+                case LOADING:
+                    binding.swipeRefreshLayout.setRefreshing(true);
+                    binding.eventsRv.setVisibility(View.INVISIBLE);
+                    break;
+                case SUCCESS:
+                    happeningNowFiltered.clear();
+                    happeningNowFiltered.addAll(listResource.getData());
+                    eventsAdapter.setData(happeningNowFiltered);
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    binding.eventsRv.setVisibility(View.VISIBLE);
+                    break;
+                case ERROR:
+                    Log.i(TAG, listResource.getError().getMessage());
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    binding.eventsRv.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    Log.d(TAG, "Created");
+                    break;
+            }
+        });
+
+        viewModel.fetchEventsHappeningSoonWithFilterResponse.observe(this, listResource -> {
+            switch (listResource.getStatus()) {
+                case LOADING:
+                    binding.swipeRefreshLayout.setRefreshing(true);
+                    binding.eventsRv.setVisibility(View.INVISIBLE);
+                    break;
+                case SUCCESS:
+                    happeningSoonFiltered.clear();
+                    happeningSoonFiltered.addAll(listResource.getData());
+                    eventsAdapter.setData(happeningSoonFiltered);
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    binding.eventsRv.setVisibility(View.VISIBLE);
+                    break;
+                case ERROR:
+                    Log.i(TAG, listResource.getError().getMessage());
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    binding.eventsRv.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    Log.d(TAG, "Created");
+                    break;
+            }
+        });
     }
 
     private void setUpEvents() {
@@ -205,7 +257,11 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
             binding.includeNowSoon.happeningSoonBtn.setEnabled(false);
 
             if (happeningSoon.size() == 0) {
-                viewModel.fetchEventsHappeningSoon(System.currentTimeMillis(), inputLocation);
+                if (filters.size() == 0) {
+                    viewModel.fetchEventsHappeningSoon(System.currentTimeMillis(), inputLocation);
+                } else {
+                    viewModel.fetchEventsHappeningSoonWithFilter(System.currentTimeMillis(), inputLocation, filters);
+                }
             } else {
                 eventsAdapter.setData(happeningSoonFiltered);
             }
@@ -213,31 +269,34 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
 
 
         binding.filterBtn.setOnClickListener(view -> {
-            FilterDialogFragment dialog = new FilterDialogFragment();
+            FilterDialogFragment dialog = FilterDialogFragment.newInstance(filters);
             dialog.show(getChildFragmentManager(), "");
         });
 
         binding.eventsRv.addOnItemTouchListener(new RecyclerTouchListener(requireContext(), new IRecyclerViewItemClickListener() {
             @Override
             public void onRecyclerViewItemClick(View view, Integer position) {
-                //Toast.makeText(requireContext(), "Event name is: " + eventsAdapter.getEvent(position).getName(), Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(requireActivity(), EventDetailActivity.class);
                 i.putExtra("event", eventsAdapter.getEvent(position));
                 startActivity(i);
-                //Toast.makeText(requireContext(), "Postion is: " + position, Toast.LENGTH_SHORT).show();
             }
         }));
 
         binding.swipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+                () -> {
+                    Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
 
-                        if (binding.includeNowSoon.happeningNowBtn.isEnabled()) {
+                    if (binding.includeNowSoon.happeningNowBtn.isEnabled()) {
+                        if (filters.size() == 0) {
                             viewModel.fetchEventsHappeningSoon(System.currentTimeMillis(), inputLocation);
                         } else {
+                            viewModel.fetchEventsHappeningSoonWithFilter(System.currentTimeMillis(), inputLocation, filters);
+                        }
+                    } else {
+                        if (filters.size() == 0) {
                             viewModel.fetchEventsHappeningNow(System.currentTimeMillis(), inputLocation);
+                        } else {
+                            viewModel.fetchEventsHappeningNowWithFilter(System.currentTimeMillis(), inputLocation, filters);
                         }
                     }
                 }

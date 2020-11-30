@@ -46,6 +46,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         holder.eventTimeTv.setText(event.getTimeStart() + " - " + event.getTimeEnd());
         holder.eventLocationTv.setText(event.getLocation());
         holder.eventCheckInsTv.setText(event.getCheckIns() + "");
+        holder.checkInsTv.setText(event.getCheckIns() <= 1 ? "check in" : "check ins");
 
         createChips(event.getCauses(), holder);
     }
@@ -84,6 +85,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         private TextView eventDateTv;
         private TextView eventTimeTv;
         private TextView eventCheckInsTv;
+        private TextView checkInsTv;
         private ChipGroup chipGroup;
 
         public ViewHolder(@NonNull RowItemEventDetailsBinding binding) {
@@ -94,6 +96,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             eventDateTv = binding.eventDateTv;
             eventTimeTv = binding.eventTimeTv;
             eventCheckInsTv = binding.checkInsTv;
+            checkInsTv = binding.textView;
             chipGroup = binding.chipGroup;
         }
 

@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -76,10 +77,43 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLocManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);;
-        mLocListener = location -> {
-            //
-        };
+        mLocManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            mLocListener = location -> {
+                if (location != null) {
+                    Log.i(TAG, "Location: " + location.toString());
+                    makeGeoRequest(location);
+                    mLocManager.removeUpdates(mLocListener);
+                }
+            };
+        } else {
+            mLocListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                    if (location != null) {
+                        Log.i(TAG, "Location: " + location.toString());
+                        makeGeoRequest(location);
+                        mLocManager.removeUpdates(mLocListener);
+                    }
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                    //
+                }
+
+                @Override
+                public void onProviderEnabled(@NonNull String provider) {
+                    //
+                }
+
+                @Override
+                public void onProviderDisabled(@NonNull String provider) {
+                    //
+                }
+            };
+        }
         queue = Volley.newRequestQueue(this.getActivity());
 
         Log.i("HomeFrag", (System.currentTimeMillis() / 1000) + "");
@@ -176,9 +210,10 @@ public class HomeFragment extends Fragment {
                 // Update location.
                 mLocManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER, 0, 0, mLocListener);
+                /*
                 Location location = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 Log.i(TAG, "Location: " + location.toString());
-                makeGeoRequest(location);
+                makeGeoRequest(location);*/
             } else {
                 // Location permission not granted.
                 Log.i(TAG, "Requesting location permission.");
@@ -199,9 +234,10 @@ public class HomeFragment extends Fragment {
                 Intent i = new Intent(requireActivity(), EventsViewActivity.class);
                 mLocManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER, 0, 0, mLocListener);
+                /*
                 Location location = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 Log.i(TAG, "Location: " + location.toString());
-                makeGeoRequest(location);
+                makeGeoRequest(location);*/
             } else {
                 // Permission denied.
                 // Tell the user the action is cancelled.
@@ -225,39 +261,39 @@ public class HomeFragment extends Fragment {
                     Request.Method.GET,
                     fullGeoUrl,
                     null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                Log.i(TAG, "Response: " + response.toString());
-                                JSONArray results = response.getJSONArray("results");
-                                JSONObject firstResult = results.getJSONObject(0);
-                                JSONArray addressComponents = firstResult.getJSONArray("address_components");
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        Log.i(TAG, "Response: " + response.toString());
+                        JSONArray results = response.getJSONArray("results");
+                        JSONObject firstResult = results.getJSONObject(0);
+                        JSONArray addressComponents = firstResult.getJSONArray("address_components");
 
-                                String city = "";
-                                for (int i = 0; i < addressComponents.length(); i++) {
-                                    JSONObject object = addressComponents.getJSONObject(i);
+                        String city = "";
+                        for (int i = 0; i < addressComponents.length(); i++) {
+                            JSONObject object = addressComponents.getJSONObject(i);
 
-                                    JSONArray typesArray = object.getJSONArray("types");
-                                    for (int j = 0; j < typesArray.length(); j++) {
-                                        if (typesArray.get(j).equals("locality")) {
-                                            city = object.getString("long_name");
-                                        }
-                                    }
-
+                            JSONArray typesArray = object.getJSONArray("types");
+                            for (int j = 0; j < typesArray.length(); j++) {
+                                if (typesArray.get(j).equals("locality")) {
+                                    city = object.getString("long_name");
                                 }
-                                //JSONObject cityInfo = addressComponents.getJSONObject(3);
-                                //String formattedAddress = firstResult.getString("formatted_address");
-                                Log.i(TAG, "Address: " + city);
-                                Intent i = new Intent(requireActivity(), EventsViewActivity.class);
-                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                i.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                                i.putExtra("Address", city);
-                                startActivity(i);
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);
                             }
+
                         }
-                    }, new Response.ErrorListener() {
+                        //JSONObject cityInfo = addressComponents.getJSONObject(3);
+                        //String formattedAddress = firstResult.getString("formatted_address");
+                        Log.i(TAG, "Address: " + city);
+                        Intent i = new Intent(requireActivity(), EventsViewActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        i.putExtra("Address", city);
+                        startActivity(i);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);
+                    }
+                }
+            }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e(TAG, "Error getting response from GeoCoding API: " + error);
