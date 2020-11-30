@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_text"
+        android:text="@string/event_causes_prompt"
+        android:textSize="@dimen/_12sdp"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/climate_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/climate"
+            style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/gun_violence_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gun_violence"
+            style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/healthcare_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/health_care"
+            style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/immigration_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/immigration"
+            style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/lgbtq_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lgbtq"
+            style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/poverty_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/poverty"
+            style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/racial_justice_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/racial_justice"
+            style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/womxns_rights_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/womxns_right"
+            style="@style/Widget.MaterialComponents.Chip.Choice"/>
+    </com.google.android.material.chip.ChipGroup>
+
+</LinearLayout>

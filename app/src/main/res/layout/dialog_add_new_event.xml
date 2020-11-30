@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:id="@+id/lay_parent">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -49,7 +49,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusableInTouchMode="true">
 
             <include layout="@layout/include_happening_now_happening_soon"
                 android:id="@+id/include_happening_now_happening_soon"
@@ -59,13 +61,51 @@
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_12sdp"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:text="Details"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_16sdp"/>
+
             <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_marginTop="0dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:text="Causes"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_16sdp"/>
+
+            <include layout="@layout/include_causes_chips"
+                android:id="@+id/include_causes_chips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_12sdp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:text="Accessibility"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_16sdp"/>
 
             <include layout="@layout/include_accessibility_checkboxes"
                 android:id="@+id/include_accessibility_checkboxes"

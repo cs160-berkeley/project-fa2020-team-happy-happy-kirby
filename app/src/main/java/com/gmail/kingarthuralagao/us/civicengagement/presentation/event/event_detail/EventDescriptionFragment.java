@@ -1,4 +1,4 @@
-package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.detail;
+package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventDescriptionBinding;
 
 public class EventDescriptionFragment extends Fragment {

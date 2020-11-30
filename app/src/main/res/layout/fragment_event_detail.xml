@@ -70,7 +70,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/engage_virtually_btn"
                 app:layout_constraintTop_toBottomOf="@id/include_event_details"
-                android:backgroundTint="@color/secondary_blue"
+                android:backgroundTint="@color/check_in_button_text_color_state_list"
                 android:text="Check In"
                 android:theme="@style/Theme.Event.Details.Button"
                 android:textColor="@color/white"

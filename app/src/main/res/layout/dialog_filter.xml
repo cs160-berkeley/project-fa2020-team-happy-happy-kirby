@@ -18,6 +18,7 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Filters"
@@ -25,6 +26,7 @@
                 android:gravity="center"/>
 
             <ImageView
+                android:id="@+id/close_btn"
                 android:layout_width="@dimen/_28sdp"
                 android:layout_height="@dimen/_28sdp"
                 android:layout_alignParentRight="true"
@@ -38,6 +40,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
+        android:id="@+id/heading_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Causes"
@@ -47,7 +50,7 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginStart="@dimen/_12sdp"/>
 
-    <include layout="@layout/include_causes_filter"
+    <include layout="@layout/include_causes_list"
         android:id="@+id/include_causes_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,6 +60,7 @@
 
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/apply_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_12sdp"

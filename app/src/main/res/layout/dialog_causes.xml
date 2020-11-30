@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingBottom="@dimen/_12sdp"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/secondary_blue"
+        app:titleTextColor="@color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Causes"
+                android:theme="@style/Theme.Toolbar.Title"
+                android:gravity="center"/>
+
+            <ImageView
+                android:id="@+id/negative_btn"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:src="@drawable/ic_close_white"/>
+
+        </RelativeLayout>
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/heading_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check all that apply"
+        android:textSize="@dimen/_16sdp"
+        android:textColor="@color/primary_text"
+        android:fontFamily="@font/inter_semi_bold"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginStart="@dimen/_12sdp"/>
+
+    <include layout="@layout/include_causes_list"
+        android:id="@+id/include_causes_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_28sdp"
+        android:layout_marginEnd="@dimen/_28sdp"/>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/positive_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:backgroundTint="@color/secondary_blue"
+        android:text="Add"
+        android:textColor="@color/white"/>
+
+</LinearLayout>

@@ -7,8 +7,8 @@ public class User {
     private String name;
     private String location;
     private List<String> causes;
-    private List<Integer> events;
-    private List<Integer> checkins;
+    private List<String> events;
+    private List<String> checkIns;
     private Map<String, Boolean> accessibilities;
     private String userID;
 
@@ -16,12 +16,12 @@ public class User {
 
     }
 
-    public User(String name, String location, List<String> causes, List<Integer> events, List<Integer> checkins,
+    public User(String name, String location, List<String> causes, List<String> events, List<String> checkIns,
                  Map<String, Boolean> accessibilities, String userID) {
         this.name = name;
         this.location = location;
         this.events = events;
-        this.checkins = checkins;
+        this.checkIns = checkIns;
         this.causes = causes;
         this.accessibilities = accessibilities;
         this.userID = userID;
@@ -59,20 +59,20 @@ public class User {
         this.causes = causes;
     }
 
-    public List<Integer> getEvents() {
+    public List<String> getEvents() {
         return events;
     }
 
-    public void setEvents(List<Integer> events) {
+    public void setEvents(List<String> events) {
         this.events = events;
     }
 
-    public List<Integer> getCheckins() {
-        return checkins;
+    public List<String> getCheckIns() {
+        return checkIns;
     }
 
-    public void setCheckins(List<Integer> checkins) {
-        this.checkins = checkins;
+    public void setCheckIns(List<String> checkIns) {
+        this.checkIns = checkIns;
     }
 
     public Map<String, Boolean> getAccessibilities() {

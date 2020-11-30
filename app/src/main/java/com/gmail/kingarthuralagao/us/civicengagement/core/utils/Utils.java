@@ -69,7 +69,6 @@ public class Utils {
         int minute = cal.get(Calendar.MINUTE);  // 16
         int second = cal.get(Calendar.SECOND);  // 17
 
-        Log.i("Utils", monthNameToNumber(month) + "/" + day + "/" + year);
         return monthNameToNumber(month) + "/" + day + "/" + year ;
     }
 
@@ -102,5 +101,49 @@ public class Utils {
         }
     }
 
+
+    public static int convertToStandardTime(int hour) {
+        switch (hour) {
+            case 13:
+                return 1;
+            case 14:
+                return 2;
+            case 15:
+                return 3;
+            case 16:
+                return 4;
+            case 17:
+                return 5;
+            case 18:
+                return 6;
+            case 19:
+                return 7;
+            case 20:
+                return 8;
+            case 21:
+                return 9;
+            case 22:
+                return 10;
+            case 23:
+                return 11;
+            default:
+                return 12;
+        }
+    }
+
+    public static String buildTimeString(int hour, int minute) {
+        String amOrPm = "AM";
+        String formattedMinute = String.valueOf(minute);
+
+        if (hour >= 12) {
+            amOrPm = "PM";
+            hour = Utils.convertToStandardTime(hour); // Converts 24-hour based clock to 12-hour based
+        }
+
+        if (minute < 10) {
+            formattedMinute = "0" + formattedMinute;
+        }
+        return hour + ":" + formattedMinute + " " + amOrPm;
+    }
 
 }

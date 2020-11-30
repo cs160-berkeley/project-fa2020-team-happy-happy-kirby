@@ -3,32 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    android:id="@+id/lay">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/event_name_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"
-        android:hint="@string/event_name_question"
-        app:errorEnabled="true">
+        android:hint="@string/event_name_prompt"
+        app:errorEnabled="true"
+        app:startIconDrawable="@drawable/ic_event_name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/event_name_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/event_causes_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_4sdp"
-        android:hint="@string/event_causes_question"
-        app:errorEnabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/event_causes_tv"
+            android:id="@+id/event_name_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -38,23 +30,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_4sdp"
-        android:hint="@string/event_location_question"
-        app:errorEnabled="true">
+        android:hint="@string/event_location_prompt"
+        app:errorEnabled="true"
+        app:startIconDrawable="@drawable/ic_event_location_gray"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/event_location_tv"
+            android:id="@+id/event_location_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/event_end_layout"
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/event_date_end_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_4sdp"
-        android:hint="@string/event_end_question"
-        app:errorEnabled="true">
-    </com.google.android.material.button.MaterialButton>
+        android:hint="@string/event_end_date_prompt"
+        app:errorEnabled="true"
+        app:startIconDrawable="@drawable/ic_event_date_gray"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/event_date_end_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/event_time_end_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_weight="0.4"
+        android:hint="@string/event_end_time_prompt"
+        app:errorEnabled="true"
+        app:startIconDrawable="@drawable/ic_start_time"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/event_time_end_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/event_notes_layout"
@@ -64,7 +83,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/event_notes_tv"
+            android:id="@+id/event_notes_et"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="textMultiLine"

@@ -1,10 +1,10 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.home;
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +33,6 @@ import com.android.volley.toolbox.Volley;
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddNewEventDialogFragment;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.detail.EventDetailActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
@@ -43,17 +41,17 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -66,12 +64,13 @@ public class HomeFragment extends Fragment {
     }
 
     private static final int AUTOCOMPLETE_REQUEST_CODE = 100;
-    private FragmentHomeBinding binding;
+    private final int LOCATION_REQUEST_CODE = 1;
     private final String TAG = getClass().getSimpleName();
+    private static Geocoder geocoder;
+    private FragmentHomeBinding binding;
     private LocationManager mLocManager;
     private LocationListener mLocListener;
     private RequestQueue queue;
-    private final int LOCATION_REQUEST_CODE = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,6 +81,8 @@ public class HomeFragment extends Fragment {
             //
         };
         queue = Volley.newRequestQueue(this.getActivity());
+
+        Log.i("HomeFrag", (System.currentTimeMillis() / 1000) + "");
     }
 
     @Nullable
@@ -135,9 +136,11 @@ public class HomeFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 String address = place.getAddress();
+                String city = getCityFromPlace(place);
+                /*
                 int commaIndex = address.indexOf(",");
                 String city = address.substring(0, commaIndex);
-                Log.i(TAG, "Address comp: " + place.getAddressComponents());
+                Log.i(TAG, "Address comp: " + place.getAddressComponents());*/
                 Intent i = new Intent(requireActivity(), EventsViewActivity.class);
                 i.putExtra("Address", city);
                 startActivity(i);
@@ -246,6 +249,8 @@ public class HomeFragment extends Fragment {
                                 //String formattedAddress = firstResult.getString("formatted_address");
                                 Log.i(TAG, "Address: " + city);
                                 Intent i = new Intent(requireActivity(), EventsViewActivity.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                                 i.putExtra("Address", city);
                                 startActivity(i);
                             } catch (Exception e) {
@@ -278,5 +283,26 @@ public class HomeFragment extends Fragment {
                 .setTypeFilter(TypeFilter.CITIES)
                 .build(requireContext());
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+    }
+
+    private static String getCityFromPlace(Place place) {
+        geocoder = new Geocoder(CivicEngagementApp.getContext(), Locale.getDefault());
+
+        try {
+            return getCityNameByCoordinates(place.getLatLng().latitude, place.getLatLng().longitude);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private static String getCityNameByCoordinates(double lat, double lon) throws IOException {
+
+        List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+        if (addresses != null && addresses.size() > 0) {
+            Log.i("AddNewEventDialogFrag", addresses.toString());
+            return addresses.get(0).getLocality() == null ? addresses.get(0).getAdminArea() : addresses.get(0).getLocality();
+        }
+        return "";
     }
 }

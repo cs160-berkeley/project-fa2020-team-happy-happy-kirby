@@ -25,6 +25,10 @@ buildscript {
         toasty_version = "1.5.0"
         custom_tab_version = "1.2.0"
         sdp_version = "1.0.6"
+        volley_version = "1.1.1"
+        logging_interceptor_version = "4.9.0"
+        rxjava_retrofit_adapter_version = "2.9.0"
+        swipe_refresh_version = "1.1.0"
     }
 }
 

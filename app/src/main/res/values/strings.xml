@@ -26,14 +26,17 @@
     <!--Add Events-->
     <string name="enable_location">Engage with local events</string>
     <string name="description">Learn about nearby social movement events for the causes you care about and contains basic event information, accessibility information for in-person engagement and resources for alternative virtual engagement.</string>
-    <string name="event_name_question">What is the name of the event?</string>
-    <string name="event_causes_question">What causes does the event support?</string>
-    <string name="event_end_question">When will the event end?</string>
-    <string name="event_start_question">When will the event start?</string>
-    <string name="event_location_question">Where will the event take place?</string>
+    <string name="event_name_prompt">Event Name</string>
+    <string name="event_causes_prompt">What causes does the event support? (Select all that apply).</string>
+    <string name="event_end_date_prompt">End Date</string>
+    <string name="event_start_date_prompt">Start Date</string>
+    <string name="event_start_time_prompt">Start Time</string>
+    <string name="event_end_time_prompt">End Time</string>
+    <string name="event_location_prompt">Location</string>
     <string name="event_description_hint">Insert any notes or event description...</string>
     <string name="event_accessibilities_question">What accessibility resources are available at this event, as best as you can tell?</string>
     <string name="add_new_event">Add New Event</string>
+    <string name="no_description">No description available for this event</string>
 
 
     <!-- Accessibilities-->

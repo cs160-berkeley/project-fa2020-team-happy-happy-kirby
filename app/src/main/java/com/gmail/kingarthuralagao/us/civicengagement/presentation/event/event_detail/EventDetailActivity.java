@@ -1,14 +1,10 @@
-package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.detail;
+package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.EventLogTags;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityActivity;
-import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityEventDetailBinding;
 
 public class EventDetailActivity extends AppCompatActivity {
