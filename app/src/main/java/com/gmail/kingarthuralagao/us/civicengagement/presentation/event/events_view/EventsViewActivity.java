@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityEventsViewBinding;
 
 import java.util.List;
@@ -30,5 +31,11 @@ public class EventsViewActivity extends AppCompatActivity {
                 .beginTransaction()
                 .add(binding.fragmentContainer.getId(), fragment)
                 .commit();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
     }
 }

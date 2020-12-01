@@ -3,6 +3,7 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.home;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -79,41 +81,7 @@ public class HomeFragment extends Fragment {
 
         mLocManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            mLocListener = location -> {
-                if (location != null) {
-                    Log.i(TAG, "Location: " + location.toString());
-                    makeGeoRequest(location);
-                    mLocManager.removeUpdates(mLocListener);
-                }
-            };
-        } else {
-            mLocListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(@NonNull Location location) {
-                    if (location != null) {
-                        Log.i(TAG, "Location: " + location.toString());
-                        makeGeoRequest(location);
-                        mLocManager.removeUpdates(mLocListener);
-                    }
-                }
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-                    //
-                }
-
-                @Override
-                public void onProviderEnabled(@NonNull String provider) {
-                    //
-                }
-
-                @Override
-                public void onProviderDisabled(@NonNull String provider) {
-                    //
-                }
-            };
-        }
+        initializeLocationListener();
         queue = Volley.newRequestQueue(this.getActivity());
 
         Log.i("HomeFrag", (System.currentTimeMillis() / 1000) + "");
@@ -125,8 +93,8 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         setHasOptionsMenu(true);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(binding.toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
 
         return binding.getRoot();
     }
@@ -157,6 +125,7 @@ public class HomeFragment extends Fragment {
         if (item.getItemId() == R.id.logout) {
             ((CivicEngagementApp) requireActivity().getApplication()).getAuthInstance().signOut();
             Intent i = new Intent(requireActivity(), AuthenticationActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             return true;
         }
@@ -175,9 +144,7 @@ public class HomeFragment extends Fragment {
                 int commaIndex = address.indexOf(",");
                 String city = address.substring(0, commaIndex);
                 Log.i(TAG, "Address comp: " + place.getAddressComponents());*/
-                Intent i = new Intent(requireActivity(), EventsViewActivity.class);
-                i.putExtra("Address", city);
-                startActivity(i);
+                navigateToEventsView(city);
                 //Log.i(TAG, "Place: " + place.getAddress() + ", " + place.getId());
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
@@ -202,7 +169,6 @@ public class HomeFragment extends Fragment {
         });
 
         binding.useCurrentLocationTv.setOnClickListener(view -> {
-            Intent i = new Intent(requireActivity(), EventsViewActivity.class);
             Log.i(TAG, "In onclicklistener for location image");
             // Location permission granted.
             if (ContextCompat.checkSelfPermission(requireActivity(),
@@ -210,10 +176,6 @@ public class HomeFragment extends Fragment {
                 // Update location.
                 mLocManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER, 0, 0, mLocListener);
-                /*
-                Location location = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                Log.i(TAG, "Location: " + location.toString());
-                makeGeoRequest(location);*/
             } else {
                 // Location permission not granted.
                 Log.i(TAG, "Requesting location permission.");
@@ -230,14 +192,12 @@ public class HomeFragment extends Fragment {
             if (grantResults.length > 0
                     && grantResults[0] == PERMISSION_GRANTED) {
 
-                // Permission was granted.
-                Intent i = new Intent(requireActivity(), EventsViewActivity.class);
+                if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
                 mLocManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER, 0, 0, mLocListener);
-                /*
-                Location location = mLocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                Log.i(TAG, "Location: " + location.toString());
-                makeGeoRequest(location);*/
             } else {
                 // Permission denied.
                 // Tell the user the action is cancelled.
@@ -251,6 +211,35 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private void initializeLocationListener() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            mLocListener = location -> {
+                if (location != null) {
+                    Log.i(TAG, "Location: " + location.toString());
+                    makeGeoRequest(location);
+                    mLocManager.removeUpdates(mLocListener);
+                }
+            };
+        } else {
+            mLocListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                    if (location != null) {
+                        Log.i(TAG, "Location: " + location.toString());
+                        makeGeoRequest(location);
+                        mLocManager.removeUpdates(mLocListener);
+                    }
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {}
+                @Override
+                public void onProviderEnabled(@NonNull String provider) {}
+                @Override
+                public void onProviderDisabled(@NonNull String provider) {}
+            };
+        }
+    }
     private void makeGeoRequest(Location location) {
         final String GEO_URL = "https://maps.googleapis.com/maps/api/geocode/json";
         if (location != null) {
@@ -281,14 +270,16 @@ public class HomeFragment extends Fragment {
                             }
 
                         }
+                        navigateToEventsView(city);
                         //JSONObject cityInfo = addressComponents.getJSONObject(3);
                         //String formattedAddress = firstResult.getString("formatted_address");
+                        /*
                         Log.i(TAG, "Address: " + city);
                         Intent i = new Intent(requireActivity(), EventsViewActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                         i.putExtra("Address", city);
-                        startActivity(i);
+                        startActivity(i);*/
                     } catch (Exception e) {
                         Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);
                     }
@@ -302,6 +293,16 @@ public class HomeFragment extends Fragment {
             // Add the request to the RequestQueue.
             queue.add(jsonObjectRequest);
         }
+    }
+
+    private void navigateToEventsView(String city) {
+        Intent i = new Intent(requireActivity(), EventsViewActivity.class);
+        i.putExtra("Address", city);
+        /*
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);*/
+        startActivity(i);
+        requireActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
     private void initializeLocationSearch() {

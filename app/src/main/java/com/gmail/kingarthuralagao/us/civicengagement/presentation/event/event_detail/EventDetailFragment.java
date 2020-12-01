@@ -1,10 +1,14 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +26,7 @@ import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.user.User;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.viewmodel.EventDetailViewModel;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.viewmodel.EventsViewViewModel;
@@ -29,6 +34,8 @@ import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventDetailBinding;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,30 +92,30 @@ public class EventDetailFragment extends Fragment {
     }
 
     private void subscribeToLiveData() {
-        viewModel.postUserCheckInResponse.observe(this, new Observer<Resource<Status>>() {
-            @Override
-            public void onChanged(Resource<Status> statusResource) {
-                switch (statusResource.getStatus()) {
-                    case SUCCESS:
-                        CivicEngagementApp.getUser().getCheckIns().add(event.getID());
-                        setCheckInButtonStatus();
-                        Toasty.success(requireContext(),
-                                "You have successfully checked in to this event",
-                                Toasty.LENGTH_LONG,
-                                true).show();
-                        loadingDialog.dismiss();
-                        break;
-                    case LOADING:
-                        loadingDialog = new LoadingDialog();
-                        loadingDialog.show(getChildFragmentManager(), "");
-                        break;
-                    case ERROR:
-                        loadingDialog.dismiss();
-                        Log.i(TAG, statusResource.getError().getMessage());
-                        Toasty.error(requireContext(), "Error checkin in", Toast.LENGTH_SHORT, true);
-                        break;
-                    default:
-                }
+        viewModel.postUserCheckInResponse.observe(this, statusResource -> {
+            switch (statusResource.getStatus()) {
+                case SUCCESS:
+                    CivicEngagementApp.getUser().getCheckIns().add(event.getID());
+                    setCheckInButtonStatus();
+                    Toasty.success(requireContext(),
+                            "You have successfully checked in to this event",
+                            Toasty.LENGTH_LONG,
+                            true).show();
+                    loadingDialog.dismiss();
+                    break;
+                case LOADING:
+                    loadingDialog = new LoadingDialog();
+                    loadingDialog.show(getChildFragmentManager(), "");
+                    break;
+                case ERROR:
+                    loadingDialog.dismiss();
+                    Log.i(TAG, statusResource.getError().getMessage());
+                    Toasty.error(requireContext(),
+                            "Error checking in",
+                            Toast.LENGTH_SHORT,
+                            true).show();
+                    break;
+                default:
             }
         });
     }
@@ -141,10 +148,18 @@ public class EventDetailFragment extends Fragment {
     private void setCheckInButtonStatus() {
         User userDoc = CivicEngagementApp.getUser();
 
-        if (userDoc.getCheckIns().contains(event.getID())) {
-            Log.i(TAG, userDoc.getCheckIns().toString());
-            binding.checkInBtn.setText("Checked In");
-            binding.checkInBtn.setBackgroundColor(getResources().getColor(R.color.checked_in_green, null));
+        if (userDoc == null) {
+            Toast.makeText(requireContext(), "Please log in to continue", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(requireContext(), AuthenticationActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            FirebaseAuth.getInstance().signOut();
+            startActivity(i);
+        } else {
+            if (userDoc.getCheckIns().contains(event.getID())) {
+                Log.i(TAG, userDoc.getCheckIns().toString());
+                binding.checkInBtn.setText("Checked In");
+                binding.checkInBtn.setBackgroundColor(getResources().getColor(R.color.checked_in_green, null));
+            }
         }
     }
 

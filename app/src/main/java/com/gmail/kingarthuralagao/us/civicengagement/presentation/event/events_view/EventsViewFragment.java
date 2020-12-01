@@ -1,5 +1,6 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -279,6 +280,10 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
                 Intent i = new Intent(requireActivity(), EventDetailActivity.class);
                 i.putExtra("event", eventsAdapter.getEvent(position));
                 startActivity(i);
+                requireActivity().overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.do_nothing);
+                /*
+                i.putExtra("event", eventsAdapter.getEvent(position));
+                startActivity(i);*/
             }
         }));
 
