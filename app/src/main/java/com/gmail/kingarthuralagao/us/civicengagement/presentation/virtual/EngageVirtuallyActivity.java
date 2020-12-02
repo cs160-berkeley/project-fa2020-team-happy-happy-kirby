@@ -46,7 +46,7 @@ public class EngageVirtuallyActivity extends AppCompatActivity {
             }
         });
 
-
+        thread.start();
         binding.progressIdc.setProgress(50);
     }
 }
