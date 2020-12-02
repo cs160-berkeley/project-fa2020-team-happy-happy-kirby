@@ -3,7 +3,6 @@ package com.gmail.kingarthuralagao.us.civicengagement.data.model.event;
 import android.util.Log;
 
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.timezone.TimeZone;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,7 @@ public class EventBuilder {
     private Map<String, Boolean> accessibilities;
     private String eventID;
     private Event eventDTO;
+    private String goFundMeLink;
 
     public EventBuilder withName(String eventName) {
         this.name = eventName;
@@ -136,6 +136,11 @@ public class EventBuilder {
         return this;
     }
 
+    public EventBuilder withGoFundMeLink(String link) {
+        this.goFundMeLink = (link != null && link.length() >= 0) ? link : "";
+        return this;
+    }
+
     public Event build() {
         this.eventDTO = new Event();
         eventDTO.setName(this.name);
@@ -151,6 +156,7 @@ public class EventBuilder {
         eventDTO.setCauses(this.causes);
         eventDTO.setAccessibilities(this.accessibilities);
         eventDTO.setID(this.eventID);
+        eventDTO.setGoFundMeLink(this.goFundMeLink);
         return eventDTO;
     }
 

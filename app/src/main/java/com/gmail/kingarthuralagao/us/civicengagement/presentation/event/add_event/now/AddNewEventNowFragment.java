@@ -3,19 +3,14 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_eve
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.icu.util.Calendar;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextWatcher;
-import android.text.style.ImageSpan;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +24,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.EventBuilder;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.timezone.TimeZone;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.CausesDialogFragment;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
-import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.IncludeAddEventHappeningNowBinding;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
@@ -44,20 +33,15 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.google.android.material.chip.ChipDrawable;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import es.dmoral.toasty.Toasty;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static androidx.core.content.ContextCompat.getSystemService;
 
 public class AddNewEventNowFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener {
@@ -75,6 +59,7 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
     private static String dateEnd;
     private static String timeEnd;
     private static Place place;
+    private static String goFundMeLink;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,6 +120,28 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
         this.timeEnd = time;
     }
 
+    public static String getName() {
+        return binding.eventNameEt.getText().toString();
+    }
+
+    public static String getDateEnd() {
+        return dateEnd;
+    }
+
+    public static String getTimeEnd() {
+        return timeEnd;
+    }
+
+    public static String getDescription() {
+        return binding.eventNotesEt.getText().toString();
+    }
+
+    public static Place getPlace() {
+        return place;
+    }
+
+    public static String getGoFundMeLink() {return goFundMeLink;}
+
     private void setUpViews() {
         binding.eventLocationEt.setFocusable(false);
         binding.eventTimeEndEt.setFocusable(false);
@@ -188,6 +195,19 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
                 binding.eventNameLayout.setError("");
             }
         });
+
+        binding.eventGofundLinkEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                binding.eventGofundmeLinkLayout.setError("");
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -227,30 +247,20 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
         startActivityForResult(intent, AUTOCOMPLETE_LOCATION_REQUEST_CODE);
     }
 
-    public static String getName() {
-        return binding.eventNameEt.getText().toString();
-    }
-
-    public static String getDateEnd() {
-        return dateEnd;
-    }
-
-    public static String getTimeEnd() {
-        return timeEnd;
-    }
-
-    public static String getDescription() {
-        return binding.eventNotesEt.getText().toString();
-    }
-
-    public static Place getPlace() {
-        return place;
-    }
-
     public void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         binding.lay.requestFocus();
+    }
+
+    public static boolean hasInvalidLink() {
+        boolean hasInvalidLink = false;
+        if (binding.eventGofundLinkEt.getText().length() != 0
+                && !Patterns.WEB_URL.matcher(binding.eventGofundLinkEt.getText().toString().toLowerCase()).matches()) {
+            binding.eventGofundmeLinkLayout.setError("Please provide a valid link");
+            hasInvalidLink = true;
+        }
+        return hasInvalidLink;
     }
 
     public static boolean hasEmptyField() {

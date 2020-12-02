@@ -2,17 +2,15 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_eve
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.DatePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,12 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
-import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.EventBuilder;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.timezone.TimeZone;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.CausesDialogFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.RangeTimePickerDialogFragment;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.IncludeAddEventHappeningSoonBinding;
@@ -36,14 +29,9 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import es.dmoral.toasty.Toasty;
 
@@ -67,6 +55,7 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
     private static String timeStart;
     private static String timeEnd;
     private static Place place;
+    private static String goFundMeLink;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,6 +114,36 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         this.timeEnd = endTime;
     }
 
+    public static String getName() {
+        return binding.eventNameEt.getText().toString();
+    }
+
+    public static Long getDateEnd() {
+        return dateEnd;
+    }
+
+    public static String getTimeEnd() {
+        return timeEnd;
+    }
+
+    public static String getDescription() {
+        return binding.eventNotesEt.getText().toString();
+    }
+
+    public static Long getDateStart() {
+        return dateStart;
+    }
+
+    public static String getTimeStart() {
+        return timeStart;
+    }
+
+    public static Place getPlace() {
+        return place;
+    }
+
+    public static String getGoFundMeLink() {return goFundMeLink;}
+
     private void setUpEvents() {
         binding.eventDateEndEt.setOnClickListener(view -> {
             hideKeyboard(binding.eventDateEndEt);
@@ -166,6 +185,19 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void afterTextChanged(Editable editable) {binding.eventNameLayout.setError("");}
+        });
+
+        binding.eventGofundLinkEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                binding.eventGofundmeLinkLayout.setError("");
+            }
         });
     }
 
@@ -213,38 +245,20 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         datePicker.addOnNegativeButtonClickListener(view -> datePicker.dismiss());
     }
 
-    public static String getName() {
-        return binding.eventNameEt.getText().toString();
-    }
-
-    public static Long getDateEnd() {
-        return dateEnd;
-    }
-
-    public static String getTimeEnd() {
-        return timeEnd;
-    }
-
-    public static String getDescription() {
-        return binding.eventNotesEt.getText().toString();
-    }
-
-    public static Long getDateStart() {
-        return dateStart;
-    }
-
-    public static String getTimeStart() {
-        return timeStart;
-    }
-
-    public static Place getPlace() {
-        return place;
-    }
-
     public void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         binding.lay.requestFocus();
+    }
+
+    public static boolean hasInvalidLink() {
+        boolean hasInvalidLink = false;
+        if (binding.eventGofundLinkEt.getText().length() != 0
+                && !Patterns.WEB_URL.matcher(binding.eventGofundLinkEt.getText().toString().toLowerCase()).matches()) {
+            binding.eventGofundmeLinkLayout.setError("Please provide a valid link");
+            hasInvalidLink = true;
+        }
+        return hasInvalidLink;
     }
 
     public static boolean hasEmptyField() {

@@ -3,11 +3,8 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.virtual;
 import android.os.Bundle;
 import android.util.Log;
 
-<<<<<<< HEAD
 import androidx.appcompat.app.AppCompatActivity;
 
-=======
->>>>>>> d0e65710e310aaff9304d85e016c9da3d107aabb
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityEngageVirtuallyBinding;
 
 import org.jsoup.Jsoup;
@@ -28,7 +25,7 @@ public class EngageVirtuallyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityEngageVirtuallyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
+
         // TODO: Change to event's GoFundMe URL
         String url = "https://www.gofundme.com/f/20rjwcnws0";
         Thread thread = new Thread(new Runnable() {

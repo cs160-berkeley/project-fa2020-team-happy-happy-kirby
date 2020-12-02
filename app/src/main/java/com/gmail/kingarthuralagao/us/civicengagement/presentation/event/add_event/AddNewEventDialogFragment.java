@@ -175,8 +175,14 @@ public class AddNewEventDialogFragment extends DialogFragment {
         binding.addEventBtn.setOnClickListener(view -> {
             Place eventLocation;
             if (binding.includeHappeningNowHappeningSoon.happeningSoonBtn.isEnabled()) { // In addneweventnow
+                if (addNewEventNowFragment.hasEmptyField() || addNewEventNowFragment.hasInvalidLink()) {
+                    return;
+                }
                 eventLocation = addNewEventNowFragment.getPlace();
             } else { // In addneweventsoon
+                if (addNewEventSoonFragment.hasEmptyField() || addNewEventSoonFragment.hasInvalidLink()) {
+                    return;
+                }
                 eventLocation = addNewEventSoonFragment.getPlace();
             }
             String locationInput = eventLocation.getLatLng().latitude + ", " + eventLocation.getLatLng().longitude;
@@ -201,6 +207,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
         String eventDescription = addNewEventNowFragment.getDescription();
         String eventDateEnd = addNewEventNowFragment.getDateEnd();
         String eventTimeEnd = addNewEventNowFragment.getTimeEnd();
+        String eventGoFundMeLink = addNewEventNowFragment.getGoFundMeLink();
 
         Place place = addNewEventNowFragment.getPlace();
         String address = place.getAddress();
@@ -223,6 +230,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
                 .withCauses(getCauses())
                 .withAccessibilities(getAccessibilities())
                 .withEventID()
+                .withGoFundMeLink(eventGoFundMeLink)
                 .build();
 
         viewModel.postEvent(eventBuilder.getEventDTO());
@@ -235,6 +243,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
         Long eventDateStart = addNewEventSoonFragment.getDateStart();
         String eventTimeEnd = addNewEventSoonFragment.getTimeEnd();
         String eventTimeStart = addNewEventSoonFragment.getTimeStart();
+        String eventGoFundMeLink = addNewEventSoonFragment.getGoFundMeLink();
 
         Place place = addNewEventSoonFragment.getPlace();
         String address = place.getAddress();
@@ -256,6 +265,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
                 .withCauses(getCauses())
                 .withAccessibilities(getAccessibilities())
                 .withEventID()
+                .withGoFundMeLink(eventGoFundMeLink)
                 .build();
 
         viewModel.postEvent(eventBuilder.getEventDTO());

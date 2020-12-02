@@ -19,6 +19,7 @@ public class Event implements Serializable {
     private List<String> causes;
     private Map<String, Boolean> accessibilities;
     private String eventID;
+    private String goFundMeLink;
 
     public Event() {
         // Empty Constructor for Firebase
@@ -26,7 +27,7 @@ public class Event implements Serializable {
 
     public Event(String name, Long dateStart, Long dateEnd, String timeStart, String timeEnd,
                  String description, String location, String timeZone, Integer checkIns, List<String> causes,
-                 Map<String, Boolean> accessibilities, String eventID, String city) {
+                 Map<String, Boolean> accessibilities, String eventID, String city, String goFundMeLink) {
         this.name = name;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
@@ -40,6 +41,7 @@ public class Event implements Serializable {
         this.accessibilities = accessibilities;
         this.eventID = eventID;
         this.city = city;
+        this.goFundMeLink = goFundMeLink;
     }
 
     public String getID() {
@@ -144,6 +146,14 @@ public class Event implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getGoFundMeLink() {
+        return goFundMeLink;
+    }
+
+    public void setGoFundMeLink(String goFundMeLink) {
+        this.goFundMeLink = goFundMeLink;
     }
 }
 

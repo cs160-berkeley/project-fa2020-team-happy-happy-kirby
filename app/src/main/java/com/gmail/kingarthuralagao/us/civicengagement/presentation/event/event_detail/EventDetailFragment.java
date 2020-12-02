@@ -2,40 +2,31 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_d
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.transition.Slide;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
-import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
-import com.gmail.kingarthuralagao.us.civicengagement.data.Status;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.user.User;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.viewmodel.EventDetailViewModel;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.viewmodel.EventsViewViewModel;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.virtual.EngageVirtuallyFragment;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventDetailBinding;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +63,7 @@ public class EventDetailFragment extends Fragment {
         tabTitles = new ArrayList<>();
         tabTitles.add("Description");
         tabTitles.add("Accessibility Info");
-
+        tabTitles.add("Engage Virtually");
     }
 
     @Nullable
@@ -185,8 +176,11 @@ public class EventDetailFragment extends Fragment {
             Fragment fragment;
             if (position == 0) {
                 fragment = EventDescriptionFragment.newInstance(event.getDescription());
-            } else {
+            } else if (position == 1) {
                 fragment = AccessibilityFragment.newInstance(event.getAccessibilities());
+            } else {
+                fragment = EngageVirtuallyFragment.newInstance(event.getGoFundMeLink());
+                //fragment = EngageVirtuallyFragment.newInstance("https://www.gofundme.com/f/20rjwcnws0");
             }
             addFragment(fragment);
             return fragment;

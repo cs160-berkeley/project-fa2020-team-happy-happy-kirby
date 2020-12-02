@@ -76,6 +76,23 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/event_gofundme_link_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_weight="0.4"
+        android:hint="@string/event_gofundme_link"
+        app:errorEnabled="true"
+        app:startIconDrawable="@drawable/ic_insert_link"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/event_gofund_link_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/event_notes_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_140sdp"
