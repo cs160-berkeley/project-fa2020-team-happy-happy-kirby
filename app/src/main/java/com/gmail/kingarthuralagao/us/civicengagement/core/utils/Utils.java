@@ -140,6 +140,10 @@ public class Utils {
             hour = Utils.convertToStandardTime(hour); // Converts 24-hour based clock to 12-hour based
         }
 
+        if (hour == 0) {
+            hour = 12;
+        }
+
         if (minute < 10) {
             formattedMinute = "0" + formattedMinute;
         }

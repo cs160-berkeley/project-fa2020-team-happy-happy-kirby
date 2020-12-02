@@ -1,15 +1,14 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.virtual;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 
-import com.gmail.kingarthuralagao.us.civilengagement.R;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityEngageVirtuallyBinding;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.w3c.dom.Document;
 
 import java.io.IOException;
 
@@ -44,7 +43,7 @@ public class EngageVirtuallyActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        }).start();
 
 
         binding.progressIdc.setProgress(50);
