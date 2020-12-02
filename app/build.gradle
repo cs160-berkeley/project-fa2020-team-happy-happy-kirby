@@ -97,4 +97,7 @@ dependencies {
     // Swipe Refresh
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_version"
 
+    // Jsoup
+    implementation 'org.jsoup:jsoup:1.10.3'
+
 }
