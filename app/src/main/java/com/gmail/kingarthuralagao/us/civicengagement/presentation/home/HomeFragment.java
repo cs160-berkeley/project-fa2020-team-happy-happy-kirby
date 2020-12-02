@@ -138,6 +138,7 @@ public class HomeFragment extends Fragment {
             Log.i(TAG, "Cancelled");
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i(TAG, "Address comp: " + place.getAddressComponents() + " " + place.toString());
                 String address = place.getAddress();
                 String city = getCityFromPlace(place);
                 /*
@@ -313,7 +314,12 @@ public class HomeFragment extends Fragment {
         Places.initialize(requireContext(), BuildConfig.API_KEY);
         Places.createClient(requireContext());
 
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS, Place.Field.NAME);
+        List<Place.Field> fields = Arrays.asList(
+                Place.Field.ID,
+                Place.Field.ADDRESS,
+                Place.Field.NAME,
+                Place.Field.LAT_LNG,
+                Place.Field.ADDRESS_COMPONENTS);
 
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)

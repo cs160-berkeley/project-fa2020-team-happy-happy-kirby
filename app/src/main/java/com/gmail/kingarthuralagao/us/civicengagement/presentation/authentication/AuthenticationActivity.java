@@ -64,6 +64,8 @@ public class AuthenticationActivity extends AppCompatActivity
     @Override
     public void navigateToHome() {
         Intent i = new Intent(this, HomeActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
     }
 

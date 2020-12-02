@@ -16,27 +16,47 @@
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CivilEngagement">
-        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.EventDetailActivity">
-        </activity>
-        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity">
-
-        </activity>
-        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityActivity" />
-        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity">
-        </activity>
-        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity">
-        </activity>
         <activity
-            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.splash.SplashScreenActivity"
-            android:theme="@style/Theme.SplashScreen">
-
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.virtual.EngageVirtuallyActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.EventDetailActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.splash.SplashScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SplashScreen">
+        </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
