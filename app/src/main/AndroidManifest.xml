@@ -16,41 +16,30 @@
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CivilEngagement">
+        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.TestActivity">
+        </activity>
         <activity
             android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.virtual.EngageVirtuallyActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.EventDetailActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.splash.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SplashScreen">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

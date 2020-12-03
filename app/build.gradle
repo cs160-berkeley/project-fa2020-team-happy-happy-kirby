@@ -40,7 +40,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0-alpha01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-firestore:22.0.0'
     implementation 'org.jetbrains:annotations:15.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -72,6 +71,7 @@ dependencies {
     implementation platform("com.google.firebase:firebase-bom:$firebase_version")
     implementation 'com.google.firebase:firebase-auth'
     implementation "com.google.android.gms:play-services-auth:$google_play_version"
+    implementation 'com.google.firebase:firebase-firestore'
 
     // Custom Tab for Twitter SignIn
     implementation "androidx.browser:browser:$custom_tab_version"
@@ -100,4 +100,14 @@ dependencies {
     // Jsoup
     implementation 'org.jsoup:jsoup:1.10.3'
 
+    // CLoud
+    //implementation 'com.google.cloud:google-cloud-language:1.101.6'
+
 }
+
+/*
+configurations {
+    implementation.exclude module:'proto-google-common-protos'
+    implementation.exclude module:'protolite-well-known-types'
+    implementation.exclude module:'protobuf-java'
+}*/
