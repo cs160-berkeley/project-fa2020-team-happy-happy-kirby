@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="true"/>
 
     <application
         android:name="com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp"
@@ -16,47 +21,47 @@
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CivilEngagement">
-        <activity
-            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.virtual.EngageVirtuallyActivity"
+        <activity android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.splash.UploadLandmarkImageActivity"
             android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.EventDetailActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.splash.SplashScreenActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.SplashScreen">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.virtual.EngageVirtuallyActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.EventDetailActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility.AccessibilityActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.gmail.kingarthuralagao.us.civicengagement.presentation.splash.SplashScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SplashScreen">
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.gmail.kingarthuralagao.us.civicengagement.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <meta-data
             android:name="preloaded_fonts"
