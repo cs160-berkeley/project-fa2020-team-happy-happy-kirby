@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center"
-        android:text="@string/virtualengage_text_dummy"
+        android:text="@string/virtualengage_text"
         android:textStyle="bold"
         android:paddingBottom="@dimen/_4sdp"
         android:paddingTop="@dimen/_4sdp"
