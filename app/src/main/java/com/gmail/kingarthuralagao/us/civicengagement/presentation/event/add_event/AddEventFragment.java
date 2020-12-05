@@ -1,6 +1,5 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Address;
@@ -17,7 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
@@ -42,11 +41,11 @@ import java.util.TimeZone;
 
 import es.dmoral.toasty.Toasty;
 
-public class AddNewEventDialogFragment extends DialogFragment {
+public class AddEventFragment extends Fragment {
 
 
-    public static AddNewEventDialogFragment newInstance() {
-        AddNewEventDialogFragment fragment = new AddNewEventDialogFragment();
+    public static AddEventFragment newInstance() {
+        AddEventFragment fragment = new AddEventFragment();
         return fragment;
     }
 
@@ -66,7 +65,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
         addNewEventNowFragment = AddNewEventNowFragment.newInstance();
         viewModel = new ViewModelProvider(this).get(AddNewEventViewModel.class);
 
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_FullScreenDialog);
+        //setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_FullScreenDialog);
     }
 
     @Nullable
@@ -85,18 +84,6 @@ public class AddNewEventDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         subscribeToLiveData();
         setUpEvents();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            dialog.getWindow().setLayout(width, height);
-            dialog.getWindow().setWindowAnimations(R.style.Theme_Slide);
-        }
     }
 
     @Override
@@ -135,8 +122,16 @@ public class AddNewEventDialogFragment extends DialogFragment {
                     break;
                 case SUCCESS:
                     loadingDialog.dismiss();
-                    Toasty.success(requireContext(), "Event successfully posted!", Toast.LENGTH_LONG, true).show();
-                    dismiss();
+                    //Toasty.success(requireContext(), "Event successfully posted!", Toast.LENGTH_LONG, true).show();
+                    Toasty.custom(requireContext(),
+                            "Event successfully posted!",
+                            getResources().getDrawable(R.drawable.ic_check_white, null),
+                            getResources().getColor(R.color.secondary_blue, null),
+                            getResources().getColor(R.color.white, null),
+                            Toast.LENGTH_LONG,
+                            true,
+                            true).show();
+                    requireActivity().finish();
                     break;
                 default:
             }
@@ -145,7 +140,7 @@ public class AddNewEventDialogFragment extends DialogFragment {
 
     private void setUpEvents() {
         setAccessibilityCheckBoxListener();
-        binding.backArrow.setOnClickListener(view -> dismiss());
+        binding.backArrow.setOnClickListener(view -> requireActivity().finish());
 
         binding.includeHappeningNowHappeningSoon.happeningNowBtn.setOnClickListener(view -> {
             getChildFragmentManager()

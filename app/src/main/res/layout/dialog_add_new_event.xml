@@ -115,7 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_4sdp"
-                    android:padding="4dp"
+                    android:padding="8dp"
                     android:inputType="text"
                     android:textSize="@dimen/_10sdp"
                     android:hint="@string/other_text_hint"

@@ -35,7 +35,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddNewEventDialogFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddEventActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
@@ -161,8 +161,12 @@ public class HomeFragment extends Fragment {
 
     private void setUpEvents() {
         binding.addNewEventBtn.setOnClickListener(view -> {
+            Intent i = new Intent(requireActivity(), AddEventActivity.class);
+            startActivity(i);
+            requireActivity().overridePendingTransition(R.anim.pull_up_from_bottom, R.anim.do_nothing);
+            /*
             AddNewEventDialogFragment fragment = AddNewEventDialogFragment.newInstance();
-            fragment.show(getChildFragmentManager(), "");
+            fragment.show(getChildFragmentManager(), "");*/
         });
 
         binding.searchForLocationTv.setOnClickListener(view -> {

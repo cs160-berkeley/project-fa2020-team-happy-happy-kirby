@@ -20,7 +20,7 @@ class UploadLandMarkImageViewModel : ViewModel() {
 
     private var landmarkList : List<LandmarkResultWrapper>? = null
     val result = StateLiveData<MutableList<LandmarkResultsAdapter.LandmarkEntity>>()
-    lateinit var coroutineScope : Job
+    private var coroutineScope : Job? = null
 
     fun fetchLocations1(landmarks : List<LandmarkResultWrapper>) {
         landmarkList = landmarks
@@ -73,7 +73,7 @@ class UploadLandMarkImageViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        coroutineScope.cancel()
+        coroutineScope?.cancel()
     }
     /*public class UploadLandmarkImageViewModel extends ViewModel {
         public StateLiveData<LandmarkResultsAdapter.LandmarkEntity> getGeolocationResponse = new StateLiveData<>();

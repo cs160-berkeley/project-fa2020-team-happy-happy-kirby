@@ -33,6 +33,7 @@ import com.gmail.kingarthuralagao.us.civilengagement.databinding.IncludeAddEvent
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -267,6 +268,7 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
 
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
                 .build(requireContext());
         startActivityForResult(intent, AUTOCOMPLETE_LOCATION_REQUEST_CODE);
     }

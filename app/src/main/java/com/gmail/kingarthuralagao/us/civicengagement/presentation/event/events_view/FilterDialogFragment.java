@@ -95,14 +95,77 @@ public class FilterDialogFragment extends DialogFragment {
             dismiss();
         });
 
-        binding.includeCausesFilter.layClimate.setOnClickListener(view -> binding.includeCausesFilter.climateCheckbox.setChecked(true));
-        binding.includeCausesFilter.layGunViolence.setOnClickListener(view -> binding.includeCausesFilter.gunViolenceCheckbox.setChecked(true));
-        binding.includeCausesFilter.layLgbtq.setOnClickListener(view -> binding.includeCausesFilter.lgbtqCheckbox.setChecked(true));
-        binding.includeCausesFilter.layHealthcare.setOnClickListener(view -> binding.includeCausesFilter.healthcareCheckbox.setChecked(true));
-        binding.includeCausesFilter.layImmigration.setOnClickListener(view -> binding.includeCausesFilter.immigrationCheckbox.setChecked(true));
-        binding.includeCausesFilter.layPoverty.setOnClickListener(view -> binding.includeCausesFilter.povertyCheckbox.setChecked(true));
-        binding.includeCausesFilter.layRacialJustice.setOnClickListener(view -> binding.includeCausesFilter.racialJusticeCheckbox.setChecked(true));
-        binding.includeCausesFilter.layWxmnsRights.setOnClickListener(view -> binding.includeCausesFilter.womxnsRightsCheckbox.setChecked(true));
+        binding.includeCausesFilter.layClimate.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.climateCheckbox.isChecked()) {
+                binding.includeCausesFilter.climateCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.climateCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layGunViolence.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.gunViolenceCheckbox.isChecked()) {
+                binding.includeCausesFilter.gunViolenceCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.gunViolenceCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layLgbtq.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.lgbtqCheckbox.isChecked()) {
+                binding.includeCausesFilter.lgbtqCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.lgbtqCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layHealthcare.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.healthcareCheckbox.isChecked()) {
+                binding.includeCausesFilter.healthcareCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.healthcareCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layImmigration.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.immigrationCheckbox.isChecked()) {
+                binding.includeCausesFilter.immigrationCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.immigrationCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layPoverty.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.povertyCheckbox.isChecked()) {
+                binding.includeCausesFilter.povertyCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.povertyCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layRacialJustice.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.racialJusticeCheckbox.isChecked()) {
+                binding.includeCausesFilter.racialJusticeCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.racialJusticeCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layWxmnsRights.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.womxnsRightsCheckbox.isChecked()) {
+                binding.includeCausesFilter.womxnsRightsCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.womxnsRightsCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layOther.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.otherCheckbox.isChecked()) {
+                binding.includeCausesFilter.otherCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.otherCheckbox.setChecked(false);
+            }
+        });
     }
 
     private void setupViews() {
