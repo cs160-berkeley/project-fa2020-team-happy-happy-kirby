@@ -44,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@id/event_name_cv"
         app:layout_constraintBottom_toTopOf="@id/fund_cv"
         android:gravity="center"
-        android:text="@string/virtualengage_text_dummy"
+        android:text="@string/virtualengage_text"
         android:textColor="#FFFFFF"
         android:textSize="@dimen/_14sdp"
         android:paddingBottom="@dimen/_4sdp"

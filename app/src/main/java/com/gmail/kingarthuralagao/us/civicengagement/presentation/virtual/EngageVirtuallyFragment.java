@@ -1,5 +1,7 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.virtual;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEngageVirtuallyBinding;
 
 import org.jsoup.Jsoup;
@@ -44,6 +47,12 @@ public class EngageVirtuallyFragment extends Fragment {
 
         if (mLink != null && mLink.length() > 0) {
             initializeGoFundMeLinkFetch();
+            /* Direct user to GoFundMe page on web browser. */
+            binding.progressIdc.setOnClickListener(v -> {
+                Log.d("EngageVirtually", "Going to GoFundMe page: " + mLink);
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mLink));
+                startActivity(browserIntent);
+            });
         }
     }
 
@@ -65,10 +74,13 @@ public class EngageVirtuallyFragment extends Fragment {
                 name = document.select(".a-campaign-title").text();
                 System.out.println(fullString);
                 String[] split = fullString.split(" ");
+                Log.d("EngageVirtually", "fullString: " + fullString);
+                name = document.select(".a-campaign-title").text();
                 raised = split[0];
                 goal = split[3];
                 raisedDouble = Double.parseDouble(raised.substring(1).replaceAll(",", ""));
                 goalDouble = Double.parseDouble(goal.substring(1).replaceAll(",", ""));
+                Log.d("EngageVirtually", "name: " + name);
                 Log.d("EngageVirtually", "Amount raised: " + raised);
                 Log.d("EngageVirtually", "Amount needed: " + goal);
             } catch (IOException e) {
@@ -87,7 +99,7 @@ public class EngageVirtuallyFragment extends Fragment {
             binding.engageVirtuallyTv.setVisibility(View.VISIBLE);
             binding.noInfoAvailableTv.setVisibility(View.GONE);
             binding.fundCv.setVisibility(View.VISIBLE);
-            binding.engageVirtuallyTv.setText("Organizers for this event have provided the following ways to engage virtually: " + name);
+            binding.engageVirtuallyTv.setText(getString(R.string.virtualengage_text) + '\n' + name);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
