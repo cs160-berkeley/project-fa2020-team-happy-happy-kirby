@@ -5,9 +5,11 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/lay_climate"
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/climate_tv"
@@ -35,9 +37,11 @@
         android:background="@drawable/recyclerview_divider_gray"/>
 
     <LinearLayout
+        android:id="@+id/lay_gun_violence"
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/gun_violence_tv"
@@ -65,9 +69,11 @@
         android:background="@drawable/recyclerview_divider_gray"/>
 
     <LinearLayout
+        android:id="@+id/lay_healthcare"
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/healthcare_tv"
@@ -95,9 +101,11 @@
         android:background="@drawable/recyclerview_divider_gray"/>
 
     <LinearLayout
+        android:id="@+id/lay_immigration"
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/immigration_tv"
@@ -125,9 +133,11 @@
         android:background="@drawable/recyclerview_divider_gray"/>
 
     <LinearLayout
+        android:id="@+id/lay_lgbtq"
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/lgbtq_tv"
@@ -155,9 +165,43 @@
         android:background="@drawable/recyclerview_divider_gray"/>
 
     <LinearLayout
+        android:id="@+id/lay_other"
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clickable="true">
+
+        <TextView
+            android:id="@+id/other_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:layout_gravity="center"
+            android:text="@string/other"
+            android:textColor="@color/secondary_text"
+            android:textSize="16sp"/>
+
+        <CheckBox
+            android:id="@+id/other_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/recyclerview_divider_gray"/>
+
+    <LinearLayout
+        android:id="@+id/lay_poverty"
+        xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/poverty_tv"
@@ -185,9 +229,11 @@
         android:background="@drawable/recyclerview_divider_gray"/>
 
     <LinearLayout
+        android:id="@+id/lay_racial_justice"
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/racial_justic_tv"
@@ -215,9 +261,11 @@
         android:background="@drawable/recyclerview_divider_gray"/>
 
     <LinearLayout
+        android:id="@+id/lay_wxmns_rights"
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/womxns_rights_tv"

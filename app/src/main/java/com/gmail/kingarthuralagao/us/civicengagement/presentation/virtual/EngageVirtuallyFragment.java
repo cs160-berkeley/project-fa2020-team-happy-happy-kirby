@@ -32,6 +32,7 @@ public class EngageVirtuallyFragment extends Fragment {
     private String raised;
     private String goal;
     private String mLink;
+    private String name;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class EngageVirtuallyFragment extends Fragment {
             try {
                 document = Jsoup.connect(mLink).get();
                 String fullString = document.select(".m-progress-meter-heading").text();
+                name = document.select(".a-campaign-title").text();
                 System.out.println(fullString);
                 String[] split = fullString.split(" ");
                 raised = split[0];
@@ -85,6 +87,7 @@ public class EngageVirtuallyFragment extends Fragment {
             binding.engageVirtuallyTv.setVisibility(View.VISIBLE);
             binding.noInfoAvailableTv.setVisibility(View.GONE);
             binding.fundCv.setVisibility(View.VISIBLE);
+            binding.engageVirtuallyTv.setText("Organizers for this event have provided the following ways to engage virtually: " + name);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

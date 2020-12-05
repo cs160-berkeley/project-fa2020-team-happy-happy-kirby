@@ -94,6 +94,15 @@ public class FilterDialogFragment extends DialogFragment {
             iFilterClickListener.onFilterApply(getCausesList());
             dismiss();
         });
+
+        binding.includeCausesFilter.layClimate.setOnClickListener(view -> binding.includeCausesFilter.climateCheckbox.setChecked(true));
+        binding.includeCausesFilter.layGunViolence.setOnClickListener(view -> binding.includeCausesFilter.gunViolenceCheckbox.setChecked(true));
+        binding.includeCausesFilter.layLgbtq.setOnClickListener(view -> binding.includeCausesFilter.lgbtqCheckbox.setChecked(true));
+        binding.includeCausesFilter.layHealthcare.setOnClickListener(view -> binding.includeCausesFilter.healthcareCheckbox.setChecked(true));
+        binding.includeCausesFilter.layImmigration.setOnClickListener(view -> binding.includeCausesFilter.immigrationCheckbox.setChecked(true));
+        binding.includeCausesFilter.layPoverty.setOnClickListener(view -> binding.includeCausesFilter.povertyCheckbox.setChecked(true));
+        binding.includeCausesFilter.layRacialJustice.setOnClickListener(view -> binding.includeCausesFilter.racialJusticeCheckbox.setChecked(true));
+        binding.includeCausesFilter.layWxmnsRights.setOnClickListener(view -> binding.includeCausesFilter.womxnsRightsCheckbox.setChecked(true));
     }
 
     private void setupViews() {
@@ -122,6 +131,9 @@ public class FilterDialogFragment extends DialogFragment {
                     break;
                 case "Womxn's Rights":
                     binding.includeCausesFilter.womxnsRightsCheckbox.setChecked(true);
+                    break;
+                case "Other":
+                    binding.includeCausesFilter.otherCheckbox.setChecked(true);
                     break;
                 default:
             }
@@ -163,6 +175,9 @@ public class FilterDialogFragment extends DialogFragment {
             causes.add(getResources().getString(R.string.womxns_right));
         }
 
+        if (binding.includeCausesFilter.otherCheckbox.isChecked()) {
+            causes.add(getResources().getString(R.string.other));
+        }
         return causes;
     }
 }

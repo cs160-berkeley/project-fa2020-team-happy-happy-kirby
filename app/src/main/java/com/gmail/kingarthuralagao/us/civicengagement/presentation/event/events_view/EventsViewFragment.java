@@ -1,6 +1,5 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,14 +13,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.event.Event;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail.EventDetailActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.adapter.EventsAdapter;
@@ -69,7 +65,7 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentEventsViewBinding.inflate(inflater, container, false);
-        binding.locationTv.setText(inputLocation);
+        binding.locationTv.setText("Events in " + inputLocation);
 
         return binding.getRoot();
     }
@@ -306,6 +302,10 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
                     }
                 }
         );
+
+        binding.backArrow.setOnClickListener(view -> {
+            requireActivity().finish();
+        });
     }
 
     private void initializeRecyclerView(ArrayList<Event> events) {

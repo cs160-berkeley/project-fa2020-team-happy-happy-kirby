@@ -30,7 +30,7 @@
                 android:layout_gravity="center"
                 android:text="@string/accessibility_one"
                 android:textColor="@color/secondary_text"
-                android:textSize="16sp"/>
+                android:textSize="@dimen/_10sdp"/>
 
             <CheckBox
                 android:id="@+id/accessibility_one_checkbox"
@@ -60,7 +60,7 @@
                 android:layout_gravity="center"
                 android:text="@string/accessibility_two"
                 android:textColor="@color/secondary_text"
-                android:textSize="16sp"/>
+                android:textSize="@dimen/_10sdp"/>
 
             <CheckBox
                 android:id="@+id/accessibility_two_checkbox"
@@ -90,7 +90,7 @@
                 android:layout_gravity="center"
                 android:text="@string/accessibility_three"
                 android:textColor="@color/secondary_text"
-                android:textSize="16sp"/>
+                android:textSize="@dimen/_10sdp"/>
 
             <CheckBox
                 android:id="@+id/accessibility_three_checkbox"
@@ -120,7 +120,7 @@
                 android:layout_gravity="center"
                 android:text="@string/accessibility_four"
                 android:textColor="@color/secondary_text"
-                android:textSize="16sp"/>
+                android:textSize="@dimen/_10sdp"/>
 
             <CheckBox
                 android:id="@+id/accessibility_four_checkbox"

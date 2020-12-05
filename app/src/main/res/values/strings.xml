@@ -27,7 +27,7 @@
     <string name="enable_location">Engage with local events</string>
     <string name="description">Learn about nearby social movement events for the causes you care about and contains basic event information, accessibility information for in-person engagement and resources for alternative virtual engagement.</string>
     <string name="event_name_prompt">Event Name*</string>
-    <string name="event_causes_prompt">What causes does the event support? (Select all that apply).</string>
+    <string name="event_causes_prompt">What causes does the event support? (Select all that apply*).</string>
     <string name="event_end_date_prompt">End Date*</string>
     <string name="event_start_date_prompt">Start Date*</string>
     <string name="event_start_time_prompt">Start Time*</string>
@@ -37,7 +37,11 @@
     <string name="event_description_hint">Insert any notes or event description...</string>
     <string name="event_accessibilities_question">What accessibility resources are available at this event, as best as you can tell?</string>
     <string name="add_new_event">Add New Event</string>
+    <string name="take_landmark_photo">Take Landmark Photo</string>
+    <string name="confirm">Confirm</string>
     <string name="no_description">No description available for this event</string>
+    <string name="other_instr">If Other, please specify:</string>
+    <string name="other_text_hint">Ex: Youth Violence, Juvenile Justice</string>
 
 
     <!-- Accessibilities-->
@@ -59,6 +63,7 @@
     <string name="poverty">Poverty</string>
     <string name="racial_justice">Racial Justice</string>
     <string name="womxns_right">Womxn\'s Rights</string>
+    <string name="other">Other</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

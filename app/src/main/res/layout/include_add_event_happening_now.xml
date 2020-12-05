@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"
         android:hint="@string/event_name_prompt"
+        app:counterMaxLength="80"
         app:errorEnabled="true"
         app:startIconDrawable="@drawable/ic_event_name"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -22,7 +23,10 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/event_name_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_10sdp"
+            android:maxLength="80"
+            android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -38,7 +42,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/event_location_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_10sdp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -55,7 +60,9 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/event_date_end_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_10sdp"
+            android:inputType="textWebEditText"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -72,7 +79,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/event_time_end_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_10sdp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -84,19 +92,23 @@
         android:hint="@string/event_gofundme_link"
         app:errorEnabled="true"
         app:startIconDrawable="@drawable/ic_insert_link"
+        app:counterMaxLength="500"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/event_gofund_link_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:maxLength="500"
+            android:textSize="@dimen/_10sdp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/event_notes_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_140sdp"
+        android:layout_height="@dimen/_120sdp"
         android:layout_marginTop="@dimen/_4sdp"
+        app:counterMaxLength="1000"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -105,7 +117,10 @@
             android:layout_height="match_parent"
             android:inputType="textMultiLine"
             android:scrollbars="vertical"
-            android:hint="@string/event_description_hint"/>
+            android:hint="@string/event_description_hint"
+            android:textSize="@dimen/_10sdp"
+            android:gravity="top"
+            android:maxLength="1000"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 

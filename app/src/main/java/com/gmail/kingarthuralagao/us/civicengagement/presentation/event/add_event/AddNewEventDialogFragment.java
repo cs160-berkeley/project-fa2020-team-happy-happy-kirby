@@ -2,9 +2,13 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_eve
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -175,12 +179,32 @@ public class AddNewEventDialogFragment extends DialogFragment {
         binding.addEventBtn.setOnClickListener(view -> {
             Place eventLocation;
             if (binding.includeHappeningNowHappeningSoon.happeningSoonBtn.isEnabled()) { // In addneweventnow
-                if (addNewEventNowFragment.hasEmptyField() || addNewEventNowFragment.hasInvalidLink()) {
+                boolean incompleteInput = false;
+                if (addNewEventNowFragment.hasEmptyField())
+                    incompleteInput = true;
+
+                if (addNewEventNowFragment.hasInvalidLink())
+                    incompleteInput = true;
+
+                if (hasMissingCause())
+                    incompleteInput = true;
+
+                if (incompleteInput) {
                     return;
                 }
                 eventLocation = addNewEventNowFragment.getPlace();
             } else { // In addneweventsoon
-                if (addNewEventSoonFragment.hasEmptyField() || addNewEventSoonFragment.hasInvalidLink()) {
+                boolean incompleteInput = false;
+                if (addNewEventSoonFragment.hasEmptyField())
+                    incompleteInput = true;
+
+                if (addNewEventSoonFragment.hasInvalidLink())
+                    incompleteInput = true;
+
+                if (hasMissingCause())
+                    incompleteInput = true;
+
+                if (incompleteInput) {
                     return;
                 }
                 eventLocation = addNewEventSoonFragment.getPlace();
@@ -202,6 +226,17 @@ public class AddNewEventDialogFragment extends DialogFragment {
             createEventHappeningSoon(timeZone);
     }
 
+    private boolean hasMissingCause() {
+        List<String> causes = getCauses();
+        if (causes.isEmpty() || (causes.contains("Other") && causes.size() <= 1)) {
+            binding.includeCausesChips.causesPrompt.setText(setErrorText());
+            return true;
+        } else {
+            binding.includeCausesChips.causesPrompt.setText(setRegularText());
+            return false;
+        }
+    }
+
     private void createEventHappeningNow(String timeZoneName) {
         String eventName = addNewEventNowFragment.getName();
         String eventDescription = addNewEventNowFragment.getDescription();
@@ -218,9 +253,9 @@ public class AddNewEventDialogFragment extends DialogFragment {
 
         eventBuilder
                 .withName(eventName)
-                .withDateStart("11/27/2020", "22:30")
+                .withDateStart(System.currentTimeMillis() / 1000)
                 .withDateEnd(eventDateEnd, eventTimeEnd)
-                .withTimeStart("22:30")
+                .withTimeStart("10:00")
                 .withTimeEnd(eventTimeEnd)
                 .withCity(getCityFromPlace(place))
                 .withDescription(eventDescription)
@@ -309,6 +344,14 @@ public class AddNewEventDialogFragment extends DialogFragment {
             Chip chip = binding.includeCausesChips.chipGroup.findViewById(resourceID);
             causes.add(chip.getText().toString());
         }
+
+        if (causes.contains(getResources().getString(R.string.other)) && binding.otherEt.getText().length() != 0) {
+            String[] causesInput = binding.otherEt.getText().toString().split(", ");
+
+            for (int i = 0; i < causesInput.length; i++) {
+                causes.add(causesInput[i]);
+            }
+        }
         return causes;
     }
 
@@ -316,7 +359,13 @@ public class AddNewEventDialogFragment extends DialogFragment {
         geocoder = new Geocoder(CivicEngagementApp.getContext(), Locale.getDefault());
 
         try {
-            return getCityNameByCoordinates(place.getLatLng().latitude, place.getLatLng().longitude);
+            String city = getCityNameByCoordinates(place.getLatLng().latitude, place.getLatLng().longitude);
+            if(city.length() == 0) {
+                String address = place.getAddress();
+                int commaIndex = address.indexOf(",");
+                city = address.substring(0, commaIndex);
+            }
+            return city;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -331,5 +380,35 @@ public class AddNewEventDialogFragment extends DialogFragment {
             return addresses.get(0).getLocality() == null ? addresses.get(0).getAdminArea() : addresses.get(0).getLocality();
         }
         return "";
+    }
+
+    private Spannable setErrorText() {
+        String text = "What causes does the event support? (Select all that apply*). Must specify a cause";
+
+        Spannable spannable = new SpannableString(text);
+
+        int dotIndex = text.indexOf(".");
+
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.primary_text, null)),
+                0,
+                (dotIndex + 1),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannable.setSpan(new ForegroundColorSpan(Color.RED), (dotIndex + 1), text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannable;
+    }
+
+    private Spannable setRegularText() {
+        String text = "What causes does the event support? (Select all that apply*).";
+
+        Spannable spannable = new SpannableString(text);
+
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.primary_text, null)),
+                0,
+                text.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannable;
     }
 }

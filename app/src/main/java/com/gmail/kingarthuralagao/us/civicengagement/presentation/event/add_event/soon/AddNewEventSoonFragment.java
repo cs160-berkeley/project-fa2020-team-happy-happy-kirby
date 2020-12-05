@@ -19,12 +19,16 @@ import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.LocationOptionDialogFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.RangeTimePickerDialogFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.landmark.UploadLandmarkImageActivity;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.landmark.adapter.LandmarkResultsAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.IncludeAddEventHappeningSoonBinding;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -38,7 +42,8 @@ import es.dmoral.toasty.Toasty;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class AddNewEventSoonFragment extends Fragment implements RangeTimePickerDialogFragment.ITimePickerListener {
+public class AddNewEventSoonFragment extends Fragment implements
+        RangeTimePickerDialogFragment.ITimePickerListener, LocationOptionDialogFragment.IChoiceSetListener {
 
     public static AddNewEventSoonFragment newInstance() {
         AddNewEventSoonFragment fragment = new AddNewEventSoonFragment();
@@ -47,6 +52,7 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
 
     private static IncludeAddEventHappeningSoonBinding binding;
     private static final int AUTOCOMPLETE_LOCATION_REQUEST_CODE = 100;
+    private static final int LANDMARK_LOCATION_REQUEST_CODE = 300;
     private static final String TAG = "AddNewEventSoonFragment";
 
     // Params for an Event object
@@ -94,6 +100,17 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
                 Log.i(TAG, "Cancelled");
             }
             return;
+        } else if (requestCode == LANDMARK_LOCATION_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Log.i(TAG, "In OKAY");
+                LandmarkResultsAdapter.LandmarkEntity landmarkEntity =
+                        (LandmarkResultsAdapter.LandmarkEntity) data.getSerializableExtra(UploadLandmarkImageActivity.LANDMARK_RESULT);
+                binding.eventLocationEt.setText(landmarkEntity.getName() + "\n" + landmarkEntity.getAddress());
+            } else if(resultCode == RESULT_CANCELED) {
+
+            } else {
+                Log.e(TAG, "Error");
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -114,6 +131,14 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         this.timeEnd = endTime;
     }
 
+    @Override
+    public void onLocationChoiceSet(int choice) {
+        if (choice == 0) {
+            initializeLocationSearch();
+        } else {
+            initializeLandmarkCapture();
+        }
+    }
     public static String getName() {
         return binding.eventNameEt.getText().toString();
     }
@@ -156,8 +181,8 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         });
 
         binding.eventLocationEt.setOnClickListener( view -> {
-            hideKeyboard(binding.eventLocationEt);
-            initializeLocationSearch();
+            LocationOptionDialogFragment dialogFragment = LocationOptionDialogFragment.newInstance();
+            dialogFragment.show(getChildFragmentManager(), "");
         });
 
         binding.eventTimeEndEt.setOnClickListener( view -> {
@@ -201,7 +226,6 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         });
     }
 
-
     private void setUpViews() {
         binding.eventLocationEt.setFocusable(false);
         binding.eventDateEndEt.setFocusable(false);
@@ -222,9 +246,16 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS, Place.Field.NAME, Place.Field.LAT_LNG);
 
         // Start the autocomplete intent.
-        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+        Intent intent = new Autocomplete
+                .IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
                 .build(requireContext());
         startActivityForResult(intent, AUTOCOMPLETE_LOCATION_REQUEST_CODE);
+    }
+
+    private void initializeLandmarkCapture() {
+        Intent intent = new Intent(requireActivity(), UploadLandmarkImageActivity.class);
+        startActivityForResult(intent, LANDMARK_LOCATION_REQUEST_CODE);
     }
 
     private void showDatePickerDialog() {

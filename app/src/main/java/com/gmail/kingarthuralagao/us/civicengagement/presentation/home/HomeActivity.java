@@ -1,10 +1,9 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.home;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityHomeBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -25,6 +24,6 @@ public class HomeActivity extends AppCompatActivity {
                 .add(binding.fragmentContainer.getId(), HomeFragment.newInstance())
                 .commit();
 
-        CivicEngagementApp.fetchUserDocument();
+        //CivicEngagementApp.fetchUserDocument();
     }
 }

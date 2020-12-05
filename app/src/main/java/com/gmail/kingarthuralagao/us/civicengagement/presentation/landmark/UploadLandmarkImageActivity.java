@@ -1,4 +1,4 @@
-package com.gmail.kingarthuralagao.us.civicengagement.presentation.splash;
+package com.gmail.kingarthuralagao.us.civicengagement.presentation.landmark;
 
 import android.Manifest;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -14,9 +15,11 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.gmail.kingarthuralagao.us.civicengagement.core.utils.LandmarkResultWrapper;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityUploadLandmarkImageBinding;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +38,8 @@ import java.util.List;
 public class UploadLandmarkImageActivity extends AppCompatActivity {
 
     private final String TAG = getClass().getSimpleName();
+    public final static String LANDMARK_RESULT = "landmark";
+    private final static int RESULT_ERROR= 5;
     private final int CAMERA_PERMISSION_REQUEST_CODE = 100;
     private final int CAMERA_RESULT_CODE = 200;
     private String currentPhotoPath;
@@ -46,7 +51,11 @@ public class UploadLandmarkImageActivity extends AppCompatActivity {
         binding = ActivityUploadLandmarkImageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        openUserCamera();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(binding.fragmentContainer.getId(), UploadLandmarkImageFragment.newInstance(), "")
+                .commit();
+        //openUserCamera();
     }
 
     @Override
@@ -57,6 +66,7 @@ public class UploadLandmarkImageActivity extends AppCompatActivity {
             takePhoto();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -113,6 +123,7 @@ public class UploadLandmarkImageActivity extends AppCompatActivity {
         return null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void startImageDetection(String currentPhotoPath) {
         FirebaseVisionImage image;
         /*
@@ -124,12 +135,24 @@ public class UploadLandmarkImageActivity extends AppCompatActivity {
 
         Task<List<FirebaseVisionCloudLandmark>> result = detector.detectInImage(image)
                 .addOnSuccessListener(firebaseVisionCloudLandmarks -> {
+                    firebaseVisionCloudLandmarks.sort((firebaseVisionCloudLandmark, t1) -> {
+                        if (firebaseVisionCloudLandmark.getConfidence() > t1.getConfidence()) {
+                            return 1;
+                        } else if (firebaseVisionCloudLandmark.getConfidence() < t1.getConfidence()) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    });
+
                     for (FirebaseVisionCloudLandmark landmark: firebaseVisionCloudLandmarks) {
 
                         Rect bounds = landmark.getBoundingBox();
                         String landmarkName = landmark.getLandmark();
                         String entityId = landmark.getEntityId();
                         float confidence = landmark.getConfidence();
+
+                        Log.i("UploadLandMarkImage", "Confidence: " + confidence);
 
                         // Multiple locations are possible, e.g., the location of the depicted
                         // landmark and the location the picture was taken.
@@ -140,10 +163,38 @@ public class UploadLandmarkImageActivity extends AppCompatActivity {
                             Log.i("UploadLandmarkImage", "Lat: " + latitude + " longitude: " + longitude);
                         }
                     }
+
+                    if (firebaseVisionCloudLandmarks.isEmpty()) {
+                        returnError(new Exception());
+                    } else {
+                        FirebaseVisionCloudLandmark landmark = firebaseVisionCloudLandmarks.get(0);
+                        String name = landmark.getLandmark();
+                        double lat;
+                        double lon;
+
+                        if (landmark.getLocations().isEmpty()) {
+                            returnError(new Exception());
+                        } else {
+                            lat = landmark.getLocations().get(0).getLatitude();
+                            lon = landmark.getLocations().get(0).getLongitude();
+                            LandmarkResultWrapper landmarkResultWrapper = new LandmarkResultWrapper(lat, lon, name);
+                            Intent intent = new Intent();
+                            intent.putExtra(LANDMARK_RESULT, landmarkResultWrapper);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    // Task failed with an exception
-                    // ...
+                    returnError(e);
                 });
+    }
+
+    public void returnError(Exception e) {
+        LandmarkResultWrapper landmarkResultWrapper = new LandmarkResultWrapper(e);
+        Intent intent = new Intent();
+        intent.putExtra(LANDMARK_RESULT, landmarkResultWrapper);
+        setResult(RESULT_ERROR, intent);
+        finish();
     }
 }
