@@ -25,11 +25,15 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.LocationOptionDialogFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.landmark.UploadLandmarkImageActivity;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.landmark.adapter.LandmarkResultsAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.IncludeAddEventHappeningNowBinding;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -44,7 +48,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class AddNewEventNowFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener {
+        TimePickerDialog.OnTimeSetListener, LocationOptionDialogFragment.IChoiceSetListener {
 
 
     public static AddNewEventNowFragment newInstance() {
@@ -54,6 +58,7 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
 
     private static IncludeAddEventHappeningNowBinding binding;
     private static final int AUTOCOMPLETE_LOCATION_REQUEST_CODE = 100;
+    private static final int LANDMARK_LOCATION_REQUEST_CODE = 200;
     private static final String TAG = "AddNewEventNowFragment";
 
     private static String dateEnd;
@@ -99,6 +104,17 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
                 Log.i(TAG, "Cancelled");
             }
             return;
+        } else if (requestCode == LANDMARK_LOCATION_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Log.i(TAG, "In OKAY");
+                LandmarkResultsAdapter.LandmarkEntity landmarkEntity =
+                        (LandmarkResultsAdapter.LandmarkEntity) data.getSerializableExtra(UploadLandmarkImageActivity.LANDMARK_RESULT);
+                binding.eventLocationEt.setText(landmarkEntity.getName() + "\n" + landmarkEntity.getAddress());
+            } else if(resultCode == RESULT_CANCELED) {
+
+            } else {
+                Log.e(TAG, "Error");
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -118,6 +134,15 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
         binding.eventTimeEndEt.setText(time);
         binding.eventTimeEndLayout.setError("");
         this.timeEnd = time;
+    }
+
+    @Override
+    public void onLocationChoiceSet(int choice) {
+        if (choice == 0) {
+            initializeLocationSearch();
+        } else {
+            initializeLandmarkCapture();
+        }
     }
 
     public static String getName() {
@@ -157,8 +182,8 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
         });
 
         binding.eventLocationEt.setOnClickListener( view -> {
-            hideKeyboard(binding.eventLocationEt);
-            initializeLocationSearch();
+            LocationOptionDialogFragment dialogFragment = LocationOptionDialogFragment.newInstance();
+            dialogFragment.show(getChildFragmentManager(), "");
         });
 
         binding.eventTimeEndEt.setOnClickListener( view -> {
@@ -243,8 +268,14 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
 
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
                 .build(requireContext());
         startActivityForResult(intent, AUTOCOMPLETE_LOCATION_REQUEST_CODE);
+    }
+
+    private void initializeLandmarkCapture() {
+        Intent intent = new Intent(requireActivity(), UploadLandmarkImageActivity.class);
+        startActivityForResult(intent, LANDMARK_LOCATION_REQUEST_CODE);
     }
 
     public void hideKeyboard(View view) {

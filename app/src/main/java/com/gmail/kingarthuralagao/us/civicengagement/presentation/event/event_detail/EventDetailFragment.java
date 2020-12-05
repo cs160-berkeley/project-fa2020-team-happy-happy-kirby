@@ -69,7 +69,7 @@ public class EventDetailFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentEventDetailBinding.inflate(inflater, container, false);
+        binding = FragmentEventDetailBinding.inflate(getLayoutInflater());
         initializeViews();
         return binding.getRoot();
     }
@@ -88,9 +88,19 @@ public class EventDetailFragment extends Fragment {
                 case SUCCESS:
                     CivicEngagementApp.getUser().getCheckIns().add(event.getID());
                     setCheckInButtonStatus();
+                    incrementCheckIns();
+                    /*
                     Toasty.success(requireContext(),
                             "You have successfully checked in to this event",
                             Toasty.LENGTH_LONG,
+                            true).show();*/
+                    Toasty.custom(requireContext(),
+                            "You have successfully checked in to this event",
+                            getResources().getDrawable(R.drawable.ic_check_white, null),
+                            getResources().getColor(R.color.secondary_blue, null),
+                            getResources().getColor(R.color.white, null),
+                            Toast.LENGTH_LONG,
+                            true,
                             true).show();
                     loadingDialog.dismiss();
                     break;
@@ -111,19 +121,33 @@ public class EventDetailFragment extends Fragment {
         });
     }
 
+    private void incrementCheckIns() {
+        int currentCount = event.getCheckIns();
+        currentCount += 1;
+        binding.includeEventDetails.eventCheckInsTv.setText("" + currentCount);
+    }
+
     private void initializeViews() {
+        setCheckInButtonStatus();
         binding.eventName.setText(event.getName());
         String startDate = Utils.getDateFromTimeStamp(event.getDateStart());
         String endDate  = Utils.getDateFromTimeStamp(event.getDateEnd());
         binding.includeEventDetails.eventDateTv.setText(startDate + " - " + endDate);
         binding.includeEventDetails.eventLocationTv.setText(event.getLocation());
-        binding.includeEventDetails.eventTimeTv.setText(event.getTimeStart() + " - " + event.getTimeEnd() + " " + event.getTimeZone());
         binding.includeEventDetails.eventCheckInsTv.setText("" + event.getCheckIns());
+        setTime();
 
         List<String> causes = event.getCauses();
-        binding.includeEventDetails.causesTv.setText(causes.toString().substring(1, causes.toString().length() - 1));
+        String causesStr = causes.toString().substring(1, causes.toString().length() - 1);
+        binding.includeEventDetails.causesTv.setText(causesStr.replace("Other,", ""));
+    }
 
-        setCheckInButtonStatus();
+    private void setTime() {
+        if (event.getDateStart() < System.currentTimeMillis() / 1000) { // Happening Now
+            binding.includeEventDetails.eventTimeTv.setText("Ends at " + event.getTimeEnd() + " " + event.getTimeZone());
+            return;
+        }
+        binding.includeEventDetails.eventTimeTv.setText(event.getTimeStart() + " - " + event.getTimeEnd() + " " + event.getTimeZone());
     }
 
     private void setUpEvents() {
@@ -132,7 +156,11 @@ public class EventDetailFragment extends Fragment {
         });
 
         binding.checkInBtn.setOnClickListener(view -> {
-            viewModel.postUserCheckIn(event.getID(), CivicEngagementApp.getUser().getUserID());
+            try {
+                viewModel.postUserCheckIn(event.getID(), FirebaseAuth.getInstance().getUid());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -146,10 +174,18 @@ public class EventDetailFragment extends Fragment {
             FirebaseAuth.getInstance().signOut();
             startActivity(i);
         } else {
-            if (userDoc.getCheckIns().contains(event.getID())) {
-                Log.i(TAG, userDoc.getCheckIns().toString());
+            try {
+                if (userDoc.getCheckIns().contains(event.getID())) {
+                    Log.i(TAG, userDoc.getCheckIns().toString());
+                /*
                 binding.checkInBtn.setText("Checked In");
-                binding.checkInBtn.setBackgroundColor(getResources().getColor(R.color.checked_in_green, null));
+                binding.checkInBtn.setBackgroundColor(getResources().getColor(R.color.checked_in_green, null));*/
+                    binding.checkInBtn.setVisibility(View.GONE);
+                    binding.checkedInBtn.setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("EventDetailFrag", e.getMessage());
             }
         }
     }
@@ -180,7 +216,6 @@ public class EventDetailFragment extends Fragment {
                 fragment = AccessibilityFragment.newInstance(event.getAccessibilities());
             } else {
                 fragment = EngageVirtuallyFragment.newInstance(event.getGoFundMeLink());
-                //fragment = EngageVirtuallyFragment.newInstance("https://www.gofundme.com/f/20rjwcnws0");
             }
             addFragment(fragment);
             return fragment;

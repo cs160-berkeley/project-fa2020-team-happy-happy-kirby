@@ -27,14 +27,6 @@ public class User {
         this.userID = userID;
     }
 
-    public String getID() {
-        return userID;
-    }
-
-    public void setID(String id) {
-        this.userID = id;
-    }
-
     public String getName() {
         return name;
     }

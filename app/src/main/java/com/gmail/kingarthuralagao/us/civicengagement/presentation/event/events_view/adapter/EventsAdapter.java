@@ -43,30 +43,41 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         String startDate = Utils.getDateFromTimeStamp(event.getDateStart());
         String endDate  = Utils.getDateFromTimeStamp(event.getDateEnd());
         holder.eventDateTv.setText(startDate + " - " + endDate);
-        holder.eventTimeTv.setText(event.getTimeStart() + " - " + event.getTimeEnd());
         holder.eventLocationTv.setText(event.getLocation());
         holder.eventCheckInsTv.setText(event.getCheckIns() + "");
         holder.checkInsTv.setText(event.getCheckIns() <= 1 ? "check in" : "check ins");
 
+        holder.eventTimeTv.setText(setTime(event));
         createChips(event.getCauses(), holder);
-    }
-
-    private void createChips(List<String> causes, ViewHolder holder) {
-        holder.getChipGroup().removeAllViews();
-        for (String cause : causes) {
-            Chip chip = new Chip(holder.chipGroup.getContext());
-            chip.setText(cause);
-            chip.setTextColor(holder.chipGroup.getContext().getColor(R.color.white));
-            chip.setShapeAppearanceModel(chip.getShapeAppearanceModel().withCornerSize(32));
-            chip.setChipBackgroundColorResource(R.color.secondary_blue_with_alpha);
-            holder.chipGroup.addView(chip);
-        }
     }
 
     @Override
     public int getItemCount() {
         Log.i(getClass().getSimpleName(), "Item count: " + events.size());
         return events.size();
+    }
+
+    private void createChips(List<String> causes, ViewHolder holder) {
+        holder.getChipGroup().removeAllViews();
+        for (String cause : causes) {
+            Log.i("EventsAdapter", cause);
+            if (!cause.equals("Other")) {
+                Chip chip = new Chip(holder.chipGroup.getContext());
+                chip.setText(cause);
+                chip.setTextColor(holder.chipGroup.getContext().getColor(R.color.white));
+                chip.setShapeAppearanceModel(chip.getShapeAppearanceModel().withCornerSize(32));
+                chip.setChipBackgroundColorResource(R.color.secondary_blue_with_alpha);
+                holder.chipGroup.addView(chip);
+            }
+        }
+    }
+
+    private String setTime(Event event) {
+        if (event.getDateStart() < System.currentTimeMillis() / 1000) { // Happening Now
+            return "Ends at " + event.getTimeEnd();
+        } else {
+            return event.getTimeStart() + " - " + event.getTimeEnd();
+        }
     }
 
     public Event getEvent(int position) {

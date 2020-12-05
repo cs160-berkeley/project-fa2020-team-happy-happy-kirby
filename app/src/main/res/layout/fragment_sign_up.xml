@@ -124,7 +124,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/name_et"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_height="wrap_content"
             android:inputType="text"
             android:maxLength="60"/>
 
@@ -133,7 +133,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_layout"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_58sdp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_16sdp"
         android:layout_marginStart="@dimen/_32sdp"
         android:layout_marginEnd="@dimen/_32sdp"
@@ -151,15 +151,15 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email_et"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:inputType="text" />
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/password_layout"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_58sdp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_2sdp"
         android:layout_marginStart="@dimen/_32sdp"
         android:layout_marginEnd="@dimen/_32sdp"
@@ -175,7 +175,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password_et"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_height="wrap_content"
             android:inputType="textPassword"
             />
     </com.google.android.material.textfield.TextInputLayout>
@@ -184,7 +184,7 @@
         android:id="@+id/sign_up_btn"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_52sdp"
-        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_48sdp"
         android:layout_marginStart="@dimen/_48sdp"
         android:text="@string/sign_up"

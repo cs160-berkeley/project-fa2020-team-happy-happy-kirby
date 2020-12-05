@@ -17,12 +17,15 @@
         android:hint="@string/event_name_prompt"
         app:errorEnabled="true"
         app:startIconDrawable="@drawable/ic_event_name"
+        app:counterMaxLength="80"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/event_name_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:counterMaxLength="80"
+            android:textSize="@dimen/_10sdp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -38,7 +41,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/event_location_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_10sdp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,7 +66,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/event_date_start_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10sdp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -82,7 +87,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/event_date_end_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10sdp"/>
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -107,7 +113,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/event_time_start_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10sdp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -127,7 +134,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/event_time_end_et"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10sdp"/>
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -140,18 +148,21 @@
         android:hint="@string/event_gofundme_link"
         app:errorEnabled="true"
         app:startIconDrawable="@drawable/ic_insert_link"
+        app:counterMaxLength="500"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/event_gofund_link_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:counterMaxLength="500"
+            android:textSize="@dimen/_10sdp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/event_notes_layout"
         android:layout_width="match_parent"
-        android:layout_height="156dp"
+        android:layout_height="@dimen/_120sdp"
         android:layout_marginTop="@dimen/margin_extra_small"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -159,9 +170,12 @@
             android:id="@+id/event_notes_et"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="top"
+            android:hint="@string/event_description_hint"
             android:inputType="textMultiLine"
+            android:maxLength="1000"
             android:scrollbars="vertical"
-            android:hint="@string/event_description_hint"/>
+            android:textSize="@dimen/_10sdp" />
     </com.google.android.material.textfield.TextInputLayout>
 
 

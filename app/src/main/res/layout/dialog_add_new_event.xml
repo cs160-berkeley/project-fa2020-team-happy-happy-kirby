@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/primary_blue">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,9 +20,9 @@
 
             <ImageView
                 android:id="@+id/back_arrow"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:src="@drawable/ic_back_arrow"
+                android:layout_width="@dimen/_22sdp"
+                android:layout_height="@dimen/_22sdp"
+                android:src="@drawable/ic_back_arrow_white"
                 android:clickable="true"/>
 
             <TextView
@@ -29,9 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:text="@string/add_new_event"
-                android:textSize="@dimen/_14sdp"
-                android:textColor="@color/primary_text"
-                android:fontFamily="@font/inter_semi_bold"/>
+                android:gravity="center_vertical"
+                style="@style/Theme.Toolbar.Title"/>
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
@@ -96,6 +96,31 @@
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_12sdp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/other_instr"
+                    android:textColor="@color/primary_text"/>
+
+                <EditText
+                    android:id="@+id/other_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:padding="8dp"
+                    android:inputType="text"
+                    android:textSize="@dimen/_10sdp"
+                    android:hint="@string/other_text_hint"
+                    android:background="@drawable/edittext_border"/>
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
