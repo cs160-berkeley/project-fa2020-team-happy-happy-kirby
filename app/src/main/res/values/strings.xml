@@ -17,6 +17,8 @@
     <string name="accessibility_text_now">Participants in this event have said they have seen / used the following resources available at the event location:</string>
     <string name="accessibility_text_soon"></string>
     <string name="app_description">Learn About Nearby Social Movement Events for the Causes You Care About</string>
+    <string name="forgot_password_description">Please enter the email of your account to reset your password.</string>
+    <string name="reset_password">Reset Password</string>
 
     <string name="virtualengage_text">Organizers for this event have provided the following ways to engage virtually:</string>
     <string name="virtualengage_text_dummy_desc">Donation links are user-provided and we bear no responsibility in verifying the authenticity of this link. You assume all responsibility for the linked GoFundMe</string>

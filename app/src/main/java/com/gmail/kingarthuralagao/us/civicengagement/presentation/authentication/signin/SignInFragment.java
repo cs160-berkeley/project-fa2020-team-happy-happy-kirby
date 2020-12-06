@@ -22,6 +22,7 @@ import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
 import com.gmail.kingarthuralagao.us.civicengagement.data.Resource;
 import com.gmail.kingarthuralagao.us.civicengagement.data.Status;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.IAuthenticationEventsListener;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.ForgotPasswordDialogFragment;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentSignInBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -38,7 +39,8 @@ import com.google.firebase.auth.OAuthProvider;
 import es.dmoral.toasty.Toasty;
 
 
-public class SignInFragment extends Fragment {
+public class SignInFragment extends Fragment implements ForgotPasswordDialogFragment.OnPasswordSend {
+
 
 
     public static SignInFragment newInstance() {
@@ -188,7 +190,16 @@ public class SignInFragment extends Fragment {
                 signInUser(emailInput, passwordInput);
         });
 
+        binding.forgotPasswordTv.setOnClickListener(forgotPasswordTv -> {
+            ForgotPasswordDialogFragment forgotPasswordDialogFragment = new ForgotPasswordDialogFragment();
+            forgotPasswordDialogFragment.show(getChildFragmentManager(), null);
+        });
+
         addTextWatchers();
+    }
+
+    private void sendResetPassword(String emailInput) {
+
     }
 
     private void addTextWatchers() {
@@ -351,5 +362,17 @@ public class SignInFragment extends Fragment {
     private void updateUI(FirebaseUser user) {
         Log.i(TAG, "Name " + user.getDisplayName());
         iAuthenticationEventsListener.navigateToHome();
+    }
+
+    @Override
+    public void onPasswordSent() {
+        Toasty.custom(requireContext(),
+                "Password reset email sent!",
+                getResources().getDrawable(R.drawable.ic_check_white, null),
+                getResources().getColor(R.color.secondary_blue, null),
+                getResources().getColor(R.color.white, null),
+                Toast.LENGTH_LONG,
+                true,
+                true).show();
     }
 }
