@@ -19,12 +19,16 @@ import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.LocationOptionDialogFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.RangeTimePickerDialogFragment;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.landmark.UploadLandmarkImageActivity;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.landmark.adapter.LandmarkResultsAdapter;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.IncludeAddEventHappeningSoonBinding;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -38,7 +42,8 @@ import es.dmoral.toasty.Toasty;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class AddNewEventSoonFragment extends Fragment implements RangeTimePickerDialogFragment.ITimePickerListener {
+public class AddNewEventSoonFragment extends Fragment implements
+        RangeTimePickerDialogFragment.ITimePickerListener, LocationOptionDialogFragment.IChoiceSetListener {
 
     public static AddNewEventSoonFragment newInstance() {
         AddNewEventSoonFragment fragment = new AddNewEventSoonFragment();
@@ -47,6 +52,7 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
 
     private static IncludeAddEventHappeningSoonBinding binding;
     private static final int AUTOCOMPLETE_LOCATION_REQUEST_CODE = 100;
+    private static final int LANDMARK_LOCATION_REQUEST_CODE = 300;
     private static final String TAG = "AddNewEventSoonFragment";
 
     // Params for an Event object
@@ -94,6 +100,17 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
                 Log.i(TAG, "Cancelled");
             }
             return;
+        } else if (requestCode == LANDMARK_LOCATION_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Log.i(TAG, "In OKAY");
+                LandmarkResultsAdapter.LandmarkEntity landmarkEntity =
+                        (LandmarkResultsAdapter.LandmarkEntity) data.getSerializableExtra(UploadLandmarkImageActivity.LANDMARK_RESULT);
+                binding.eventLocationEt.setText(landmarkEntity.getName() + "\n" + landmarkEntity.getAddress());
+            } else if(resultCode == RESULT_CANCELED) {
+
+            } else {
+                Log.e(TAG, "Error");
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -114,6 +131,14 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         this.timeEnd = endTime;
     }
 
+    @Override
+    public void onLocationChoiceSet(int choice) {
+        if (choice == 0) {
+            initializeLocationSearch();
+        } else {
+            initializeLandmarkCapture();
+        }
+    }
     public static String getName() {
         return binding.eventNameEt.getText().toString();
     }
@@ -156,8 +181,8 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         });
 
         binding.eventLocationEt.setOnClickListener( view -> {
-            hideKeyboard(binding.eventLocationEt);
-            initializeLocationSearch();
+            LocationOptionDialogFragment dialogFragment = LocationOptionDialogFragment.newInstance();
+            dialogFragment.show(getChildFragmentManager(), "");
         });
 
         binding.eventTimeEndEt.setOnClickListener( view -> {
@@ -201,7 +226,6 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         });
     }
 
-
     private void setUpViews() {
         binding.eventLocationEt.setFocusable(false);
         binding.eventDateEndEt.setFocusable(false);
@@ -222,9 +246,16 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS, Place.Field.NAME, Place.Field.LAT_LNG);
 
         // Start the autocomplete intent.
-        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+        Intent intent = new Autocomplete
+                .IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
                 .build(requireContext());
         startActivityForResult(intent, AUTOCOMPLETE_LOCATION_REQUEST_CODE);
+    }
+
+    private void initializeLandmarkCapture() {
+        Intent intent = new Intent(requireActivity(), UploadLandmarkImageActivity.class);
+        startActivityForResult(intent, LANDMARK_LOCATION_REQUEST_CODE);
     }
 
     private void showDatePickerDialog() {
@@ -232,9 +263,9 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         datePicker.show(getChildFragmentManager(), "");
 
         datePicker.addOnPositiveButtonClickListener(selection -> {
-            Log.i(TAG, selection.first + "" + selection.second);
-            dateStart = selection.first / 1000;
-            dateEnd = selection.second / 1000;
+            Log.i(TAG, selection.first + " " + selection.second);
+            dateStart = (selection.first + 1000 * 60 * 60 * 24) / 1000;
+            dateEnd = (selection.second + 1000 * 60 * 60 * 24) / 1000;
 
             binding.eventDateStartEt.setText(Utils.getDateFromTimeStamp(dateStart));
             binding.eventDateStartLayout.setError("");
@@ -287,5 +318,106 @@ public class AddNewEventSoonFragment extends Fragment implements RangeTimePicker
         }
 
         return hasAnEmptyField;
+    }
+
+    public static boolean hasInvalidTimeStamp() {
+        Log.i(TAG, "In invalidTimes");
+        if (dateEnd != null  && timeEnd != null && timeEnd.length() != 0) {
+            Log.i(TAG, "dateStart: " + dateStart);
+            Log.i(TAG, "dateEnddd: " + dateEnd);
+            if (!String.valueOf(dateStart).equals(String.valueOf(dateEnd))) {
+                return false;
+            }
+            Log.i(TAG, "In invalidTimes. Inside if");
+
+            String[] timeEndParts = timeEnd.split(":");
+            String hourEnd = timeEndParts[0];
+            String minuteEnd = timeEndParts[1];
+
+            if (minuteEnd.contains("PM")) {
+                hourEnd = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hourEnd)));
+            }
+
+            String minuteEndMod = minuteEnd.replace(" AM", "");
+            minuteEndMod = minuteEndMod.replace(" PM", "");
+            hourEnd = hourEnd.length() == 2 ? hourEnd : "0" + hourEnd;
+
+            String timeEndMod = hourEnd + ":" + minuteEndMod + ":" + "00";
+
+            String[] timeStartParts = timeStart.split(":");
+            String hourStart = timeStartParts[0];
+            String minuteStart = timeStartParts[1];
+
+            if (minuteStart.contains("PM")) {
+                hourStart = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hourStart)));
+            }
+
+            String minuteStartMod = minuteStart.replace(" AM", "");
+            minuteStartMod = minuteStartMod.replace(" PM", "");
+            hourStart = hourStart.length() == 2 ? hourStart : "0" + hourStart;
+
+            String timeStartMod = hourStart + ":" + minuteStartMod + ":" + "00";
+
+            Long endTimeStamp = Utils.getTimeStampFromDate("09/20/2020" + " " + timeEndMod);
+            Long startTimeStamp = Utils.getTimeStampFromDate("09/20/2020" + " " + timeStartMod);
+
+            Log.i(TAG, "TimeEnd: " + timeEndMod);
+            Log.i(TAG, "TimeStart: " + timeStartMod);
+            Log.i(TAG, "EndTimeSt: " + endTimeStamp);
+            Log.i(TAG, "StartTimeStam: " + startTimeStamp);
+
+            //return true;
+            return endTimeStamp < startTimeStamp;
+
+            /*
+            String timeEndMod = timeEnd.replace(" PM", "");
+            timeEndMod = timeEndMod.replace(" AM", "");
+            timeEndMod = timeEndMod.replace("\\s", "");
+            String[] timeParts = timeEndMod.split(":");
+            String hourEnd = timeParts[0];
+            String minuteEnd = timeParts[1];
+
+            hourEnd = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hourEnd)));
+            hourEnd = hourEnd.length() == 2 ? hourEnd : "0" + hourEnd;*/
+
+
+            /*
+            String date = month + "/" + day + "/" + year;
+            String time = hour + ":" + minute + ":" + "00";
+
+            String timeStartMod = timeStart.replace(" PM", "");
+            timeStartMod = timeStartMod.replace(" AM", "");
+            timeStartMod = timeStartMod.replace("\\s", "");
+            timeParts = timeStartMod.split(":");
+            String hourStart = timeParts[0];
+            String minuteStart = timeParts[1];
+
+
+            String[] dateParts = dateEnd.split("/");
+            String month = dateParts[0];
+            String day = dateParts[1];
+            String year = dateParts[2];
+
+            month = month.length() == 2 ? month : "0" + month;
+            day = day.length() == 2 ? day : "0" + day;
+
+            Log.i(TAG,  " time is:" + timeEnd);
+            String timeEndMod = timeEnd.replace(" PM", "");
+            timeEndMod = timeEndMod.replace(" AM", "");
+            timeEndMod = timeEndMod.replace("\\s", "");
+            String[] timeParts = timeEndMod.split(":");
+            String hour = timeParts[0];
+            String minute = timeParts[1];
+
+            hour = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hour)));
+            hour = hour.length() == 2 ? hour : "0" + hour;
+
+            String date = month + "/" + day + "/" + year;
+            String time = hour + ":" + minute + ":" + "00";
+
+            Long inputDateTimeStamp = Utils.getTimeStampFromDate(date + " " + time);
+            Long currentTimeStamp = System.currentTimeMillis() / 1000;*/
+        }
+        return false;
     }
 }

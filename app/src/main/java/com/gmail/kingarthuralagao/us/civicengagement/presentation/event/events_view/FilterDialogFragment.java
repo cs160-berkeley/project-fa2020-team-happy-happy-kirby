@@ -94,6 +94,78 @@ public class FilterDialogFragment extends DialogFragment {
             iFilterClickListener.onFilterApply(getCausesList());
             dismiss();
         });
+
+        binding.includeCausesFilter.layClimate.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.climateCheckbox.isChecked()) {
+                binding.includeCausesFilter.climateCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.climateCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layGunViolence.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.gunViolenceCheckbox.isChecked()) {
+                binding.includeCausesFilter.gunViolenceCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.gunViolenceCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layLgbtq.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.lgbtqCheckbox.isChecked()) {
+                binding.includeCausesFilter.lgbtqCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.lgbtqCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layHealthcare.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.healthcareCheckbox.isChecked()) {
+                binding.includeCausesFilter.healthcareCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.healthcareCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layImmigration.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.immigrationCheckbox.isChecked()) {
+                binding.includeCausesFilter.immigrationCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.immigrationCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layPoverty.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.povertyCheckbox.isChecked()) {
+                binding.includeCausesFilter.povertyCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.povertyCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layRacialJustice.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.racialJusticeCheckbox.isChecked()) {
+                binding.includeCausesFilter.racialJusticeCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.racialJusticeCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layWxmnsRights.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.womxnsRightsCheckbox.isChecked()) {
+                binding.includeCausesFilter.womxnsRightsCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.womxnsRightsCheckbox.setChecked(false);
+            }
+        });
+
+        binding.includeCausesFilter.layOther.setOnClickListener(view -> {
+            if (!binding.includeCausesFilter.otherCheckbox.isChecked()) {
+                binding.includeCausesFilter.otherCheckbox.setChecked(true);
+            } else {
+                binding.includeCausesFilter.otherCheckbox.setChecked(false);
+            }
+        });
     }
 
     private void setupViews() {
@@ -122,6 +194,9 @@ public class FilterDialogFragment extends DialogFragment {
                     break;
                 case "Womxn's Rights":
                     binding.includeCausesFilter.womxnsRightsCheckbox.setChecked(true);
+                    break;
+                case "Other":
+                    binding.includeCausesFilter.otherCheckbox.setChecked(true);
                     break;
                 default:
             }
@@ -163,6 +238,9 @@ public class FilterDialogFragment extends DialogFragment {
             causes.add(getResources().getString(R.string.womxns_right));
         }
 
+        if (binding.includeCausesFilter.otherCheckbox.isChecked()) {
+            causes.add(getResources().getString(R.string.other));
+        }
         return causes;
     }
 }

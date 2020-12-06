@@ -3,13 +3,6 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.authenticatio
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,6 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
@@ -30,14 +29,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
 
 import es.dmoral.toasty.Toasty;
@@ -118,7 +113,7 @@ public class SignInFragment extends Fragment {
                     if (resource.getData().isNewUser()) {
                         initializeUser(user, user.getDisplayName());
                     } else {
-                        iAuthenticationEventsListener.onStopLoading();
+                        //iAuthenticationEventsListener.onStopLoading();
                         updateUI(user);
                     }
                     break;
@@ -136,7 +131,7 @@ public class SignInFragment extends Fragment {
         signInFragmentViewModel.signInWithEmailAndPasswordResponse.observe(this, firebaseUserResource -> {
             switch (firebaseUserResource.getStatus()) {
                 case LOADING:
-                    iAuthenticationEventsListener.onStartLoading();
+                    iAuthenticationEventsListener.onStartLoading("Authenticating");
                     break;
                 case SUCCESS:
                     FirebaseUser user = firebaseUserResource.getData();
@@ -159,13 +154,14 @@ public class SignInFragment extends Fragment {
             public void onChanged(Resource<Status> statusResource) {
                 switch (statusResource.getStatus()) {
                     case LOADING:
+                        iAuthenticationEventsListener.onSetLoadingText("Creating User Account");
                         break;
                     case SUCCESS:
                         iAuthenticationEventsListener.onStopLoading();
                         updateUI(firebaseAuth.getCurrentUser());
                         break;
                     case ERROR:
-                        Toasty.error(requireActivity(), statusResource.getError().getMessage(), Toast.LENGTH_SHORT, true);
+                        Toasty.error(requireActivity(), "Error Creating Account", Toast.LENGTH_SHORT, true);
                         iAuthenticationEventsListener.onStopLoading();
                         break;
                     default:
@@ -264,7 +260,7 @@ public class SignInFragment extends Fragment {
     
     /********************************** Google SignIn **********************************/
     private void initializeGoogleSignIn() {
-        iAuthenticationEventsListener.onStartLoading();
+        iAuthenticationEventsListener.onStartLoading("Initializing Sign In Process");
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -295,7 +291,7 @@ public class SignInFragment extends Fragment {
 
     private void initializeTwitterSignIn() {
         OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
-        iAuthenticationEventsListener.onStartLoading();
+        iAuthenticationEventsListener.onStartLoading("Initializing Sign In Process");
 
         Task<AuthResult> pendingResultTask = firebaseAuth.getPendingAuthResult();
         if (pendingResultTask != null) {

@@ -2,19 +2,10 @@ package com.gmail.kingarthuralagao.us.civicengagement;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.user.User;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.model.Document;
 
 public class CivicEngagementApp extends Application {
 
@@ -44,6 +35,9 @@ public class CivicEngagementApp extends Application {
                 });
     }
 
+    public static void setUser(User u) {
+        user = u;
+    }
     public static User getUser() {
         return user;
     }

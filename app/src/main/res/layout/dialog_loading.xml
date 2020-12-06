@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_centerInParent="true"
     android:background="@android:color/transparent"
     xmlns:tools="http://schemas.android.com/tools">
@@ -10,5 +11,45 @@
         android:id="@+id/progress_circular"
         android:layout_width="@dimen/_52sdp"
         android:layout_height="@dimen/_52sdp"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/white"
+        android:visibility="invisible"
+        android:elevation="@dimen/_16sdp"/>
+
+    <RelativeLayout
+        android:id="@+id/loading_txt_lay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/progress_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading"
+            android:textSize="@dimen/_16sdp"
+            android:fontFamily="@font/inter_semi_bold"
+            android:textColor="@color/white"
+            android:theme="@style/Theme.Loading" />
+
+        <com.eyalbira.loadingdots.LoadingDots
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_toRightOf="@id/progress_tv"
+
+
+            app:LoadingDots_auto_play="true"
+
+            app:LoadingDots_dots_color="@color/white"
+            app:LoadingDots_dots_count="5"
+            app:LoadingDots_dots_size="@dimen/_4sdp"
+            app:LoadingDots_dots_space="1dp"
+
+            app:LoadingDots_jump_duration="200"
+            app:LoadingDots_jump_height="4dp"/>
+    </RelativeLayout>
 </RelativeLayout>

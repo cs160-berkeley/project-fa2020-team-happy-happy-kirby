@@ -6,9 +6,11 @@ public interface IAuthenticationEventsListener {
 
     void onSwitchToSignUp();
 
-    void onStartLoading();
+    void onStartLoading(String txt);
 
     void onStopLoading();
 
     void navigateToHome();
+
+    void onSetLoadingText(String txt);
 }

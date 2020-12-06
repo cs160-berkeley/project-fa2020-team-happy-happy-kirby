@@ -1,15 +1,21 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.user.User;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.signin.SignInFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.signup.SignUpFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityAuthenticationBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import es.dmoral.toasty.Toasty;
 
 public class AuthenticationActivity extends AppCompatActivity
         implements IAuthenticationEventsListener {
@@ -21,6 +27,7 @@ public class AuthenticationActivity extends AppCompatActivity
     private SignInFragment signInFragment;
     private SignUpFragment signUpFragment;
     private LoadingDialog loadingDialog;
+    private Intent i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +58,8 @@ public class AuthenticationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStartLoading() {
-        loadingDialog = new LoadingDialog();
+    public void onStartLoading(String txt) {
+        loadingDialog = LoadingDialog.newInstance(txt.length() == 0 ? "Loading" : txt);
         loadingDialog.show(getSupportFragmentManager(), DIALOG);
     }
 
@@ -63,10 +70,12 @@ public class AuthenticationActivity extends AppCompatActivity
 
     @Override
     public void navigateToHome() {
-        Intent i = new Intent(this, HomeActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
+        fetchUserDocument();
+    }
+
+    @Override
+    public void onSetLoadingText(String txt) {
+
     }
 
     private void createFragments() {
@@ -97,5 +106,27 @@ public class AuthenticationActivity extends AppCompatActivity
                 .show(signUpFragment)
                 .hide(signInFragment)
                 .commit();
+    }
+
+    public void fetchUserDocument() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        firestore
+                .collection("Users")
+                .document(mAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    CivicEngagementApp.setUser(task.getResult().toObject(User.class));
+                    loadingDialog.dismiss();
+                    i = new Intent(this, HomeActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
+                })
+                .addOnFailureListener(error -> {
+                    loadingDialog.dismiss();
+                    Toasty.error(this, "Error fetching user information.", Toasty.LENGTH_SHORT, true);
+                });
     }
 }
