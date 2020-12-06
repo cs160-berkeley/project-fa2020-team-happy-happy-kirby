@@ -218,6 +218,7 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void startImageDetection(String currentPhotoPath) throws IOException {
+        Log.d("UploadLandMarkImage", "currentPhotoPath: " + currentPhotoPath);
         loadingDialog = LoadingDialog.newInstance("Processing Image");
         loadingDialog.setCancelable(false);
         loadingDialog.show(getChildFragmentManager(), "");
