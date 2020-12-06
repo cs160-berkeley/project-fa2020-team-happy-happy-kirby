@@ -35,6 +35,7 @@ import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddEventActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.my_events.MyEventsActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.viewmodel.HomeFragmentViewModel;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
@@ -128,6 +129,10 @@ public class HomeFragment extends Fragment {
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             return true;
+        } else if (item.getItemId() == R.id.my_events) {
+            Intent i = new Intent(requireActivity(), MyEventsActivity.class);
+            startActivity(i);
+            requireActivity().overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -33,7 +33,7 @@ public class HomeActivity extends AppCompatActivity {
                 .add(binding.fragmentContainer.getId(), HomeFragment.newInstance())
                 .commit();
 
-        fetchEventsFromFirebase();
+        //fetchEventsFromFirebase();
         //CivicEngagementApp.fetchUserDocument();
     }
 
