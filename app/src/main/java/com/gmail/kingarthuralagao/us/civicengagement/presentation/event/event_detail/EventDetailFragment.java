@@ -122,8 +122,10 @@ public class EventDetailFragment extends Fragment {
     }
 
     private void incrementCheckIns() {
+        User userDoc = CivicEngagementApp.getUser();
         int currentCount = event.getCheckIns();
-        currentCount += 1;
+        if (!userDoc.getCheckIns().contains(event.getID()))
+            currentCount += 1;
         binding.includeEventDetails.eventCheckInsTv.setText("" + currentCount);
     }
 
