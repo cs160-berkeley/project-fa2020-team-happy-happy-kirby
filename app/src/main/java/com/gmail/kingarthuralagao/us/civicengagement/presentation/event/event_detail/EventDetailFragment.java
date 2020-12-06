@@ -29,6 +29,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -124,8 +125,7 @@ public class EventDetailFragment extends Fragment {
     private void incrementCheckIns() {
         User userDoc = CivicEngagementApp.getUser();
         int currentCount = event.getCheckIns();
-        if (!userDoc.getCheckIns().contains(event.getID()))
-            currentCount += 1;
+        currentCount += 1;
         binding.includeEventDetails.eventCheckInsTv.setText("" + currentCount);
     }
 
@@ -145,11 +145,27 @@ public class EventDetailFragment extends Fragment {
     }
 
     private void setTime() {
+        HashMap<String, String> fullToAbbreviation = new HashMap<String, String>();
+        fullToAbbreviation.put("Central Standard Time", "CST");
+        fullToAbbreviation.put("Mountain Standard Time", "MST");
+        fullToAbbreviation.put("Pacific Standard Time", "PST");
+        fullToAbbreviation.put("Alaska Standard Time", "AST");
+        fullToAbbreviation.put("Hawaii-Aleutian Standard Time", "HST");
+        String fullTimeZone = event.getTimeZone();
+        String abbreviatedTimeZone = fullToAbbreviation.get(fullTimeZone);
         if (event.getDateStart() < System.currentTimeMillis() / 1000) { // Happening Now
-            binding.includeEventDetails.eventTimeTv.setText("Ends at " + event.getTimeEnd() + " " + event.getTimeZone());
+            if (fullToAbbreviation.containsKey(fullTimeZone)) {
+                binding.includeEventDetails.eventTimeTv.setText("Ends at " + event.getTimeEnd() + " " + abbreviatedTimeZone);
+            } else {
+                binding.includeEventDetails.eventTimeTv.setText("Ends at " + event.getTimeEnd() + " " + fullTimeZone);
+            }
             return;
         }
-        binding.includeEventDetails.eventTimeTv.setText(event.getTimeStart() + " - " + event.getTimeEnd() + " " + event.getTimeZone());
+        if (fullToAbbreviation.containsKey(fullTimeZone)) {
+            binding.includeEventDetails.eventTimeTv.setText(event.getTimeStart() + " - " + event.getTimeEnd() + " " + abbreviatedTimeZone);
+        } else {
+            binding.includeEventDetails.eventTimeTv.setText(event.getTimeStart() + " - " + event.getTimeEnd() + " " + fullTimeZone);
+        }
     }
 
     private void setUpEvents() {
