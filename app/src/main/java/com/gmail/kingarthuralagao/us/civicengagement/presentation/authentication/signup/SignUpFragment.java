@@ -108,7 +108,7 @@ public class SignUpFragment extends Fragment {
         signUpFragmentViewModel.isEmailTakenResponse.observe(this, booleanResource -> {
             switch (booleanResource.getStatus()) {
                 case LOADING:
-                    iAuthenticationEventsListener.onStartLoading();
+                    iAuthenticationEventsListener.onStartLoading("Verifying Email");
                     break;
                 case SUCCESS:
                     Log.d(TAG, "Result: " + booleanResource.getData().toString());
@@ -144,7 +144,7 @@ public class SignUpFragment extends Fragment {
         signUpFragmentViewModel.googleSignInResponse.observe(this, resource -> {
             switch (resource.getStatus()) {
                 case LOADING:
-                    iAuthenticationEventsListener.onStartLoading();
+                    iAuthenticationEventsListener.onStartLoading("Initializing Sign Up Process");
                     break;
                 case SUCCESS:
                     FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -170,7 +170,7 @@ public class SignUpFragment extends Fragment {
         signUpFragmentViewModel.createNewUserResponse.observe(this, firebaseUserResource -> {
             switch (firebaseUserResource.getStatus()) {
                 case LOADING:
-                    iAuthenticationEventsListener.onStartLoading();
+                    iAuthenticationEventsListener.onStartLoading("Initializing Sign Up Process");
                     break;
                 case SUCCESS:
                     FirebaseUser user = firebaseUserResource.getData();
@@ -190,13 +190,14 @@ public class SignUpFragment extends Fragment {
         signUpFragmentViewModel.initializeUserResponse.observe(this, statusResource -> {
             switch (statusResource.getStatus()) {
                 case LOADING:
+                    iAuthenticationEventsListener.onSetLoadingText("Creating User Account");
                     break;
                 case SUCCESS:
                     //iAuthenticationEventsListener.onStopLoading();
                     updateUI(firebaseAuth.getCurrentUser());
                     break;
                 case ERROR:
-                    Toasty.error(requireActivity(), statusResource.getError().getMessage(), Toast.LENGTH_SHORT, true);
+                    Toasty.error(requireActivity(), "Error Creating Account", Toast.LENGTH_SHORT, true);
                     iAuthenticationEventsListener.onStopLoading();
                     break;
                 default:
@@ -342,7 +343,7 @@ public class SignUpFragment extends Fragment {
 
     private void initializeTwitterSignIn() {
         OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
-        iAuthenticationEventsListener.onStartLoading();
+        iAuthenticationEventsListener.onStartLoading("Initializing Sign Up Process");
 
         Task<AuthResult> pendingResultTask = firebaseAuth.getPendingAuthResult();
         if (pendingResultTask != null) {
@@ -374,7 +375,8 @@ public class SignUpFragment extends Fragment {
                         })
                 .addOnFailureListener(
                         exception -> {
-                            Toasty.error(requireActivity(), exception.getMessage(), Toast.LENGTH_SHORT, true).show();
+                            Log.e(TAG, exception.getMessage());
+                            Toasty.error(requireActivity(), "Invalid Credentials", Toast.LENGTH_SHORT, true).show();
                             iAuthenticationEventsListener.onStopLoading();
                         });
     }
@@ -392,7 +394,8 @@ public class SignUpFragment extends Fragment {
                         })
                 .addOnFailureListener(
                         exception -> {
-                            Toasty.error(requireActivity(), exception.getMessage(), Toast.LENGTH_SHORT, true).show();
+                            Log.e(TAG, exception.getMessage());
+                            Toasty.error(requireActivity(), "Invalid Credentials", Toast.LENGTH_SHORT, true).show();
                             iAuthenticationEventsListener.onStopLoading();
                         });
     }

@@ -1,14 +1,14 @@
 package com.gmail.kingarthuralagao.us.civicengagement.domain.usecase.geolocation;
 
 import com.gmail.kingarthuralagao.us.civicengagement.core.base.BaseUseCase;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.location.GeolocationResult;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.repository_interfaces.geolocation.GeolocationRepository;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.landmark.adapter.LandmarkResultsAdapter;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class GetGeolocationUseCase extends BaseUseCase<LandmarkResultsAdapter.LandmarkEntity, GetGeolocationUseCase.Params> {
+public class GetGeolocationUseCase extends BaseUseCase<GeolocationResult, GetGeolocationUseCase.Params> {
 
     private GeolocationRepository geolocationRepository;
 
@@ -18,7 +18,7 @@ public class GetGeolocationUseCase extends BaseUseCase<LandmarkResultsAdapter.La
     }
 
     @Override
-    protected Observable<LandmarkResultsAdapter.LandmarkEntity> createObservableUseCase(Params params) {
+    protected Observable<GeolocationResult> createObservableUseCase(Params params) {
         return geolocationRepository.getGeolocation(params.location, params.key);
     }
 

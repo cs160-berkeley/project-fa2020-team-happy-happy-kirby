@@ -136,6 +136,7 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
         viewModel.getResult().observe(this, listResource -> {
             switch (listResource.getStatus()) {
                 case LOADING:
+                    loadingDialog.setLoadingText("Searching Landmark Location");
                     break;
                 case SUCCESS:
                     List<LandmarkResultsAdapter.LandmarkEntity> filteredList = new ArrayList<>();
@@ -157,6 +158,7 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
                     break;
                 case ERROR:
                     loadingDialog.dismiss();
+                    setNoResultResponse();
                     break;
                 default:
             }
@@ -216,7 +218,8 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void startImageDetection(String currentPhotoPath) throws IOException {
-        loadingDialog = new LoadingDialog();
+        loadingDialog = LoadingDialog.newInstance("Processing Image");
+        loadingDialog.setCancelable(false);
         loadingDialog.show(getChildFragmentManager(), "");
         FirebaseVisionImage image;
         image = FirebaseVisionImage.fromFilePath(requireContext(), Uri.fromFile(new File(currentPhotoPath)));

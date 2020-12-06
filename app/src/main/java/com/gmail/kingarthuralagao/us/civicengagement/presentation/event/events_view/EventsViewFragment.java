@@ -53,6 +53,7 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
     private FragmentEventsViewBinding binding;
     private EventsAdapter eventsAdapter;
     private EventsViewViewModel viewModel;
+    private Boolean clickedBefore = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -241,11 +242,13 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
             binding.includeNowSoon.happeningNowBtn.setEnabled(false);
             binding.includeNowSoon.happeningSoonBtn.setEnabled(true);
 
+            /*
             if (happeningNow.size() == 0) {
                 viewModel.fetchEventsHappeningNow(System.currentTimeMillis(), inputLocation);
             } else {
                 eventsAdapter.setData(happeningNowFiltered);
-            }
+            }*/
+            eventsAdapter.setData(happeningNowFiltered);
         });
 
         binding.includeNowSoon.happeningSoonBtn.setOnClickListener(view -> {
@@ -253,12 +256,13 @@ public class EventsViewFragment extends Fragment implements FilterDialogFragment
             binding.includeNowSoon.happeningNowBtn.setEnabled(true);
             binding.includeNowSoon.happeningSoonBtn.setEnabled(false);
 
-            if (happeningSoon.size() == 0) {
+            if (!clickedBefore) {
                 if (filters.size() == 0) {
                     viewModel.fetchEventsHappeningSoon(System.currentTimeMillis(), inputLocation);
                 } else {
                     viewModel.fetchEventsHappeningSoonWithFilter(System.currentTimeMillis(), inputLocation, filters);
                 }
+                clickedBefore = true;
             } else {
                 eventsAdapter.setData(happeningSoonFiltered);
             }

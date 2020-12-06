@@ -33,7 +33,7 @@
     <string name="event_start_time_prompt">Start Time*</string>
     <string name="event_end_time_prompt">End Time*</string>
     <string name="event_location_prompt">Location*</string>
-    <string name="event_gofundme_link">Add a GoFundMeLink</string>
+    <string name="event_gofundme_link">Add a GoFundMe Link</string>
     <string name="event_description_hint">Insert any notes or event description...</string>
     <string name="event_accessibilities_question">What accessibility resources are available at this event, as best as you can tell?</string>
     <string name="add_new_event">Add New Event</string>
@@ -49,6 +49,9 @@
     <string name="accessibility_two">Medic station with supplies</string>
     <string name="accessibility_three">Medic station with trained staff</string>
     <string name="accessibility_four">Easy access to seating</string>
+    <string name="accessibility_five">Venue provides elevator or ramp access</string>
+    <string name="accessibility_six">Accessible parking available</string>
+    <string name="accessibility_seven">Indoor access with air-conditioning</string>
 
     <!--Events View-->
     <string name="street_name_dummy">1234 The Main Street</string>

@@ -26,17 +26,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
+import com.gmail.kingarthuralagao.us.civicengagement.data.model.location.AddressComponent;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddEventActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewActivity;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.viewmodel.HomeFragmentViewModel;
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentHomeBinding;
@@ -48,13 +47,12 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import es.dmoral.toasty.Toasty;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -74,17 +72,18 @@ public class HomeFragment extends Fragment {
     private LocationManager mLocManager;
     private LocationListener mLocListener;
     private RequestQueue queue;
+    private HomeFragmentViewModel viewModel;
+    private LoadingDialog loadingDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(HomeFragmentViewModel.class);
         mLocManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         initializeLocationListener();
-        queue = Volley.newRequestQueue(this.getActivity());
-
-        Log.i("HomeFrag", (System.currentTimeMillis() / 1000) + "");
+        //queue = Volley.newRequestQueue(this.getActivity());
     }
 
     @Nullable
@@ -103,6 +102,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpEvents();
+        subscribeToLiveData();
     }
 
     @Override
@@ -181,11 +181,48 @@ public class HomeFragment extends Fragment {
                 // Update location.
                 mLocManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER, 0, 0, mLocListener);
+                loadingDialog = LoadingDialog.newInstance("");
+                loadingDialog.setCancelable(false);
+                loadingDialog.show(getChildFragmentManager(), "");
             } else {
                 // Location permission not granted.
                 Log.i(TAG, "Requesting location permission.");
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_REQUEST_CODE);
+            }
+        });
+    }
+
+    private void subscribeToLiveData() {
+        viewModel.getGeolocationResponse.observe(this, geolocationResource -> {
+            switch (geolocationResource.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    if (geolocationResource.getData() != null) {
+                        List<AddressComponent> addressComponents = geolocationResource.getData().getAddressComponents();
+                        String city = "";
+                        for (int i = 0; i < addressComponents.size(); i++) {
+                            AddressComponent addressComponent = addressComponents.get(i);
+
+                            List<String> types = addressComponent.getTypes();
+                            for (int j = 0; j < types.size(); j++) {
+                                if (types.get(j).equals("locality")) {
+                                    city = addressComponent.getLongName();
+                                }
+                            }
+                        }
+                        navigateToEventsView(city);
+                    } else {
+                        Toasty.error(requireContext(), "Error getting location", Toasty.LENGTH_SHORT, true);
+                    }
+                    loadingDialog.dismiss();
+                    break;
+                case ERROR:
+                    Toasty.error(requireContext(), "Error getting location", Toasty.LENGTH_SHORT, true);
+                    loadingDialog.dismiss();
+                    break;
+                default:
             }
         });
     }
@@ -201,6 +238,9 @@ public class HomeFragment extends Fragment {
                         PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
+                loadingDialog = LoadingDialog.newInstance("");
+                loadingDialog.setCancelable(false);
+                loadingDialog.show(getChildFragmentManager(), "");
                 mLocManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER, 0, 0, mLocListener);
             } else {
@@ -221,7 +261,8 @@ public class HomeFragment extends Fragment {
             mLocListener = location -> {
                 if (location != null) {
                     Log.i(TAG, "Location: " + location.toString());
-                    makeGeoRequest(location);
+                    viewModel.getGeolocation(location.getLatitude() + "," + location.getLongitude(), BuildConfig.API_KEY);
+                    //makeGeoRequest(location);
                     mLocManager.removeUpdates(mLocListener);
                 }
             };
@@ -231,7 +272,8 @@ public class HomeFragment extends Fragment {
                 public void onLocationChanged(@NonNull Location location) {
                     if (location != null) {
                         Log.i(TAG, "Location: " + location.toString());
-                        makeGeoRequest(location);
+                        //makeGeoRequest(location);
+                        viewModel.getGeolocation(location.getLatitude() + "," + location.getLongitude(), BuildConfig.API_KEY);
                         mLocManager.removeUpdates(mLocListener);
                     }
                 }
@@ -243,60 +285,6 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onProviderDisabled(@NonNull String provider) {}
             };
-        }
-    }
-    private void makeGeoRequest(Location location) {
-        final String GEO_URL = "https://maps.googleapis.com/maps/api/geocode/json";
-        if (location != null) {
-            // Request a string response from the provided URL.
-            String fullGeoUrl = GEO_URL + "?latlng=" + location.getLatitude() + ','
-                    + location.getLongitude() + "&key=" + BuildConfig.API_KEY;
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    Request.Method.GET,
-                    fullGeoUrl,
-                    null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        Log.i(TAG, "Response: " + response.toString());
-                        JSONArray results = response.getJSONArray("results");
-                        JSONObject firstResult = results.getJSONObject(0);
-                        JSONArray addressComponents = firstResult.getJSONArray("address_components");
-
-                        String city = "";
-                        for (int i = 0; i < addressComponents.length(); i++) {
-                            JSONObject object = addressComponents.getJSONObject(i);
-
-                            JSONArray typesArray = object.getJSONArray("types");
-                            for (int j = 0; j < typesArray.length(); j++) {
-                                if (typesArray.get(j).equals("locality")) {
-                                    city = object.getString("long_name");
-                                }
-                            }
-
-                        }
-                        navigateToEventsView(city);
-                        //JSONObject cityInfo = addressComponents.getJSONObject(3);
-                        //String formattedAddress = firstResult.getString("formatted_address");
-                        /*
-                        Log.i(TAG, "Address: " + city);
-                        Intent i = new Intent(requireActivity(), EventsViewActivity.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        i.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                        i.putExtra("Address", city);
-                        startActivity(i);*/
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e(TAG, "Error getting response from GeoCoding API: " + error);
-                }
-            });
-            // Add the request to the RequestQueue.
-            queue.add(jsonObjectRequest);
         }
     }
 
@@ -352,4 +340,51 @@ public class HomeFragment extends Fragment {
         }
         return "";
     }
+
+    /*
+    * private void makeGeoRequest(Location location) {
+        final String GEO_URL = "https://maps.googleapis.com/maps/api/geocode/json";
+        if (location != null) {
+            // Request a string response from the provided URL.
+            String fullGeoUrl = GEO_URL + "?latlng=" + location.getLatitude() + ','
+                    + location.getLongitude() + "&key=" + BuildConfig.API_KEY;
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.GET,
+                    fullGeoUrl,
+                    null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        Log.i(TAG, "Response: " + response.toString());
+                        JSONArray results = response.getJSONArray("results");
+                        JSONObject firstResult = results.getJSONObject(0);
+                        JSONArray addressComponents = firstResult.getJSONArray("address_components");
+
+                        String city = "";
+                        for (int i = 0; i < addressComponents.length(); i++) {
+                            JSONObject object = addressComponents.getJSONObject(i);
+
+                            JSONArray typesArray = object.getJSONArray("types");
+                            for (int j = 0; j < typesArray.length(); j++) {
+                                if (typesArray.get(j).equals("locality")) {
+                                    city = object.getString("long_name");
+                                }
+                            }
+
+                        }
+                        navigateToEventsView(city);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "Error getting response from GeoCoding API: " + error);
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(jsonObjectRequest);
+        }
+    }*/
 }

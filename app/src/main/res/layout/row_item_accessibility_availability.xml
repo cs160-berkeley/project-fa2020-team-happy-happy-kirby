@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/resource_tv"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_24sdp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="00dp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:layout_marginTop="0dp"

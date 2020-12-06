@@ -105,7 +105,7 @@ public class EventDetailFragment extends Fragment {
                     loadingDialog.dismiss();
                     break;
                 case LOADING:
-                    loadingDialog = new LoadingDialog();
+                    loadingDialog = LoadingDialog.newInstance("");
                     loadingDialog.show(getChildFragmentManager(), "");
                     break;
                 case ERROR:

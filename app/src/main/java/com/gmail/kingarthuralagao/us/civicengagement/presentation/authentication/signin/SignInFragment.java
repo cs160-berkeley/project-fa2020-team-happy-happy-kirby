@@ -131,7 +131,7 @@ public class SignInFragment extends Fragment {
         signInFragmentViewModel.signInWithEmailAndPasswordResponse.observe(this, firebaseUserResource -> {
             switch (firebaseUserResource.getStatus()) {
                 case LOADING:
-                    iAuthenticationEventsListener.onStartLoading();
+                    iAuthenticationEventsListener.onStartLoading("Authenticating");
                     break;
                 case SUCCESS:
                     FirebaseUser user = firebaseUserResource.getData();
@@ -154,13 +154,14 @@ public class SignInFragment extends Fragment {
             public void onChanged(Resource<Status> statusResource) {
                 switch (statusResource.getStatus()) {
                     case LOADING:
+                        iAuthenticationEventsListener.onSetLoadingText("Creating User Account");
                         break;
                     case SUCCESS:
                         iAuthenticationEventsListener.onStopLoading();
                         updateUI(firebaseAuth.getCurrentUser());
                         break;
                     case ERROR:
-                        Toasty.error(requireActivity(), statusResource.getError().getMessage(), Toast.LENGTH_SHORT, true);
+                        Toasty.error(requireActivity(), "Error Creating Account", Toast.LENGTH_SHORT, true);
                         iAuthenticationEventsListener.onStopLoading();
                         break;
                     default:
@@ -259,7 +260,7 @@ public class SignInFragment extends Fragment {
     
     /********************************** Google SignIn **********************************/
     private void initializeGoogleSignIn() {
-        iAuthenticationEventsListener.onStartLoading();
+        iAuthenticationEventsListener.onStartLoading("Initializing Sign In Process");
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -290,7 +291,7 @@ public class SignInFragment extends Fragment {
 
     private void initializeTwitterSignIn() {
         OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
-        iAuthenticationEventsListener.onStartLoading();
+        iAuthenticationEventsListener.onStartLoading("Initializing Sign In Process");
 
         Task<AuthResult> pendingResultTask = firebaseAuth.getPendingAuthResult();
         if (pendingResultTask != null) {

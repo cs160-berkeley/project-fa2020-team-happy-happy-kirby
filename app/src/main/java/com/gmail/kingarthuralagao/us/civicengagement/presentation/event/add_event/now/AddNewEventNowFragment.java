@@ -319,4 +319,39 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
 
         return hasAnEmptyField;
     }
+
+    public static boolean hasInvalidTimeStamp() {
+        if (dateEnd != null && dateEnd.length() != 0 && timeEnd != null && timeEnd.length() != 0) {
+            String[] dateParts = dateEnd.split("/");
+            String month = dateParts[0];
+            String day = dateParts[1];
+            String year = dateParts[2];
+
+            month = month.length() == 2 ? month : "0" + month;
+            day = day.length() == 2 ? day : "0" + day;
+
+            String[] timeParts = timeEnd.split(":");
+            String hour = timeParts[0];
+            String minute = timeParts[1];
+
+            if (minute.contains("PM")) {
+                hour = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hour)));
+            }
+
+            String minuteMod = minute.replace(" AM", "");
+            minuteMod = minuteMod.replace(" PM", "");
+            hour = hour.length() == 2 ? hour : "0" + hour;
+
+            String date = month + "/" + day + "/" + year;
+            String time = hour + ":" + minuteMod + ":" + "00";
+
+            Long inputDateTimeStamp = Utils.getTimeStampFromDate(date + " " + time);
+            Long currentTimeStamp = System.currentTimeMillis() / 1000;
+
+            if (inputDateTimeStamp <= currentTimeStamp) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

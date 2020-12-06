@@ -23,6 +23,7 @@ public class Utils {
     }
 
     public static Long getTimeStampFromDate(String date) {
+        String dateMod = date + " PST";
         long epoch = 0L;
         try {
             epoch = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(date).getTime() / 1000;
@@ -68,6 +69,9 @@ public class Utils {
         int hour = cal.get(Calendar.HOUR_OF_DAY);  // 15
         int minute = cal.get(Calendar.MINUTE);  // 16
         int second = cal.get(Calendar.SECOND);  // 17
+
+        String date = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new java.util.Date (timeStamp * 1000));
+        Log.i("InUtils", date);
 
         return monthNameToNumber(month) + "/" + day + "/" + year ;
     }
@@ -128,6 +132,35 @@ public class Utils {
                 return 11;
             default:
                 return 12;
+        }
+    }
+
+    public static int convertToMilitaryTime(int hour) {
+        switch (hour) {
+            case 1:
+                return 13;
+            case 2:
+                return 14;
+            case 3:
+                return 15;
+            case 4:
+                return 16;
+            case 5:
+                return 17;
+            case 6:
+                return 18;
+            case 7:
+                return 19;
+            case 8:
+                return 20;
+            case 9:
+                return 21;
+            case 10:
+                return 22;
+            case 11:
+                return 23;
+            default:
+                return 00;
         }
     }
 

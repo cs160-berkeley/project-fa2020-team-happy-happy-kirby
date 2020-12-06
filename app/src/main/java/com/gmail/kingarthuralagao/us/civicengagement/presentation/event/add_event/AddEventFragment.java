@@ -100,7 +100,7 @@ public class AddEventFragment extends Fragment {
         viewModel.getTimeZoneResponse.observe(this, responseResource -> {
             switch (responseResource.getStatus()) {
                 case LOADING:
-                    loadingDialog = new LoadingDialog();
+                    loadingDialog = LoadingDialog.newInstance("Processing Timezone");
                     loadingDialog.show(getChildFragmentManager(), "");
                     break;
                 case ERROR:
@@ -124,7 +124,7 @@ public class AddEventFragment extends Fragment {
                     loadingDialog.dismiss();
                     //Toasty.success(requireContext(), "Event successfully posted!", Toast.LENGTH_LONG, true).show();
                     Toasty.custom(requireContext(),
-                            "Event successfully posted!",
+                            "Event successfully added!",
                             getResources().getDrawable(R.drawable.ic_check_white, null),
                             getResources().getColor(R.color.secondary_blue, null),
                             getResources().getColor(R.color.white, null),
@@ -133,6 +133,8 @@ public class AddEventFragment extends Fragment {
                             true).show();
                     requireActivity().finish();
                     break;
+                case LOADING:
+                    loadingDialog.setLoadingText("Posting Event");
                 default:
             }
         });
@@ -188,8 +190,15 @@ public class AddEventFragment extends Fragment {
                 if (incompleteInput) {
                     return;
                 }
+
+                if (addNewEventNowFragment.hasInvalidTimeStamp()) {
+                    Toasty.error(requireContext(), "Please enter a valid time range", Toasty.LENGTH_LONG, true).show();
+                    return;
+                }
+
                 eventLocation = addNewEventNowFragment.getPlace();
             } else { // In addneweventsoon
+                Log.i("AddEventFrag", "InAddeventsoon");
                 boolean incompleteInput = false;
                 if (addNewEventSoonFragment.hasEmptyField())
                     incompleteInput = true;
@@ -203,6 +212,12 @@ public class AddEventFragment extends Fragment {
                 if (incompleteInput) {
                     return;
                 }
+
+                if (addNewEventSoonFragment.hasInvalidTimeStamp()) {
+                    Toasty.error(requireContext(), "Please enter a valid time range", Toasty.LENGTH_LONG, true).show();
+                    return;
+                }
+
                 eventLocation = addNewEventSoonFragment.getPlace();
             }
             String locationInput = eventLocation.getLatLng().latitude + ", " + eventLocation.getLatLng().longitude;
@@ -240,6 +255,30 @@ public class AddEventFragment extends Fragment {
                 binding.includeAccessibilityCheckboxes.accessibilityFourCheckbox.setChecked(false);
             } else {
                 binding.includeAccessibilityCheckboxes.accessibilityFourCheckbox.setChecked(true);
+            }
+        });
+
+        binding.includeAccessibilityCheckboxes.layAccessibilityFive.setOnClickListener(view -> {
+            if (binding.includeAccessibilityCheckboxes.accessibilityFiveCheckbox.isChecked()) {
+                binding.includeAccessibilityCheckboxes.accessibilityFiveCheckbox.setChecked(false);
+            } else {
+                binding.includeAccessibilityCheckboxes.accessibilityFiveCheckbox.setChecked(true);
+            }
+        });
+
+        binding.includeAccessibilityCheckboxes.layAccessibilitySix.setOnClickListener(view -> {
+            if (binding.includeAccessibilityCheckboxes.accessibilitySixCheckbox.isChecked()) {
+                binding.includeAccessibilityCheckboxes.accessibilitySixCheckbox.setChecked(false);
+            } else {
+                binding.includeAccessibilityCheckboxes.accessibilitySixCheckbox.setChecked(true);
+            }
+        });
+
+        binding.includeAccessibilityCheckboxes.layAccessibilitySeven.setOnClickListener(view -> {
+            if (binding.includeAccessibilityCheckboxes.accessibilitySevenCheckbox.isChecked()) {
+                binding.includeAccessibilityCheckboxes.accessibilitySevenCheckbox.setChecked(false);
+            } else {
+                binding.includeAccessibilityCheckboxes.accessibilitySevenCheckbox.setChecked(true);
             }
         });
     }
@@ -363,6 +402,23 @@ public class AddEventFragment extends Fragment {
             accessibilities.put(getResources().getString(R.string.accessibility_four), false);
         }
 
+        if (binding.includeAccessibilityCheckboxes.accessibilityFiveCheckbox.isChecked()) {
+            accessibilities.put(getResources().getString(R.string.accessibility_five), true);
+        } else {
+            accessibilities.put(getResources().getString(R.string.accessibility_five), false);
+        }
+
+        if (binding.includeAccessibilityCheckboxes.accessibilitySixCheckbox.isChecked()) {
+            accessibilities.put(getResources().getString(R.string.accessibility_six), true);
+        } else {
+            accessibilities.put(getResources().getString(R.string.accessibility_six), false);
+        }
+
+        if (binding.includeAccessibilityCheckboxes.accessibilitySevenCheckbox.isChecked()) {
+            accessibilities.put(getResources().getString(R.string.accessibility_seven), true);
+        } else {
+            accessibilities.put(getResources().getString(R.string.accessibility_seven), false);
+        }
         return accessibilities;
     }
 

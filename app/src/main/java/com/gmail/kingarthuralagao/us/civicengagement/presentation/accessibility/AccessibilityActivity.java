@@ -1,10 +1,10 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.accessibility;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.EventsViewFragment;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityAccessibilityBinding;
 
 public class AccessibilityActivity extends AppCompatActivity {
@@ -29,5 +29,7 @@ public class AccessibilityActivity extends AppCompatActivity {
                 .beginTransaction()
                 .add(binding.fragmentContainer.getId(), EventsViewFragment.newInstance("Engage me at 1234 Main Street"))
                 .commit();*/
+
+        new LoadingDialog().show(getSupportFragmentManager(), "");
     }
 }

@@ -64,6 +64,7 @@ public class EventBuilder {
     }
 
     public EventBuilder withDateEnd(String dateEnd, String timeEnd) {
+        /*
         String[] dateParts = dateEnd.split("/");
         String month = dateParts[0];
         String day = dateParts[1];
@@ -79,7 +80,27 @@ public class EventBuilder {
         hour = hour.length() == 2 ? hour : "0" + hour;
 
         String date = month + "/" + day + "/" + year;
-        String time = 12 + ":" + "00" + ":" + "00";
+        String time = 12 + ":" + 00 + ":" + "00";*/
+        String[] dateParts = dateEnd.split("/");
+        String month = dateParts[0];
+        String day = dateParts[1];
+        String year = dateParts[2];
+
+        month = month.length() == 2 ? month : "0" + month;
+        day = day.length() == 2 ? day : "0" + day;
+
+        String timeEndMod = timeEnd.replace(" PM", "");
+        timeEndMod = timeEndMod.replace(" AM", "");
+        timeEndMod = timeEndMod.replace("\\s", "");
+        String[] timeParts = timeEndMod.split(":");
+        String hour = timeParts[0];
+        String minute = timeParts[1];
+
+        hour = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hour)));
+        hour = hour.length() == 2 ? hour : "0" + hour;
+
+        String date = month + "/" + day + "/" + year;
+        String time = hour + ":" + minute + ":" + "00";
         Log.i("EventBuilder", date + " " + time);
         this.dateEnd = Utils.getTimeStampFromDate(date + " " + time);
         return this;

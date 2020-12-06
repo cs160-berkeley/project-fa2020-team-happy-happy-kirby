@@ -118,4 +118,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2'
 
+    // Loading Dots
+    implementation 'com.eyalbira.loadingdots:loading-dots:1.0.2'
+
 }

@@ -47,6 +47,18 @@ public class AddressComponent implements Serializable, Parcelable
     public AddressComponent() {
     }
 
+    public String getLongName() {
+        return longName;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public List<String> getTypes() {
+        return types;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(longName);
         dest.writeValue(shortName);

@@ -58,8 +58,8 @@ public class AuthenticationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStartLoading() {
-        loadingDialog = new LoadingDialog();
+    public void onStartLoading(String txt) {
+        loadingDialog = LoadingDialog.newInstance(txt.length() == 0 ? "Loading" : txt);
         loadingDialog.show(getSupportFragmentManager(), DIALOG);
     }
 
@@ -71,6 +71,11 @@ public class AuthenticationActivity extends AppCompatActivity
     @Override
     public void navigateToHome() {
         fetchUserDocument();
+    }
+
+    @Override
+    public void onSetLoadingText(String txt) {
+
     }
 
     private void createFragments() {

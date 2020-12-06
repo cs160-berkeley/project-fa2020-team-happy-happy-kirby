@@ -263,9 +263,9 @@ public class AddNewEventSoonFragment extends Fragment implements
         datePicker.show(getChildFragmentManager(), "");
 
         datePicker.addOnPositiveButtonClickListener(selection -> {
-            Log.i(TAG, selection.first + "" + selection.second);
-            dateStart = selection.first / 1000;
-            dateEnd = selection.second / 1000;
+            Log.i(TAG, selection.first + " " + selection.second);
+            dateStart = (selection.first + 1000 * 60 * 60 * 24) / 1000;
+            dateEnd = (selection.second + 1000 * 60 * 60 * 24) / 1000;
 
             binding.eventDateStartEt.setText(Utils.getDateFromTimeStamp(dateStart));
             binding.eventDateStartLayout.setError("");
@@ -318,5 +318,106 @@ public class AddNewEventSoonFragment extends Fragment implements
         }
 
         return hasAnEmptyField;
+    }
+
+    public static boolean hasInvalidTimeStamp() {
+        Log.i(TAG, "In invalidTimes");
+        if (dateEnd != null  && timeEnd != null && timeEnd.length() != 0) {
+            Log.i(TAG, "dateStart: " + dateStart);
+            Log.i(TAG, "dateEnddd: " + dateEnd);
+            if (!String.valueOf(dateStart).equals(String.valueOf(dateEnd))) {
+                return false;
+            }
+            Log.i(TAG, "In invalidTimes. Inside if");
+
+            String[] timeEndParts = timeEnd.split(":");
+            String hourEnd = timeEndParts[0];
+            String minuteEnd = timeEndParts[1];
+
+            if (minuteEnd.contains("PM")) {
+                hourEnd = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hourEnd)));
+            }
+
+            String minuteEndMod = minuteEnd.replace(" AM", "");
+            minuteEndMod = minuteEndMod.replace(" PM", "");
+            hourEnd = hourEnd.length() == 2 ? hourEnd : "0" + hourEnd;
+
+            String timeEndMod = hourEnd + ":" + minuteEndMod + ":" + "00";
+
+            String[] timeStartParts = timeStart.split(":");
+            String hourStart = timeStartParts[0];
+            String minuteStart = timeStartParts[1];
+
+            if (minuteStart.contains("PM")) {
+                hourStart = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hourStart)));
+            }
+
+            String minuteStartMod = minuteStart.replace(" AM", "");
+            minuteStartMod = minuteStartMod.replace(" PM", "");
+            hourStart = hourStart.length() == 2 ? hourStart : "0" + hourStart;
+
+            String timeStartMod = hourStart + ":" + minuteStartMod + ":" + "00";
+
+            Long endTimeStamp = Utils.getTimeStampFromDate("09/20/2020" + " " + timeEndMod);
+            Long startTimeStamp = Utils.getTimeStampFromDate("09/20/2020" + " " + timeStartMod);
+
+            Log.i(TAG, "TimeEnd: " + timeEndMod);
+            Log.i(TAG, "TimeStart: " + timeStartMod);
+            Log.i(TAG, "EndTimeSt: " + endTimeStamp);
+            Log.i(TAG, "StartTimeStam: " + startTimeStamp);
+
+            //return true;
+            return endTimeStamp < startTimeStamp;
+
+            /*
+            String timeEndMod = timeEnd.replace(" PM", "");
+            timeEndMod = timeEndMod.replace(" AM", "");
+            timeEndMod = timeEndMod.replace("\\s", "");
+            String[] timeParts = timeEndMod.split(":");
+            String hourEnd = timeParts[0];
+            String minuteEnd = timeParts[1];
+
+            hourEnd = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hourEnd)));
+            hourEnd = hourEnd.length() == 2 ? hourEnd : "0" + hourEnd;*/
+
+
+            /*
+            String date = month + "/" + day + "/" + year;
+            String time = hour + ":" + minute + ":" + "00";
+
+            String timeStartMod = timeStart.replace(" PM", "");
+            timeStartMod = timeStartMod.replace(" AM", "");
+            timeStartMod = timeStartMod.replace("\\s", "");
+            timeParts = timeStartMod.split(":");
+            String hourStart = timeParts[0];
+            String minuteStart = timeParts[1];
+
+
+            String[] dateParts = dateEnd.split("/");
+            String month = dateParts[0];
+            String day = dateParts[1];
+            String year = dateParts[2];
+
+            month = month.length() == 2 ? month : "0" + month;
+            day = day.length() == 2 ? day : "0" + day;
+
+            Log.i(TAG,  " time is:" + timeEnd);
+            String timeEndMod = timeEnd.replace(" PM", "");
+            timeEndMod = timeEndMod.replace(" AM", "");
+            timeEndMod = timeEndMod.replace("\\s", "");
+            String[] timeParts = timeEndMod.split(":");
+            String hour = timeParts[0];
+            String minute = timeParts[1];
+
+            hour = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hour)));
+            hour = hour.length() == 2 ? hour : "0" + hour;
+
+            String date = month + "/" + day + "/" + year;
+            String time = hour + ":" + minute + ":" + "00";
+
+            Long inputDateTimeStamp = Utils.getTimeStampFromDate(date + " " + time);
+            Long currentTimeStamp = System.currentTimeMillis() / 1000;*/
+        }
+        return false;
     }
 }

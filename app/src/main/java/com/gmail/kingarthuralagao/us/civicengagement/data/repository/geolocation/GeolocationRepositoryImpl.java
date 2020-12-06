@@ -1,11 +1,8 @@
 package com.gmail.kingarthuralagao.us.civicengagement.data.repository.geolocation;
 
-import android.util.Log;
-
 import com.gmail.kingarthuralagao.us.civicengagement.data.api.geolocation.IGeolocation;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.location.GeolocationResult;
 import com.gmail.kingarthuralagao.us.civicengagement.domain.repository_interfaces.geolocation.GeolocationRepository;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.landmark.adapter.LandmarkResultsAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -33,16 +30,11 @@ public class GeolocationRepositoryImpl implements GeolocationRepository {
         retrofitClient = new GeolocationRepositoryImpl.RetrofitClient();
     }
     @Override
-    public Observable<LandmarkResultsAdapter.LandmarkEntity> getGeolocation(String latlng, String key) {
+    public Observable<GeolocationResult> getGeolocation(String latlng, String key) {
         return retrofitClient.getGeolocation().getResults(latlng, key).map(results -> {
-
-            if (!results.getGeolocationResults().isEmpty()) {
+            if (results.getGeolocationResults().size() > 0) {
                 GeolocationResult geolocationResult = results.getGeolocationResults().get(0);
-
-                String address = geolocationResult.getFormattedAddress();
-                Log.i("GeolocationRepo", "Lat: " + geolocationResult.getGeometry().getLocation().getLat());
-                Log.i("GeolocationRepo", "Lng: " + geolocationResult.getGeometry().getLocation().getLng());
-                return new LandmarkResultsAdapter.LandmarkEntity("name", address);
+                return geolocationResult;
             }
             return null;
         });
