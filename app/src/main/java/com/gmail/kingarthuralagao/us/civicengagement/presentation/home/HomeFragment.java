@@ -28,7 +28,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.data.model.location.AddressComponent;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
@@ -47,6 +52,9 @@ import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -84,7 +92,7 @@ public class HomeFragment extends Fragment {
         mLocManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         initializeLocationListener();
-        //queue = Volley.newRequestQueue(this.getActivity());
+        queue = Volley.newRequestQueue(this.getActivity());
     }
 
     @Nullable
@@ -221,11 +229,11 @@ public class HomeFragment extends Fragment {
                     } else {
                         Toasty.error(requireContext(), "Error getting location", Toasty.LENGTH_SHORT, true);
                     }
-                    loadingDialog.dismiss();
+                    //loadingDialog.dismiss();
                     break;
                 case ERROR:
                     Toasty.error(requireContext(), "Error getting location", Toasty.LENGTH_SHORT, true);
-                    loadingDialog.dismiss();
+                    //loadingDialog.dismiss();
                     break;
                 default:
             }
@@ -266,8 +274,8 @@ public class HomeFragment extends Fragment {
             mLocListener = location -> {
                 if (location != null) {
                     Log.i(TAG, "Location: " + location.toString());
-                    viewModel.getGeolocation(location.getLatitude() + "," + location.getLongitude(), BuildConfig.API_KEY);
-                    //makeGeoRequest(location);
+                    //viewModel.getGeolocation(location.getLatitude() + "," + location.getLongitude(), BuildConfig.API_KEY);
+                    makeGeoRequest(location);
                     mLocManager.removeUpdates(mLocListener);
                 }
             };
@@ -346,8 +354,8 @@ public class HomeFragment extends Fragment {
         return "";
     }
 
-    /*
-    * private void makeGeoRequest(Location location) {
+
+    private void makeGeoRequest(Location location) {
         final String GEO_URL = "https://maps.googleapis.com/maps/api/geocode/json";
         if (location != null) {
             // Request a string response from the provided URL.
@@ -377,6 +385,7 @@ public class HomeFragment extends Fragment {
                             }
 
                         }
+                        loadingDialog.dismiss();
                         navigateToEventsView(city);
                     } catch (Exception e) {
                         Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);
@@ -385,11 +394,12 @@ public class HomeFragment extends Fragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    loadingDialog.dismiss();
                     Log.e(TAG, "Error getting response from GeoCoding API: " + error);
                 }
             });
             // Add the request to the RequestQueue.
             queue.add(jsonObjectRequest);
         }
-    }*/
+    }
 }

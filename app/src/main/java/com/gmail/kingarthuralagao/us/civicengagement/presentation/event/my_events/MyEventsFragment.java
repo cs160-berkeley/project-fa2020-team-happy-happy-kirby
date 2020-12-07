@@ -76,6 +76,7 @@ public class MyEventsFragment extends Fragment {
     private void setUpViews() {
         binding.filterBtn.setVisibility(View.GONE);
         binding.locationTv.setText("My Events");
+        initializeRecyclerView(happeningNow);
         fetchMyEventsHappeningNow();
     }
 
@@ -178,28 +179,30 @@ public class MyEventsFragment extends Fragment {
         User user = CivicEngagementApp.getUser();
         List<String> checkIns = user.getCheckIns();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("events")
-                .whereIn("id", checkIns)
-                .whereLessThanOrEqualTo("dateStart", System.currentTimeMillis() / 1000)
-                .orderBy("dateStart")
-                .get()
-                .addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
-                        happeningNow.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Event e = document.toObject(Event.class);
-                            happeningNow.add(e);
+        if (checkIns.size() > 0) {
+            db.collection("events")
+                    .whereIn("id", checkIns)
+                    .whereLessThanOrEqualTo("dateStart", System.currentTimeMillis() / 1000)
+                    .orderBy("dateStart")
+                    .get()
+                    .addOnCompleteListener(requireActivity(), task -> {
+                        if (task.isSuccessful()) {
+                            happeningNow.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Event e = document.toObject(Event.class);
+                                happeningNow.add(e);
+                            }
+                            eventsAdapter.setData(happeningNow);
+                        } else {
+                            Toasty.error(requireContext(), "Error Fetching Events", Toasty.LENGTH_SHORT, true);
                         }
-                        initializeRecyclerView(happeningNow);
-                    } else {
-                        Toasty.error(requireContext(), "Error Fetching Events", Toasty.LENGTH_SHORT, true);
-                    }
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                }).addOnFailureListener(e -> {
-                    e.printStackTrace();
-                    Toasty.error(requireContext(), "Error Fetching Events", Toasty.LENGTH_SHORT, true);
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                });
+                        binding.swipeRefreshLayout.setRefreshing(false);
+                    }).addOnFailureListener(e -> {
+                e.printStackTrace();
+                Toasty.error(requireContext(), "Error Fetching Events", Toasty.LENGTH_SHORT, true);
+                binding.swipeRefreshLayout.setRefreshing(false);
+            });
+        }
     }
 
     private void fetchMyEventsHappeningSoon() {
@@ -208,32 +211,34 @@ public class MyEventsFragment extends Fragment {
         User user = CivicEngagementApp.getUser();
         List<String> checkIns = user.getCheckIns();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("events")
-                .whereIn("id", checkIns)
-                .whereGreaterThan("dateStart", System.currentTimeMillis() / 1000)
-                .orderBy("dateStart")
-                .get()
-                .addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
-                        happeningSoon.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Event e = document.toObject(Event.class);
-                            happeningSoon.add(e);
-                        }
+        if (checkIns.size() > 0) {
+            db.collection("events")
+                    .whereIn("id", checkIns)
+                    .whereGreaterThan("dateStart", System.currentTimeMillis() / 1000)
+                    .orderBy("dateStart")
+                    .get()
+                    .addOnCompleteListener(requireActivity(), task -> {
+                        if (task.isSuccessful()) {
+                            happeningSoon.clear();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Event e = document.toObject(Event.class);
+                                happeningSoon.add(e);
+                            }
 
-                        eventsAdapter.setData(happeningSoon);
-                    } else {
-                        Toasty.error(requireContext(), "Error Fetching Events", Toasty.LENGTH_SHORT, true);
-                    }
+                            eventsAdapter.setData(happeningSoon);
+                        } else {
+                            Toasty.error(requireContext(), "Error Fetching Events", Toasty.LENGTH_SHORT, true);
+                        }
+                        binding.swipeRefreshLayout.setRefreshing(false);
+                        binding.eventsRv.setVisibility(View.VISIBLE);
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toasty.error(requireContext(), "Error Fetching Events", Toasty.LENGTH_SHORT, true);
                     binding.swipeRefreshLayout.setRefreshing(false);
                     binding.eventsRv.setVisibility(View.VISIBLE);
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toasty.error(requireContext(), "Error Fetching Events", Toasty.LENGTH_SHORT, true);
-                binding.swipeRefreshLayout.setRefreshing(false);
-                binding.eventsRv.setVisibility(View.VISIBLE);
-            }
-        });
+                }
+            });
+        }
     }
 }
