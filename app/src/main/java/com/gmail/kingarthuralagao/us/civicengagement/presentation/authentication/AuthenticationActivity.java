@@ -10,7 +10,7 @@ import com.gmail.kingarthuralagao.us.civicengagement.data.model.user.User;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.signin.SignInFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.signup.SignUpFragment;
-import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.HomeActivity;
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.bottomnav.BottomNavActivity;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityAuthenticationBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -119,7 +119,8 @@ public class AuthenticationActivity extends AppCompatActivity
                 .addOnCompleteListener(task -> {
                     CivicEngagementApp.setUser(task.getResult().toObject(User.class));
                     loadingDialog.dismiss();
-                    i = new Intent(this, HomeActivity.class);
+                    //i = new Intent(this, HomeActivity.class);
+                    i = new Intent(this, BottomNavActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
