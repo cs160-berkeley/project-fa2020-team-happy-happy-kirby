@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -31,11 +32,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
-import com.gmail.kingarthuralagao.us.civicengagement.data.model.location.AddressComponent;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.LoadingDialog;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.authentication.AuthenticationActivity;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.AddEventActivity;
@@ -60,8 +59,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import es.dmoral.toasty.Toasty;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -103,7 +100,8 @@ public class HomeFragment extends Fragment {
         setHasOptionsMenu(true);
         ((AppCompatActivity) getActivity()).setSupportActionBar(binding.toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
-
+        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_menu);
+        binding.toolbar.setOverflowIcon(drawable);
         return binding.getRoot();
     }
 
@@ -207,6 +205,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void subscribeToLiveData() {
+        /*
         viewModel.getGeolocationResponse.observe(this, geolocationResource -> {
             switch (geolocationResource.getStatus()) {
                 case LOADING:
@@ -237,7 +236,7 @@ public class HomeFragment extends Fragment {
                     break;
                 default:
             }
-        });
+        });*/
     }
 
     @Override
@@ -388,15 +387,13 @@ public class HomeFragment extends Fragment {
                         loadingDialog.dismiss();
                         navigateToEventsView(city);
                     } catch (Exception e) {
+                        loadingDialog.dismiss();
                         Log.e(TAG, "Error retrieving results from GeoCoding API: " + e);
                     }
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    loadingDialog.dismiss();
-                    Log.e(TAG, "Error getting response from GeoCoding API: " + error);
-                }
+            }, error -> {
+                loadingDialog.dismiss();
+                Log.e(TAG, "Error getting response from GeoCoding API: " + error);
             });
             // Add the request to the RequestQueue.
             queue.add(jsonObjectRequest);

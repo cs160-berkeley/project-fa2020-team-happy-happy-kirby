@@ -12,8 +12,9 @@
             android:id="@+id/event_description_tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="No description available for this event"
+            android:text="No description available for this eventasdasdas dasdaasdasdas"
             android:textSize="@dimen/_12sdp"
+            android:lineSpacingMultiplier="1.2"
             android:textColor="@color/secondary_text"
             android:layout_marginTop="@dimen/_4sdp"/>
     </ScrollView>

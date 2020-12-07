@@ -32,7 +32,7 @@
             android:textSize="@dimen/_28sdp"
             android:textColor="@color/primary_text"
             android:gravity="center"
-            android:text="Welcome to CivEngageMEnt"/>
+            android:text="Welcome to CivicEngageMEnt"/>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
