@@ -5,6 +5,8 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/location_layout"
+        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -21,6 +23,7 @@
             android:layout_marginStart="16dp"
             android:gravity="left"
             android:text="Event Location"
+            android:textColor="@color/secondary_blue"
             android:theme="@style/Theme.Event.Details"/>
     </LinearLayout>
 

@@ -1,11 +1,15 @@
 package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.event_detail;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -135,7 +139,9 @@ public class EventDetailFragment extends Fragment {
         String startDate = Utils.getDateFromTimeStamp(event.getDateStart());
         String endDate  = Utils.getDateFromTimeStamp(event.getDateEnd());
         binding.includeEventDetails.eventDateTv.setText(startDate + " - " + endDate);
-        binding.includeEventDetails.eventLocationTv.setText(event.getLocation());
+        SpannableString content = new SpannableString(event.getLocation());
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        binding.includeEventDetails.eventLocationTv.setText(content);
         binding.includeEventDetails.eventCheckInsTv.setText("" + event.getCheckIns());
         setTime();
 
@@ -180,6 +186,21 @@ public class EventDetailFragment extends Fragment {
                 e.printStackTrace();
             }
         });
+
+        /* Open the address in Google Maps. */
+        binding.includeEventDetails.locationLayout.setOnClickListener(view -> {
+            int newLineIndex = event.getLocation().indexOf('\n');
+            String address = event.getLocation().substring(newLineIndex + 1);
+            openMaps(address);
+        });
+    }
+
+    void openMaps(String address) {
+        Log.d(TAG, "address: " + address);
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + address);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 
     private void setCheckInButtonStatus() {
