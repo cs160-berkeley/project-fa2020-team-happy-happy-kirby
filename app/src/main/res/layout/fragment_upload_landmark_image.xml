@@ -58,15 +58,33 @@
         android:layout_marginHorizontal="@dimen/_48sdp"
         android:text="@string/hello_blank_fragment" />
 
-    <TextView
-        android:id="@+id/take_another_picture_tv"
+    <LinearLayout
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_8sdp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/_10sdp"
-        android:textColor="@color/secondary_blue"
-        android:text="Retake Photo"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/take_another_picture_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:textSize="@dimen/_10sdp"
+            android:textColor="@color/secondary_blue"
+            android:text="Take Photo"/>
+
+        <TextView
+            android:id="@+id/upload_another_picture_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:textSize="@dimen/_10sdp"
+            android:textColor="@color/secondary_blue"
+            android:text="Upload Photo"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/results_tv"

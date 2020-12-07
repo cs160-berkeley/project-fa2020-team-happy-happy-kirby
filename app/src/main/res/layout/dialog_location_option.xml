@@ -12,8 +12,8 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="@dimen/_32sdp"
-            android:layout_height="@dimen/_32sdp"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
             android:layout_marginStart="@dimen/_12sdp"
             android:src="@drawable/ic_search"
             android:layout_gravity="center"/>
@@ -23,9 +23,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="@dimen/_12sdp"
-            android:textSize="@dimen/_22sdp"
+            android:padding="@dimen/_8sdp"
+            android:textSize="@dimen/_18sdp"
             android:text="Search for a Location"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/upload_landmark_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:src="@drawable/ic_gallery_lg"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/upload_landmark_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/_8sdp"
+            android:textSize="@dimen/_18sdp"
+            android:text="Upload Landmark Photo"/>
 
     </LinearLayout>
 
@@ -37,8 +62,8 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="@dimen/_32sdp"
-            android:layout_height="@dimen/_32sdp"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
             android:layout_marginStart="@dimen/_12sdp"
             android:src="@drawable/ic_camera"
             android:layout_gravity="center"/>
@@ -48,9 +73,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="@dimen/_12sdp"
-            android:textSize="@dimen/_22sdp"
-            android:text="Use Landmark"/>
+            android:padding="@dimen/_8sdp"
+            android:textSize="@dimen/_18sdp"
+            android:text="Take Landmark Photo"/>
 
     </LinearLayout>
 </LinearLayout>

@@ -56,8 +56,12 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
         void onRecyclerViewItemClick(View view, Integer position);
     }
 
-    public static UploadLandmarkImageFragment newInstance() {
-        return new UploadLandmarkImageFragment();
+    public static UploadLandmarkImageFragment newInstance(int choice) {
+        UploadLandmarkImageFragment fragment = new UploadLandmarkImageFragment();
+        Bundle args = new Bundle();
+        args.putInt("choice", choice);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     private final String TAG = getClass().getSimpleName();
@@ -65,6 +69,8 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
     private final static int RESULT_ERROR= 5;
     private final int CAMERA_PERMISSION_REQUEST_CODE = 100;
     private final int CAMERA_RESULT_CODE = 200;
+    private final int GALLERY_PERMISSION_REQUEST_CODE = 300;
+    private final int GALLERY_RESULT_CODE = 400;
     private UploadLandMarkImageViewModel viewModel;
     private String currentPhotoPath;
     private FragmentUploadLandmarkImageBinding binding;
@@ -79,14 +85,13 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
 
         viewModel = new ViewModelProvider(requireActivity()).get(UploadLandMarkImageViewModel.class);
 
-        openUserCamera();
+        int choice = getArguments().getInt("choice");
+        if (choice == 1) {
+            openUserCamera();
+        } else {
+            openUserGallery();
+        }
         ArrayList<LandmarkResultsAdapter.LandmarkEntity> entities = new ArrayList<>();
-        entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
-        entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
-        entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
-        entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
-        entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
-        entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
         initializeRecyclerView(entities);
     }
 
@@ -110,6 +115,8 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
 
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             takePhoto();
+        else if (requestCode == GALLERY_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            getPhoto();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -120,7 +127,15 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
         if (resultCode == requireActivity().RESULT_OK && requestCode == CAMERA_RESULT_CODE) {
             try {
                 Glide.with(this).load(currentPhotoPath).into(binding.capturedImageIv);
-                startImageDetection(currentPhotoPath);
+                Uri imageUri = Uri.fromFile(new File(currentPhotoPath));
+                startImageDetection(imageUri);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (resultCode == requireActivity().RESULT_OK && requestCode == GALLERY_RESULT_CODE) {
+            try {
+                Uri selectedImage = data.getData();
+                startImageDetection(selectedImage);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -178,8 +193,21 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
         binding.takeAnotherPictureTv.setOnClickListener(view -> {
             openUserCamera();
         });
+
+        binding.uploadAnotherPictureTv.setOnClickListener(view -> openUserGallery());
     }
 
+    private void openUserGallery() {
+        if (requireActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_PERMISSION_REQUEST_CODE);
+        else
+            getPhoto();
+    }
+
+    private void getPhoto() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, GALLERY_RESULT_CODE);
+    }
 
     public void openUserCamera() {
         if (requireActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
@@ -217,13 +245,13 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void startImageDetection(String currentPhotoPath) throws IOException {
+    private void startImageDetection(Uri uri) throws IOException {
         Log.d("UploadLandMarkImage", "currentPhotoPath: " + currentPhotoPath);
         loadingDialog = LoadingDialog.newInstance("Processing Image");
         loadingDialog.setCancelable(false);
         loadingDialog.show(getChildFragmentManager(), "");
         FirebaseVisionImage image;
-        image = FirebaseVisionImage.fromFilePath(requireContext(), Uri.fromFile(new File(currentPhotoPath)));
+        image = FirebaseVisionImage.fromFilePath(requireContext(), uri);
         //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.white_house);
         //image = FirebaseVisionImage.fromBitmap(bitmap);
 

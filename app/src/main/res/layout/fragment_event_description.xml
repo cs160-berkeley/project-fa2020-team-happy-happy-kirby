@@ -12,7 +12,7 @@
             android:id="@+id/event_description_tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="No description available for this eventasdasdas dasdaasdasdas"
+            android:text="No description provided for this event"
             android:textSize="@dimen/_12sdp"
             android:lineSpacingMultiplier="1.2"
             android:textColor="@color/secondary_text"

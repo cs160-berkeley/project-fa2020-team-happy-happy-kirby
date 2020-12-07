@@ -53,7 +53,7 @@ public class UploadLandmarkImageActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(binding.fragmentContainer.getId(), UploadLandmarkImageFragment.newInstance(), "")
+                .add(binding.fragmentContainer.getId(), UploadLandmarkImageFragment.newInstance(getIntent().getIntExtra("choice", 1)), "")
                 .commit();
         //openUserCamera();
     }

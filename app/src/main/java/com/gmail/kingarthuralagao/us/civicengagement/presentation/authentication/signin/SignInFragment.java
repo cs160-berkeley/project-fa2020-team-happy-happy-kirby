@@ -41,8 +41,6 @@ import es.dmoral.toasty.Toasty;
 
 public class SignInFragment extends Fragment implements ForgotPasswordDialogFragment.OnPasswordSend {
 
-
-
     public static SignInFragment newInstance() {
         SignInFragment fragment = new SignInFragment();
         return fragment;
