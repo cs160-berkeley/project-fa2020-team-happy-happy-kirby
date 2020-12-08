@@ -24,6 +24,7 @@ import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_v
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.events_view.viewmodel.EventsViewViewModel;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventsViewBinding;
+import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentEventsViewBottomNavBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class EventsViewBottomNavFragment extends Fragment implements
     private ArrayList<Event> happeningNowFiltered = new ArrayList<>();
     private ArrayList<Event> happeningSoonFiltered = new ArrayList<>();
     private ArrayList<String> filters = new ArrayList<>();
-    private FragmentEventsViewBinding binding;
+    private FragmentEventsViewBottomNavBinding binding;
     private EventsAdapter eventsAdapter;
     private EventsViewViewModel viewModel;
     private Boolean clickedBefore = false;
@@ -75,7 +76,7 @@ public class EventsViewBottomNavFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentEventsViewBinding.inflate(inflater, container, false);
+        binding = FragmentEventsViewBottomNavBinding.inflate(inflater, container, false);
         binding.locationTv.setText("Events in " + inputLocation);
 
         return binding.getRoot();

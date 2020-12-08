@@ -156,6 +156,7 @@ public class EventDetailBottomNavFragment extends Fragment {
         fullToAbbreviation.put("Pacific Standard Time", "PST");
         fullToAbbreviation.put("Alaska Standard Time", "AST");
         fullToAbbreviation.put("Hawaii-Aleutian Standard Time", "HST");
+        fullToAbbreviation.put("Eastern Standard Time", "EST");
         String fullTimeZone = event.getTimeZone();
         String abbreviatedTimeZone = fullToAbbreviation.get(fullTimeZone);
         if (event.getDateStart() < System.currentTimeMillis() / 1000) { // Happening Now

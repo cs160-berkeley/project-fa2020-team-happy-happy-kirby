@@ -35,6 +35,12 @@
         <item name="android:textSize">@dimen/_16sdp</item>
     </style>
 
+    <style name="Theme.Toolbar.Title.Blue" parent="">
+        <item name="fontFamily">@font/inter_semi_bold</item>
+        <item name="android:textColor">@color/primary_blue</item>
+        <item name="android:textSize">@dimen/_16sdp</item>
+    </style>
+
     <style name="Theme.Loading" parent="">
         <item name="fontFamily">@font/inter_semi_bold</item>
     </style>
@@ -64,6 +70,10 @@
 
     <style name="Theme.Toolbar.Colored" parent="">
         <item name="colorControlNormal">@color/white</item>
+    </style>
+
+    <style name="Theme.Toolbar.Colored.Blue" parent="">
+        <item name="colorControlNormal">@color/primary_blue</item>
     </style>
 
 

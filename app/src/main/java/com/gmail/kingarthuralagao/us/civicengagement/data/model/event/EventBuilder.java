@@ -26,6 +26,7 @@ public class EventBuilder {
     private String eventID;
     private Event eventDTO;
     private String goFundMeLink;
+    private List<String> keyWords;
 
     public EventBuilder withName(String eventName) {
         this.name = eventName;
@@ -34,6 +35,11 @@ public class EventBuilder {
 
     public EventBuilder withDateStart(Long timeStamp) {
         this.dateStart = timeStamp;
+        return this;
+    }
+
+    public EventBuilder withKeywords(List<String> keywords) {
+        this.keyWords = keywords;
         return this;
     }
 
@@ -178,6 +184,7 @@ public class EventBuilder {
         eventDTO.setAccessibilities(this.accessibilities);
         eventDTO.setID(this.eventID);
         eventDTO.setGoFundMeLink(this.goFundMeLink);
+        eventDTO.setKeyWords(this.keyWords);
         return eventDTO;
     }
 

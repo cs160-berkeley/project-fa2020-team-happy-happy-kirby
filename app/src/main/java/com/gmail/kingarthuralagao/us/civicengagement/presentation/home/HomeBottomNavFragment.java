@@ -42,6 +42,7 @@ import com.gmail.kingarthuralagao.us.civicengagement.presentation.home.viewmodel
 import com.gmail.kingarthuralagao.us.civilengagement.BuildConfig;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentHomeBinding;
+import com.gmail.kingarthuralagao.us.civilengagement.databinding.FragmentHomeBottomNavBinding;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -76,7 +77,7 @@ public class HomeBottomNavFragment extends Fragment {
     private final int LOCATION_REQUEST_CODE = 1;
     private final String TAG = getClass().getSimpleName();
     private static Geocoder geocoder;
-    private FragmentHomeBinding binding;
+    private FragmentHomeBottomNavBinding binding;
     private LocationManager mLocManager;
     private LocationListener mLocListener;
     private RequestQueue queue;
@@ -102,12 +103,12 @@ public class HomeBottomNavFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentHomeBottomNavBinding.inflate(inflater, container, false);
 
         setHasOptionsMenu(true);
         ((AppCompatActivity) getActivity()).setSupportActionBar(binding.toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
-        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_menu);
+        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_menu_blue);
         binding.toolbar.setOverflowIcon(drawable);
         return binding.getRoot();
     }

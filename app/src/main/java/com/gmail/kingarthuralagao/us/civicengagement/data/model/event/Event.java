@@ -20,6 +20,7 @@ public class Event implements Serializable {
     private Map<String, Boolean> accessibilities;
     private String eventID;
     private String goFundMeLink;
+    private List<String> keyWords;
 
     public Event() {
         // Empty Constructor for Firebase
@@ -27,7 +28,7 @@ public class Event implements Serializable {
 
     public Event(String name, Long dateStart, Long dateEnd, String timeStart, String timeEnd,
                  String description, String location, String timeZone, Integer checkIns, List<String> causes,
-                 Map<String, Boolean> accessibilities, String eventID, String city, String goFundMeLink) {
+                 Map<String, Boolean> accessibilities, String eventID, String city, String goFundMeLink, List<String> keyWords) {
         this.name = name;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
@@ -42,6 +43,7 @@ public class Event implements Serializable {
         this.eventID = eventID;
         this.city = city;
         this.goFundMeLink = goFundMeLink;
+        this.keyWords = keyWords;
     }
 
     public String getID() {
@@ -154,6 +156,14 @@ public class Event implements Serializable {
 
     public void setGoFundMeLink(String goFundMeLink) {
         this.goFundMeLink = goFundMeLink;
+    }
+
+    public List<String> getKeyWords() {
+        return keyWords;
+    }
+
+    public void setKeyWords(List<String> keyWords) {
+        this.keyWords = keyWords;
     }
 }
 

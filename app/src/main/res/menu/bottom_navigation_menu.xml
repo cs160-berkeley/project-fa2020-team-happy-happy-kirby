@@ -10,4 +10,10 @@
         android:enabled="true"
         android:icon="@drawable/ic_my_events"
         android:title="My Events"/>
+
+    <item
+    android:id="@+id/page_3"
+    android:enabled="true"
+    android:icon="@drawable/ic_search"
+    android:title="Search"/>
 </menu>

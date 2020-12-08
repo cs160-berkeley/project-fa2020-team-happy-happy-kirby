@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.gmail.kingarthuralagao.us.civicengagement.presentation.search.SearchEventsFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.my_events.MyEventsBottomNavFragment;
 import com.gmail.kingarthuralagao.us.civilengagement.R;
 import com.gmail.kingarthuralagao.us.civilengagement.databinding.ActivityBottomNavBinding;
@@ -17,6 +18,7 @@ public class BottomNavActivity extends AppCompatActivity {
     private ActivityBottomNavBinding bottomNavBinding;
     private HomeFragmentContainer homeFragmentContainer;
     private MyEventsBottomNavFragment myEventFragment;
+    private SearchEventsFragment searchEventsFragment;
     private boolean isHomeVisible = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +27,17 @@ public class BottomNavActivity extends AppCompatActivity {
         setContentView(bottomNavBinding.getRoot());
 
         homeFragmentContainer = HomeFragmentContainer.newInstance();
+        myEventFragment = MyEventsBottomNavFragment.newInstance();
+        searchEventsFragment = SearchEventsFragment.newInstance();
         //myEventFragmentContainer = MyEventFragmentContainer.newInstance();
 
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(bottomNavBinding.fragmentContainer.getId(), homeFragmentContainer, "")
+                .add(bottomNavBinding.fragmentContainer.getId(), myEventFragment, "")
+                .add(bottomNavBinding.fragmentContainer.getId(), searchEventsFragment, "")
+                .hide(myEventFragment)
+                .hide(searchEventsFragment)
                 .commit();
 
         setUpEvents();
@@ -44,23 +52,25 @@ public class BottomNavActivity extends AppCompatActivity {
                             .beginTransaction()
                             .show(homeFragmentContainer)
                             .hide(myEventFragment)
+                            .hide(searchEventsFragment)
                             .commit();
                     isHomeVisible = true;
                     return true;
                 } else if (item.getItemId() == R.id.page_2) {
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    if (myEventFragment == null) {
-                        myEventFragment = MyEventsBottomNavFragment.newInstance();
-                        transaction
-                                .add(bottomNavBinding.fragmentContainer.getId(), myEventFragment, "")
-                                .hide(homeFragmentContainer)
-                                .commit();
-                        isHomeVisible = false;
-                        return true;
-                    }
                     transaction
                             .show(myEventFragment)
                             .hide(homeFragmentContainer)
+                            .hide(searchEventsFragment)
+                            .commit();
+                    isHomeVisible = false;
+                    return true;
+                } else if (item.getItemId() == R.id.page_3) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .hide(homeFragmentContainer)
+                            .hide(myEventFragment)
+                            .show(searchEventsFragment)
                             .commit();
                     isHomeVisible = false;
                     return true;

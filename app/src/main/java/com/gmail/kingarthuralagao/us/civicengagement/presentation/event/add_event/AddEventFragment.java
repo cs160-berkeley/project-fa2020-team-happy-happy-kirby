@@ -370,6 +370,7 @@ public class AddEventFragment extends Fragment {
                 .withAccessibilities(getAccessibilities())
                 .withEventID()
                 .withGoFundMeLink(eventGoFundMeLink)
+                .withKeywords(generateSearchKeywords(eventName))
                 .build();
 
         viewModel.postEvent(eventBuilder.getEventDTO());
@@ -496,5 +497,27 @@ public class AddEventFragment extends Fragment {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return spannable;
+    }
+
+    private List<String> generateSearchKeywords(String eventName) {
+        String lowerCase = eventName.toLowerCase();
+        List<String> keywords = new ArrayList<>();
+
+        String[] splits = lowerCase.split(" ");
+
+        for (int i = 0; i < splits.length; i++) {
+            String appendString = "";
+
+            for (int j = 0; j < lowerCase.length(); j++) {
+                Character c = lowerCase.charAt(j);
+                appendString += c.toString();
+                keywords.add(appendString);
+                Log.i("AddEventFrag", appendString);
+            }
+
+            lowerCase = lowerCase.replace(splits[i] + " ", "");
+        }
+
+        return keywords;
     }
 }
