@@ -81,12 +81,13 @@ public class UploadLandmarkImageFragment extends Fragment implements LandmarkRes
 
         openUserCamera();
         ArrayList<LandmarkResultsAdapter.LandmarkEntity> entities = new ArrayList<>();
+        /*
         entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
         entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
         entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
         entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
         entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
-        entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));
+        entities.add(new LandmarkResultsAdapter.LandmarkEntity("Hello", "Hi"));*/
         initializeRecyclerView(entities);
     }
 
