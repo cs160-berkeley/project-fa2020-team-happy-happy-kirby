@@ -136,7 +136,7 @@ public class AddNewEventSoonFragment extends Fragment implements
         if (choice == 0) {
             initializeLocationSearch();
         } else {
-            initializeLandmarkCapture();
+            initializeLandmarkCapture(choice);
         }
     }
     public static String getName() {
@@ -253,8 +253,9 @@ public class AddNewEventSoonFragment extends Fragment implements
         startActivityForResult(intent, AUTOCOMPLETE_LOCATION_REQUEST_CODE);
     }
 
-    private void initializeLandmarkCapture() {
+    private void initializeLandmarkCapture(int choice) {
         Intent intent = new Intent(requireActivity(), UploadLandmarkImageActivity.class);
+        intent.putExtra("choice", choice);
         startActivityForResult(intent, LANDMARK_LOCATION_REQUEST_CODE);
     }
 

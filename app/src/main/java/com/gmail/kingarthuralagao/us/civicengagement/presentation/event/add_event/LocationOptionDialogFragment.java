@@ -64,5 +64,10 @@ public class LocationOptionDialogFragment extends BottomSheetDialogFragment {
             iChoiceSetListener.onLocationChoiceSet(0);
             dismiss();
         });
+
+        binding.uploadLandmarkLay.setOnClickListener(view -> {
+            iChoiceSetListener.onLocationChoiceSet(2);
+            dismiss();
+        });
     }
 }
