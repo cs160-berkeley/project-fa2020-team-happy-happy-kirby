@@ -2,6 +2,8 @@ package com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_eve
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
+import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.LocationOptionDialogFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.RangeTimePickerDialogFragment;
@@ -34,8 +37,10 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
@@ -61,7 +66,13 @@ public class AddNewEventSoonFragment extends Fragment implements
     private static String timeStart;
     private static String timeEnd;
     private static Place place;
+    private static String eventLocationName;
+    private static String eventLocationAddress;
+    private static String eventLocationCity;
+    private static Double eventLocationLatitude;
+    private static Double eventLocationLongitude;
     private static String goFundMeLink;
+    private static Geocoder geocoder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +102,11 @@ public class AddNewEventSoonFragment extends Fragment implements
                 this.place = place;
                 String address = place.getAddress();
                 String name = place.getName();
+                eventLocationAddress = address;
+                eventLocationName = name;
+                eventLocationCity = getCityFromPlace(place);
+                eventLocationLatitude = place.getLatLng().latitude;
+                eventLocationLongitude = place.getLatLng().longitude;
                 binding.eventLocationEt.setText(name + "\n" + address);
                 binding.eventLocationLayout.setError("");
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
@@ -105,6 +121,11 @@ public class AddNewEventSoonFragment extends Fragment implements
                 Log.i(TAG, "In OKAY");
                 LandmarkResultsAdapter.LandmarkEntity landmarkEntity =
                         (LandmarkResultsAdapter.LandmarkEntity) data.getSerializableExtra(UploadLandmarkImageActivity.LANDMARK_RESULT);
+                eventLocationAddress = landmarkEntity.getAddress();
+                eventLocationName = landmarkEntity.getName();
+                eventLocationCity = landmarkEntity.getCity();
+                eventLocationLatitude = landmarkEntity.getLatitude();
+                eventLocationLongitude = landmarkEntity.getLongitude();
                 binding.eventLocationEt.setText(landmarkEntity.getName() + "\n" + landmarkEntity.getAddress());
             } else if(resultCode == RESULT_CANCELED) {
 
@@ -168,6 +189,26 @@ public class AddNewEventSoonFragment extends Fragment implements
     }
 
     public static String getGoFundMeLink() {return goFundMeLink;}
+
+    public static String getEventLocationName() {
+        return eventLocationName;
+    }
+
+    public static String getEventLocationAddress() {
+        return eventLocationAddress;
+    }
+
+    public static String getEventLocationCity() {
+        return eventLocationCity;
+    }
+
+    public static Double getEventLocationLatitude() {
+        return eventLocationLatitude;
+    }
+
+    public static Double getEventLocationLongitude() {
+        return eventLocationLongitude;
+    }
 
     private void setUpEvents() {
         binding.eventDateEndEt.setOnClickListener(view -> {
@@ -369,56 +410,34 @@ public class AddNewEventSoonFragment extends Fragment implements
 
             //return true;
             return endTimeStamp < startTimeStamp;
-
-            /*
-            String timeEndMod = timeEnd.replace(" PM", "");
-            timeEndMod = timeEndMod.replace(" AM", "");
-            timeEndMod = timeEndMod.replace("\\s", "");
-            String[] timeParts = timeEndMod.split(":");
-            String hourEnd = timeParts[0];
-            String minuteEnd = timeParts[1];
-
-            hourEnd = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hourEnd)));
-            hourEnd = hourEnd.length() == 2 ? hourEnd : "0" + hourEnd;*/
-
-
-            /*
-            String date = month + "/" + day + "/" + year;
-            String time = hour + ":" + minute + ":" + "00";
-
-            String timeStartMod = timeStart.replace(" PM", "");
-            timeStartMod = timeStartMod.replace(" AM", "");
-            timeStartMod = timeStartMod.replace("\\s", "");
-            timeParts = timeStartMod.split(":");
-            String hourStart = timeParts[0];
-            String minuteStart = timeParts[1];
-
-
-            String[] dateParts = dateEnd.split("/");
-            String month = dateParts[0];
-            String day = dateParts[1];
-            String year = dateParts[2];
-
-            month = month.length() == 2 ? month : "0" + month;
-            day = day.length() == 2 ? day : "0" + day;
-
-            Log.i(TAG,  " time is:" + timeEnd);
-            String timeEndMod = timeEnd.replace(" PM", "");
-            timeEndMod = timeEndMod.replace(" AM", "");
-            timeEndMod = timeEndMod.replace("\\s", "");
-            String[] timeParts = timeEndMod.split(":");
-            String hour = timeParts[0];
-            String minute = timeParts[1];
-
-            hour = String.valueOf(Utils.convertToMilitaryTime(Integer.valueOf(hour)));
-            hour = hour.length() == 2 ? hour : "0" + hour;
-
-            String date = month + "/" + day + "/" + year;
-            String time = hour + ":" + minute + ":" + "00";
-
-            Long inputDateTimeStamp = Utils.getTimeStampFromDate(date + " " + time);
-            Long currentTimeStamp = System.currentTimeMillis() / 1000;*/
         }
         return false;
+    }
+
+    private static String getCityFromPlace(Place place) {
+        geocoder = new Geocoder(CivicEngagementApp.getContext(), Locale.getDefault());
+
+        try {
+            String city = getCityNameByCoordinates(place.getLatLng().latitude, place.getLatLng().longitude);
+            if(city.length() == 0) {
+                String address = place.getAddress();
+                int commaIndex = address.indexOf(",");
+                city = address.substring(0, commaIndex);
+            }
+            return city;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private static String getCityNameByCoordinates(double lat, double lon) throws IOException {
+
+        List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+        if (addresses != null && addresses.size() > 0) {
+            Log.i("AddNewEventDialogFrag", addresses.toString());
+            return addresses.get(0).getLocality() == null ? addresses.get(0).getAdminArea() : addresses.get(0).getLocality();
+        }
+        return "";
     }
 }

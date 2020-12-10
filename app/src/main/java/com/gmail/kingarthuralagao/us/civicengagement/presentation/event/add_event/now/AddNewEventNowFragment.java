@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.icu.util.Calendar;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.gmail.kingarthuralagao.us.civicengagement.CivicEngagementApp;
 import com.gmail.kingarthuralagao.us.civicengagement.core.utils.Utils;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.event.add_event.LocationOptionDialogFragment;
 import com.gmail.kingarthuralagao.us.civicengagement.presentation.landmark.UploadLandmarkImageActivity;
@@ -38,6 +41,7 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -64,7 +68,13 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
     private static String dateEnd;
     private static String timeEnd;
     private static Place place;
+    private static String eventLocationName;
+    private static String eventLocationAddress;
+    private static String eventLocationCity;
+    private static Double eventLocationLatitude;
+    private static Double eventLocationLongitude;
     private static String goFundMeLink;
+    private static Geocoder geocoder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +105,11 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
                 this.place = place;
                 String address = place.getAddress();
                 String name = place.getName();
+                eventLocationAddress = address;
+                eventLocationName = name;
+                eventLocationCity = getCityFromPlace(place);
+                eventLocationLatitude = place.getLatLng().latitude;
+                eventLocationLongitude = place.getLatLng().longitude;
                 binding.eventLocationEt.setText(name + "\n" + address);
                 binding.eventLocationLayout.setError("");
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
@@ -109,6 +124,11 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
                 Log.i(TAG, "In OKAY");
                 LandmarkResultsAdapter.LandmarkEntity landmarkEntity =
                         (LandmarkResultsAdapter.LandmarkEntity) data.getSerializableExtra(UploadLandmarkImageActivity.LANDMARK_RESULT);
+                eventLocationAddress = landmarkEntity.getAddress();
+                eventLocationName = landmarkEntity.getName();
+                eventLocationCity = landmarkEntity.getCity();
+                eventLocationLatitude = landmarkEntity.getLatitude();
+                eventLocationLongitude = landmarkEntity.getLongitude();
                 binding.eventLocationEt.setText(landmarkEntity.getName() + "\n" + landmarkEntity.getAddress());
             } else if(resultCode == RESULT_CANCELED) {
 
@@ -166,6 +186,26 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
     }
 
     public static String getGoFundMeLink() {return goFundMeLink;}
+
+    public static String getEventLocationName() {
+        return eventLocationName;
+    }
+
+    public static String getEventLocationAddress() {
+        return eventLocationAddress;
+    }
+
+    public static String getEventLocationCity() {
+        return eventLocationCity;
+    }
+
+    public static Double getEventLocationLatitude() {
+        return eventLocationLatitude;
+    }
+
+    public static Double getEventLocationLongitude() {
+        return eventLocationLongitude;
+    }
 
     private void setUpViews() {
         binding.eventLocationEt.setFocusable(false);
@@ -354,5 +394,32 @@ public class AddNewEventNowFragment extends Fragment implements DatePickerDialog
             }
         }
         return false;
+    }
+
+    private static String getCityFromPlace(Place place) {
+        geocoder = new Geocoder(CivicEngagementApp.getContext(), Locale.getDefault());
+
+        try {
+            String city = getCityNameByCoordinates(place.getLatLng().latitude, place.getLatLng().longitude);
+            if(city.length() == 0) {
+                String address = place.getAddress();
+                int commaIndex = address.indexOf(",");
+                city = address.substring(0, commaIndex);
+            }
+            return city;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private static String getCityNameByCoordinates(double lat, double lon) throws IOException {
+
+        List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+        if (addresses != null && addresses.size() > 0) {
+            Log.i("AddNewEventDialogFrag", addresses.toString());
+            return addresses.get(0).getLocality() == null ? addresses.get(0).getAdminArea() : addresses.get(0).getLocality();
+        }
+        return "";
     }
 }

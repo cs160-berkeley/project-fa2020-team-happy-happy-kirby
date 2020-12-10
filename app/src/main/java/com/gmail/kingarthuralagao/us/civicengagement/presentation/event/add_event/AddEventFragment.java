@@ -175,7 +175,7 @@ public class AddEventFragment extends Fragment {
         });
 
         binding.addEventBtn.setOnClickListener(view -> {
-            Place eventLocation;
+            String eventLocation;
             if (binding.includeHappeningNowHappeningSoon.happeningSoonBtn.isEnabled()) { // In addneweventnow
                 boolean incompleteInput = false;
                 if (addNewEventNowFragment.hasEmptyField())
@@ -196,7 +196,7 @@ public class AddEventFragment extends Fragment {
                     return;
                 }
 
-                eventLocation = addNewEventNowFragment.getPlace();
+                eventLocation = addNewEventNowFragment.getEventLocationLatitude() + ", " + addNewEventNowFragment.getEventLocationLongitude();
             } else { // In addneweventsoon
                 Log.i("AddEventFrag", "InAddeventsoon");
                 boolean incompleteInput = false;
@@ -218,10 +218,9 @@ public class AddEventFragment extends Fragment {
                     return;
                 }
 
-                eventLocation = addNewEventSoonFragment.getPlace();
+                eventLocation = addNewEventSoonFragment.getEventLocationLatitude() + ", " + addNewEventSoonFragment.getEventLocationLongitude();
             }
-            String locationInput = eventLocation.getLatLng().latitude + ", " + eventLocation.getLatLng().longitude;
-            viewModel.getTimeZone(locationInput, System.currentTimeMillis() / 1000, BuildConfig.API_KEY);
+            viewModel.getTimeZone(eventLocation, System.currentTimeMillis() / 1000, BuildConfig.API_KEY);
         });
     }
 
@@ -313,31 +312,36 @@ public class AddEventFragment extends Fragment {
         String eventTimeEnd = addNewEventNowFragment.getTimeEnd();
         String eventGoFundMeLink = addNewEventNowFragment.getGoFundMeLink();
 
-        Place place = addNewEventNowFragment.getPlace();
-        String address = place.getAddress();
-        String locationName = place.getName() == null ? "" : place.getName();
-        String eventLocation = locationName.length() == 0 ? place.getAddress() : locationName + "\n" + address;
+        //Place place = addNewEventNowFragment.getPlace();
+        try {
+            String address = addNewEventNowFragment.getEventLocationAddress();
+            String locationName = addNewEventNowFragment.getEventLocationName() == null ? "" : addNewEventNowFragment.getEventLocationName();
+            String eventLocation = locationName.length() == 0 ? addNewEventNowFragment.getEventLocationAddress()
+                    : locationName + "\n" + address;
+            String city = addNewEventNowFragment.getEventLocationCity();
 
-        EventBuilder eventBuilder = new EventBuilder();
+            EventBuilder eventBuilder = new EventBuilder();
 
-        eventBuilder
-                .withName(eventName)
-                .withDateStart(System.currentTimeMillis() / 1000)
-                .withDateEnd(eventDateEnd, eventTimeEnd)
-                .withTimeStart("10:00")
-                .withTimeEnd(eventTimeEnd)
-                .withCity(getCityFromPlace(place))
-                .withDescription(eventDescription)
-                .withLocation(eventLocation)
-                .withTimeZone(timeZoneName)
-                .withCheckIns()
-                .withCauses(getCauses())
-                .withAccessibilities(getAccessibilities())
-                .withEventID()
-                .withGoFundMeLink(eventGoFundMeLink)
-                .build();
-
-        viewModel.postEvent(eventBuilder.getEventDTO());
+            eventBuilder
+                    .withName(eventName)
+                    .withDateStart(System.currentTimeMillis() / 1000)
+                    .withDateEnd(eventDateEnd, eventTimeEnd)
+                    .withTimeStart("10:00")
+                    .withTimeEnd(eventTimeEnd)
+                    .withCity(city)
+                    .withDescription(eventDescription)
+                    .withLocation(eventLocation)
+                    .withTimeZone(timeZoneName)
+                    .withCheckIns()
+                    .withCauses(getCauses())
+                    .withAccessibilities(getAccessibilities())
+                    .withEventID()
+                    .withGoFundMeLink(eventGoFundMeLink)
+                    .build();
+            viewModel.postEvent(eventBuilder.getEventDTO());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void createEventHappeningSoon(String timeZoneName) {
@@ -349,30 +353,36 @@ public class AddEventFragment extends Fragment {
         String eventTimeStart = addNewEventSoonFragment.getTimeStart();
         String eventGoFundMeLink = addNewEventSoonFragment.getGoFundMeLink();
 
-        Place place = addNewEventSoonFragment.getPlace();
-        String address = place.getAddress();
-        String locationName = place.getName() == null ? "" : place.getName();
-        String eventLocation = locationName.length() == 0 ? place.getAddress() : locationName + "\n" + address;
+        try {
 
-        EventBuilder eventBuilder = new EventBuilder();
-        eventBuilder
-                .withName(eventName)
-                .withDateStart(eventDateStart)
-                .withDateEnd(eventDateEnd)
-                .withTimeStart(eventTimeStart)
-                .withTimeEnd(eventTimeEnd)
-                .withCity(getCityFromPlace(place))
-                .withDescription(eventDescription)
-                .withLocation(eventLocation)
-                .withTimeZone(timeZoneName)
-                .withCheckIns()
-                .withCauses(getCauses())
-                .withAccessibilities(getAccessibilities())
-                .withEventID()
-                .withGoFundMeLink(eventGoFundMeLink)
-                .build();
+            //Place place = addNewEventSoonFragment.getPlace();
+            String address = addNewEventSoonFragment.getEventLocationAddress();
+            String locationName = addNewEventSoonFragment.getEventLocationName() == null ? "" : addNewEventSoonFragment.getEventLocationName();
+            String eventLocation = locationName.length() == 0 ? addNewEventSoonFragment.getEventLocationAddress()
+                    : locationName + "\n" + address;
+            String city = addNewEventSoonFragment.getEventLocationCity();
 
-        viewModel.postEvent(eventBuilder.getEventDTO());
+            EventBuilder eventBuilder = new EventBuilder();
+            eventBuilder
+                    .withName(eventName)
+                    .withDateStart(eventDateStart)
+                    .withDateEnd(eventDateEnd)
+                    .withTimeStart(eventTimeStart)
+                    .withTimeEnd(eventTimeEnd)
+                    .withCity(city)
+                    .withDescription(eventDescription)
+                    .withLocation(eventLocation)
+                    .withTimeZone(timeZoneName)
+                    .withCheckIns()
+                    .withCauses(getCauses())
+                    .withAccessibilities(getAccessibilities())
+                    .withEventID()
+                    .withGoFundMeLink(eventGoFundMeLink)
+                    .build();
+            viewModel.postEvent(eventBuilder.getEventDTO());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Map<String, Boolean> getAccessibilities() {

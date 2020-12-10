@@ -28,7 +28,7 @@ class UploadLandMarkImageViewModel : ViewModel() {
         var landmarkEntities : MutableList<LandmarkResultsAdapter.LandmarkEntity> = mutableListOf()
         coroutineScope = CoroutineScope(Dispatchers.IO).launch {
             result.postLoading()
-            var deferredList : MutableList<Deferred<String>> = mutableListOf()
+            var deferredList : MutableList<Deferred<GeolocationResult?>> = mutableListOf()
             for (landmark in landmarkList!!) {
                 val latlng = "${landmark.lat},${landmark.lon}"
                 var deferred = async { getLocationFromAPI(latlng)}
@@ -37,13 +37,17 @@ class UploadLandMarkImageViewModel : ViewModel() {
 
             for (i in 0 until deferredList.size) {
                 try {
-                    val address : String = deferredList[i].await()
+                    val result = deferredList[i].await()
+                    val address : String = result?.formattedAddress.toString()
+                    val city = getCity(result)
                     val landmarkName = landmarkList!![i].landmarkName
-                    landmarkEntities.add(LandmarkResultsAdapter.LandmarkEntity(landmarkName, address))
+                    val lat = result?.geometry?.location?.lat
+                    val lng = result?.geometry?.location?.lng
+                    landmarkEntities.add(LandmarkResultsAdapter.LandmarkEntity(landmarkName, address, city, lat, lng))
                     Log.i("Inside For Loop", address)
                 } catch (e : Exception) {
                     e.printStackTrace()
-                    landmarkEntities.add(LandmarkResultsAdapter.LandmarkEntity("", ""))
+                    landmarkEntities.add(LandmarkResultsAdapter.LandmarkEntity("", "", "", 0.0, 0.0))
                 }
             }
 
@@ -52,9 +56,25 @@ class UploadLandMarkImageViewModel : ViewModel() {
         }
     }
 
-    private suspend fun getLocationFromAPI(latlng : String) : String {
-        var result = ""
+    private fun getCity(result: GeolocationResult?): String {
+        var city = ""
+        if (result != null) {
+            val addressComponents = result.addressComponents
+            for (i in 0 until addressComponents.size) {
+                val addressComponent = addressComponents[i]
 
+                val types = addressComponent.types;
+                for (j in 0 until types.size) {
+                    if (types[j] == "locality") {
+                        city = addressComponent.longName;
+                    }
+                }
+            }
+        }
+        return city
+    }
+
+    suspend fun getLocationFromAPI(latlng : String) : GeolocationResult? {
         val key = "AIzaSyCt5BNGo9os5a-45NEJE9A-hN8cITF-nLA"
         try {
             val response = RetrofitClient.geolocationApi.getResults(latlng, key)
@@ -62,55 +82,20 @@ class UploadLandMarkImageViewModel : ViewModel() {
 
             Log.i("GeolocationVM", response.toString())
             if (body != null) {
-                result = body.geolocationResults[0]?.formattedAddress.toString()
+                return body.geolocationResults[0]
                 Log.i("GeolocationVM", body.geolocationResults[0]?.formattedAddress.toString())
             }
         } catch (e : Exception) {
             e.printStackTrace()
         }
-        return result
+        return null
     }
 
     override fun onCleared() {
         super.onCleared()
         coroutineScope?.cancel()
     }
-    /*public class UploadLandmarkImageViewModel extends ViewModel {
-        public StateLiveData<LandmarkResultsAdapter.LandmarkEntity> getGeolocationResponse = new StateLiveData<>();
 
-        private GetGeolocationUseCase getGeolocationUseCase =
-                new GetGeolocationUseCase(GeolocationRepositoryImpl.newInstance());
-
-        @Override
-        protected void onCleared() {
-            super.onCleared();
-            getGeolocationUseCase.dispose();
-        }
-
-        public void getGeolocation(String latlng, String key) {
-            getGeolocationResponse.postLoading();
-
-            DisposableObserver<LandmarkResultsAdapter.LandmarkEntity> disposableObserver = new DisposableObserver<LandmarkResultsAdapter.LandmarkEntity>() {
-                @Override
-                public void onNext(LandmarkResultsAdapter.@NonNull LandmarkEntity landmarkEntity) {
-                    getGeolocationResponse.postSuccess(landmarkEntity);
-                }
-
-                @Override
-                public void onError(@NonNull Throwable e) {
-                    getGeolocationResponse.postError(e);
-                }
-
-                @Override
-                public void onComplete() {
-                    Log.i("UploadLandmark", "Oncomplete");
-                }
-            };
-
-            getGeolocationUseCase.execute(disposableObserver, GetGeolocationUseCase.Params.getGeolocation(latlng, key));
-
-        }
-    }*/
 }
 
 object RetrofitClient {

@@ -31,7 +31,7 @@
                 android:layout_marginStart="@dimen/_12sdp"
                 android:text="@string/take_landmark_photo"
                 android:textSize="@dimen/_14sdp"
-                android:theme="@style/Theme.Toolbar.Title"/>
+                style="@style/Theme.Toolbar.Title"/>
 
             <TextView
                 android:id="@+id/confirm_tv"

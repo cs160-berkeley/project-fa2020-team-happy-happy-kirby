@@ -63,7 +63,8 @@ public class LandmarkResultsAdapter extends RecyclerView.Adapter<LandmarkResults
                     selectedLay.setBackgroundColor(colorResUnSelected);
                 }
                 selectedLay = holder.layout;
-                selected = new LandmarkEntity(holder.landmarkNameTv.getText().toString(), holder.landmarkLocationTv.getText().toString());
+                selected = new LandmarkEntity(holder.landmarkNameTv.getText().toString(),
+                        holder.landmarkLocationTv.getText().toString(), entity.city, entity.latitude, entity.longitude);
             } else {
                 holder.layout.setBackgroundColor(colorResUnSelected);
                 selectedLay.setBackgroundColor(colorResUnSelected);
@@ -97,10 +98,16 @@ public class LandmarkResultsAdapter extends RecyclerView.Adapter<LandmarkResults
     public static class LandmarkEntity implements Serializable {
         private String name;
         private String address;
+        private String city;
+        private Double latitude;
+        private Double longitude;
 
-        public LandmarkEntity(String n, String a) {
+        public LandmarkEntity(String n, String a, String c, Double lat, Double lng) {
             name = n;
             address = a;
+            city = c;
+            latitude = lat;
+            longitude = lng;
         }
 
         public String getAddress() {
@@ -109,6 +116,30 @@ public class LandmarkResultsAdapter extends RecyclerView.Adapter<LandmarkResults
 
         public String getName() {
             return name;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public Double getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(Double latitude) {
+            this.latitude = latitude;
+        }
+
+        public Double getLongitude() {
+            return longitude;
+        }
+
+        public void setLongitude(Double longitude) {
+            this.longitude = longitude;
         }
     }
 
