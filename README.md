@@ -10,4 +10,4 @@ Final project starter repo for CS 160, Fall 2020
 
 
 ## Final Video
-youtube.com/aLinkToYourVideo
+https://www.youtube.com/watch?v=86qtq9wF8-k
